@@ -6721,7 +6721,7 @@ var StreamView = (function (_React$Component) {
 
         return _react2['default'].createElement(
             'div',
-            { className: 'StreamView' },
+            { className: 'stream-view' },
             postViews
         );
     };

@@ -43,7 +43,7 @@ class StreamView extends React.Component {
         })
 
         return (
-            <div className="StreamView">
+            <div className="stream-view">
                 {postViews}
             </div>
         )
