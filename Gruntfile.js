@@ -33,6 +33,16 @@ module.exports = function(grunt) {
             }
         }
     },
+    connect: {
+      web: {
+        options:  {
+          port: 3000,
+          hostname: '127.0.0.1',
+          base: 'src',
+          keepalive: true
+        }
+      }
+    },
     less: {
         main: {
             options: {
@@ -59,6 +69,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks("grunt-browserify");
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-less');
+  grunt.loadNpmTasks('grunt-contrib-connect');
 
   // Default task.
   grunt.registerTask("default", ["watch"]);

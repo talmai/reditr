@@ -8,5 +8,8 @@
     "babelify": "^6.4.0",
     "grunt-browserify": "^4.0.1",
     "grunt-contrib-less": "^1.0.1"
+  },
+  "dependencies": {
+    "superagent": "^1.4.0"
   }
 }

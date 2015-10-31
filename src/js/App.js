@@ -1,10 +1,9 @@
 import React from 'react'
 import { render } from 'react-dom'
 import createHistory from 'history/lib/createHashHistory'
-import LoginView from './views/LoginView.js'
-import SignUpView from './views/SignUpView.js'
-import AdminView from './views/AdminView.js'
+
 import HeaderView from './views/HeaderView.js'
+import StreamView from './views/StreamView.js'
 
 // First we import some components...
 import { Router, Route, IndexRoute, Link } from 'react-router'
@@ -20,22 +19,12 @@ class App extends React.Component {
 
     constructor(props) {
         super(props)
-
-        this.state = {
-            showHeader: Parse.User.current() // show header if logged in
-        }
     }
 
     render() {
         return (
             <div>
-                {
-                    function(){
-                        if (this.state.showHeader) {
-                            return <HeaderView />
-                        }
-                    }.call(this)
-                }
+                <HeaderView />
                 {/*
                     next we replace `<Child>` with `this.props.children`
                     the router will figure out the children for us
@@ -49,15 +38,12 @@ class App extends React.Component {
 // init parse
 Parse.initialize("KEY1", "KEY2");
 
-let firstScreen = Parse.User.current() ? AdminView : LoginView
-
 // Finally, we render a <Router> with some <Route>s.
 // It does all the fancy routing stuff for us.
 render((
   <Router history={history}>
     <Route path="/" component={App}>
-        <IndexRoute component={firstScreen} />
-        <Route path="/signup" component={SignUpView} />
+        <IndexRoute component={StreamView} />
     </Route>
   </Router>
 ), document.getElementById('App'))
