@@ -6298,11 +6298,6 @@ var App = (function (_React$Component) {
             'div',
             null,
             _react2['default'].createElement(_viewsHeaderViewJs2['default'], null),
-            _react2['default'].createElement(
-                _reactRouter.Link,
-                { to: '/r/reditr' },
-                'Reditr'
-            ),
             this.props.children
         );
     };
