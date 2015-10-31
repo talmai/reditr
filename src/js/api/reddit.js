@@ -11,6 +11,7 @@ class reddit {
 
         Request
             .get(this.baseUrl + "r/" + subreddit + "/" + options.sort + ".json")
+            .query(options)
             .end(callback);
 
     }
