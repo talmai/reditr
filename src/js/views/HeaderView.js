@@ -14,7 +14,6 @@ class HeaderView extends React.Component {
             <div id="HeaderView">
                 <img className="logo" src="images/logo.png" />
                 <ul className="mini-nav">
-                    <a onClick={this.onClickLogout.bind(this)}>Logout</a>
                 </ul>
             </div>
         )
