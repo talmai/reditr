@@ -1,6 +1,8 @@
 import React from 'react'
 import { render } from 'react-dom'
 
+import MediaParserView from './MediaParserView.js'
+
 class StreamItemView extends React.Component {
 
     constructor(props) {
@@ -20,13 +22,7 @@ class StreamItemView extends React.Component {
                 <span className="stream-item-title">{post.get("title")}</span>
                 <span className="stream-item-author">{post.get("author")}</span>
                 <span className="stream-item-vote-count">{post.get("score")}</span>
-                {
-                    (() => {
-                        if (post.get("url").indexOf("imgur") != -1) {
-                            return (<img src={post.get("url") + ".png"} className="stream-item-media" />)
-                        }
-                    }.call())
-                }
+                <MediaParserView url={post.get("url")} />
             </div>
         )
 

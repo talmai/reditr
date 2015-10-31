@@ -1,6 +1,6 @@
 import React from 'react'
 import { render } from 'react-dom'
-import createHistory from 'history/lib/createHashHistory'
+import createHistory from 'history/lib/createBrowserHistory'
 
 import HeaderView from './views/HeaderView.js'
 import StreamView from './views/StreamView.js'
@@ -44,6 +44,7 @@ render((
   <Router history={history}>
     <Route path="/" component={App}>
         <IndexRoute component={StreamView} />
+        <Route path="/r/:subreddit" component={StreamView} />
     </Route>
   </Router>
 ), document.getElementById('App'))

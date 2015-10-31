@@ -12,7 +12,8 @@
   },
   "dependencies": {
     "superagent": "^1.4.0",
-    "superagent-jsonp": "0.0.6",
-    "jsonget": "^0.2.2"
+    "superagent-jsonp": "git+https://github.com/dimitryvin/superagent-jsonp.git",
+    "react-router": "^1.0.0-rc3",
+    "history": "^1.13.0"
   }
 }

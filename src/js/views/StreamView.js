@@ -4,28 +4,34 @@ import { render } from 'react-dom'
 import reddit from '../api/reddit.js'
 import StreamItemView from './StreamItemView.js'
 import PostModel from '../models/PostModel.js'
+import { Link } from 'react-router'
 
 class StreamView extends React.Component {
 
     constructor(props) {
         super(props)
 
+        let subreddit = this.props.params.subreddit || "gaming"
         this.state = {
-            subreddit: "gaming",
+            subreddit: subreddit,
             posts: []
         }
 
         this.redditApi = new reddit()
-
         this.load()
     }
 
-    load() {
-        this.redditApi.getPostsFromSubreddit(this.state.subreddit, {}, (err, posts) => {
+    load(subreddit = this.state.subreddit) {
+        this.redditApi.getPostsFromSubreddit(subreddit, {}, (err, posts) => {
             this.setState({
+                subreddit: subreddit,
                 posts: posts.body.data.children
             })
         })
+    }
+
+    componentWillReceiveProps(props) {
+        this.load(props.params.subreddit) // loads new prop info
     }
 
     render() {
@@ -37,7 +43,7 @@ class StreamView extends React.Component {
         })
 
         return (
-            <div key="what" className="StreamView">
+            <div className="StreamView">
                 {postViews}
             </div>
         )
