@@ -8,7 +8,9 @@ Our Website: http://reditr.com
 2. cd to directory
 3. Run ``npm install``
 4. Run ``grunt`` (To manually build, run ``grunt build``)
-5. Done!
+6. Open a new tab in terminal, and run ``grunt connect``
+7. Go to your browser and go to http://localhost:3000
+5. You are ready to dev!
 
 # Style
 ![Color palette](https://dl.dropboxusercontent.com/s/j9r547mygvm6qm3/Screenshot%202015-10-31%2013.53.03.png?dl=0)
