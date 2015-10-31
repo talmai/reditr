@@ -3,20 +3,32 @@ body {
   margin: 0;
   padding: 0;
   background-color: #f0f1f2;
+  height: 100%;
+  width: 100%;
   font-family: 'Open Sans', sans-serif;
+}
+#App {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+#App .app-view {
+  position: relative;
+  width: 100%;
+  height: 100%;
 }
 
 #HeaderView {
   position: relative;
   box-sizing: border-box;
   width: 100%;
-  height: 80px;
+  height: 60px;
   border-bottom: 1px solid #121212;
   background-color: #333;
 }
 #HeaderView .logo {
   line-height: 100px;
-  height: 80px;
+  height: 100%;
 }
 #HeaderView ul.mini-nav {
   font-size: 10px;
@@ -106,3 +118,11 @@ body {
   max-height: 400px;
   max-width: 90%;
 }
+
+.stream-view {
+  position: relative;
+  width: 100%;
+  height: calc(100% - 60px);
+  overflow: auto;
+}
+

@@ -23,7 +23,7 @@ class App extends React.Component {
 
     render() {
         return (
-            <div>
+            <div className="app-view">
                 <HeaderView />
                 {/*
                     next we replace `<Child>` with `this.props.children`
