@@ -6290,16 +6290,31 @@ var MediaParser = (function () {
         this.regex = {
             IMGUR_ALBUM: /(http|https):\/\/*(.?)imgur.com\/(a|gallery)\/([a-zA-Z0-9]{5,})/gi,
             IMGUR_IMAGE: /(http|https):\/\/*(.?)imgur.com\/([a-zA-Z0-9]{5,})$/gi,
-            IMGUR_RAW_IMAGE: /(http|https):\/\/*(.?)i.imgur.com/gi
+            IMGUR_GIFV: /.*?i\.imgur\.com\/([a-z0-9]{5,})\.gifv$/gi,
+            IMGUR_RAW_IMAGE: /(http|https):\/\/*(.?)i\.imgur\.com\/[a-z0-9]{5,}\.(png|gif$|jpg|jpeg)/gi
         };
 
         if (this.regex.IMGUR_ALBUM.test(url)) {
             this.handleImgurAlbum(url, callback);
         } else if (this.regex.IMGUR_IMAGE.test(url)) {
             this.handleImgurImage(url, callback);
+        } else if (this.regex.IMGUR_GIFV.test(url)) {
+            this.handleImgurGifv(url, callback);
         } else if (this.regex.IMGUR_RAW_IMAGE.test(url)) {
             this.handleImgurRawImage(url, callback);
         }
+    };
+
+    MediaParser.prototype.handleImgurGifv = function handleImgurGifv(url, callback) {
+        // reset regex pos
+        this.regex.IMGUR_GIFV.lastIndex = 0;
+        var imgurId = this.regex.IMGUR_GIFV.exec(url).pop(); // id is last in matching group
+
+        callback({
+            url: url,
+            parsedUrl: "http://i.imgur.com/" + imgurId + ".webm",
+            type: "video"
+        });
     };
 
     /** Simply adds .png to the url, imgur auto handles if it's a gif or not */
@@ -6420,11 +6435,6 @@ var HeaderView = (function (_React$Component) {
         _React$Component.apply(this, arguments);
     }
 
-    HeaderView.prototype.onClickLogout = function onClickLogout() {
-        Parse.User.logOut();
-        window.location.href = './index.html';
-    };
-
     HeaderView.prototype.render = function render() {
         return _react2['default'].createElement(
             'div',
@@ -6469,12 +6479,19 @@ var MediaParserView = (function (_React$Component) {
 
         _React$Component.call(this, props);
 
+        // get the parser
         this.parser = new _apiMediaParserJs2['default']();
 
+        // no media as default
         this.state = {
             media: {}
         };
     }
+
+    //
+    /**
+      Takes the url and determines what type of media we have
+    */
 
     MediaParserView.prototype.parseMedia = function parseMedia() {
         var _this = this;
@@ -6497,6 +6514,13 @@ var MediaParserView = (function (_React$Component) {
             case "image":
                 // simply return image tag
                 return _react2['default'].createElement('img', { src: this.state.media.parsedUrl, className: 'stream-item-media' });
+                break;
+            case "video":
+                return _react2['default'].createElement(
+                    'video',
+                    { className: 'stream-item-media', autoPlay: true, loop: true, muted: true },
+                    _react2['default'].createElement('source', { type: 'video/webm', src: this.state.media.parsedUrl })
+                );
                 break;
             default:
                 return false;
@@ -6539,6 +6563,7 @@ var StreamItemView = (function (_React$Component) {
 
         _React$Component.call(this, props);
 
+        // set default
         this.state = {
             voteCount: this.props.post.get("score")
         };
@@ -6553,6 +6578,11 @@ var StreamItemView = (function (_React$Component) {
             { key: this.props.key, className: 'stream-item-view' },
             _react2['default'].createElement(
                 'span',
+                { className: 'stream-item-vote-count' },
+                post.get("score")
+            ),
+            _react2['default'].createElement(
+                'span',
                 { className: 'stream-item-title' },
                 post.get("title")
             ),
@@ -6560,11 +6590,6 @@ var StreamItemView = (function (_React$Component) {
                 'span',
                 { className: 'stream-item-author' },
                 post.get("author")
-            ),
-            _react2['default'].createElement(
-                'span',
-                { className: 'stream-item-vote-count' },
-                post.get("score")
             ),
             _react2['default'].createElement(_MediaParserViewJs2['default'], { url: post.get("url") })
         );
@@ -6605,8 +6630,6 @@ var _modelsPostModelJs = require('../models/PostModel.js');
 
 var _modelsPostModelJs2 = _interopRequireDefault(_modelsPostModelJs);
 
-var _reactRouter = require('react-router');
-
 var StreamView = (function (_React$Component) {
     _inherits(StreamView, _React$Component);
 
@@ -6615,13 +6638,17 @@ var StreamView = (function (_React$Component) {
 
         _React$Component.call(this, props);
 
+        // temporarily assume gaming to be the default sub
         var subreddit = this.props.params.subreddit || "gaming";
         this.state = {
             subreddit: subreddit,
             posts: []
         };
 
+        // get the api
         this.redditApi = new _apiRedditJs2['default']();
+
+        // load the posts
         this.load();
     }
 
@@ -6630,7 +6657,9 @@ var StreamView = (function (_React$Component) {
 
         var subreddit = arguments.length <= 0 || arguments[0] === undefined ? this.state.subreddit : arguments[0];
 
+        // retreive the posts
         this.redditApi.getPostsFromSubreddit(subreddit, { sort: "hot" }, function (err, posts) {
+            // update state to re render
             _this.setState({
                 subreddit: subreddit,
                 posts: posts.body.data.children
@@ -6663,7 +6692,7 @@ var StreamView = (function (_React$Component) {
 exports['default'] = StreamView;
 module.exports = exports['default'];
 
-},{"../api/reddit.js":70,"../models/PostModel.js":71,"./StreamItemView.js":74,"react":231,"react-dom":76,"react-router":38}],76:[function(require,module,exports){
+},{"../api/reddit.js":70,"../models/PostModel.js":71,"./StreamItemView.js":74,"react":231,"react-dom":76}],76:[function(require,module,exports){
 'use strict';
 
 module.exports = require('react/lib/ReactDOM');

@@ -113,10 +113,19 @@ body {
   padding: 10px;
   box-sizing: border-box;
 }
+.stream-item-view .stream-item-author {
+  float: right;
+  color: #999;
+}
+.stream-item-view .stream-item-title {
+  font-weight: bold;
+  margin-left: 10px;
+}
 .stream-item-view .stream-item-media {
   display: block;
   max-height: 400px;
   max-width: 90%;
+  margin: 10px auto 0 auto;
 }
 
 .stream-view {

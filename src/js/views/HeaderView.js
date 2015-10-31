@@ -4,11 +4,6 @@ import { Link } from 'react-router';
 
 class HeaderView extends React.Component {
 
-    onClickLogout() {
-        Parse.User.logOut();
-        window.location.href = './index.html';
-    }
-
     render() {
         return (
             <div id="HeaderView">

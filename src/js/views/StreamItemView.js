@@ -8,6 +8,7 @@ class StreamItemView extends React.Component {
     constructor(props) {
         super(props)
 
+        // set default
         this.state = {
             voteCount: this.props.post.get("score")
         }
@@ -19,9 +20,9 @@ class StreamItemView extends React.Component {
 
         return (
             <div key={this.props.key} className="stream-item-view">
+                <span className="stream-item-vote-count">{post.get("score")}</span>
                 <span className="stream-item-title">{post.get("title")}</span>
                 <span className="stream-item-author">{post.get("author")}</span>
-                <span className="stream-item-vote-count">{post.get("score")}</span>
                 <MediaParserView url={post.get("url")} />
             </div>
         )
