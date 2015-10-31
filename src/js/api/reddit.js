@@ -9,8 +9,11 @@ class reddit {
     getPostsFromSubreddit(subreddit, options, callback) {
         options = options || {}
 
+        let jsonp = require('superagent-jsonp')
+
         Request
             .get(this.baseUrl + 'r/' + subreddit + '.json')
+            .use(jsonp)
             .end(callback);
 
     }

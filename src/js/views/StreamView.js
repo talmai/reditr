@@ -2,6 +2,8 @@ import React from 'react'
 import { render } from 'react-dom'
 
 import reddit from '../api/reddit.js'
+import StreamItemView from './StreamItemView.js'
+import PostModel from '../models/PostModel.js'
 
 class StreamView extends React.Component {
 
@@ -9,7 +11,7 @@ class StreamView extends React.Component {
         super(props)
 
         this.state = {
-            subreddit: "reditr",
+            subreddit: "gaming",
             posts: []
         }
 
@@ -19,13 +21,26 @@ class StreamView extends React.Component {
     }
 
     load() {
-        this.redditApi.getPostsFromSubreddit(this.state.subreddit, {}, function(err, res) {
-            console.log(res)
+        this.redditApi.getPostsFromSubreddit(this.state.subreddit, {}, (err, posts) => {
+            this.setState({
+                posts: posts.body.data.children
+            })
         })
     }
 
     render() {
-        return (<div className="StreamView" />)
+
+        let postViews = []
+        this.state.posts.forEach(post => {
+            let postObj = new PostModel(post)
+            postViews.push(<StreamItemView key={postObj.get('id')} post={postObj} />)
+        })
+
+        return (
+            <div key="what" className="StreamView">
+                {postViews}
+            </div>
+        )
     }
 
 }

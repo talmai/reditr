@@ -7,9 +7,12 @@
     "grunt-contrib-watch": "~0.6.1",
     "babelify": "^6.4.0",
     "grunt-browserify": "^4.0.1",
-    "grunt-contrib-less": "^1.0.1"
+    "grunt-contrib-less": "^1.0.1",
+    "superagent-jsonp": "git+https://github.com/dimitryvin/superagent-jsonp.git"
   },
   "dependencies": {
-    "superagent": "^1.4.0"
+    "superagent": "^1.4.0",
+    "superagent-jsonp": "0.0.6",
+    "jsonget": "^0.2.2"
   }
 }
