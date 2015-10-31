@@ -22,7 +22,7 @@ class StreamView extends React.Component {
     }
 
     load(subreddit = this.state.subreddit) {
-        this.redditApi.getPostsFromSubreddit(subreddit, {}, (err, posts) => {
+        this.redditApi.getPostsFromSubreddit(subreddit, { sort: "hot" }, (err, posts) => {
             this.setState({
                 subreddit: subreddit,
                 posts: posts.body.data.children

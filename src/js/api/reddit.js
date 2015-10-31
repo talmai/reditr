@@ -3,17 +3,14 @@ import Request from 'superagent'
 class reddit {
 
     constructor() {
-        this.baseUrl = "https://reddit.com/"
+        this.baseUrl = "https://www.reddit.com/"
     }
 
     getPostsFromSubreddit(subreddit, options, callback) {
-        options = options || {}
-
-        let jsonp = require('superagent-jsonp')
+        options = options || { sort: "hot" }
 
         Request
-            .get(this.baseUrl + 'r/' + subreddit + '.json')
-            .use(jsonp)
+            .get(this.baseUrl + "r/" + subreddit + "/" + options.sort + ".json")
             .end(callback);
 
     }
