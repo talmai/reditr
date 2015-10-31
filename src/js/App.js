@@ -1,6 +1,6 @@
 import React from 'react'
 import { render } from 'react-dom'
-import createHistory from 'history/lib/createHashHistory'
+import createHistory from 'history/lib/createBrowserHistory'
 
 import HeaderView from './views/HeaderView.js'
 import StreamView from './views/StreamView.js'
