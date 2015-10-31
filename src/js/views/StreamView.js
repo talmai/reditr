@@ -83,8 +83,8 @@ class StreamView extends React.Component {
 
     scrollListener() {
         let node = ReactDOM.findDOMNode(this)
-        console.log(node.scrollHeight, node.scrollTop)
 
+        // detect scrolling to the bottom
         if (node.scrollHeight - (node.scrollTop + node.offsetHeight) < 100) {
             this.load()
         }

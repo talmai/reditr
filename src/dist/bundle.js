@@ -25630,8 +25630,6 @@ var StreamView = (function (_React$Component) {
 
     StreamView.prototype.scrollListener = function scrollListener() {
         var node = _reactDom2['default'].findDOMNode(this);
-        console.log(node.scrollHeight, node.scrollTop);
-
         if (node.scrollHeight - (node.scrollTop + node.offsetHeight) < 100) {
             this.load();
         }
