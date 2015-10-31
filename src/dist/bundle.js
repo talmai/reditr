@@ -6298,6 +6298,11 @@ var App = (function (_React$Component) {
             'div',
             null,
             _react2['default'].createElement(_viewsHeaderViewJs2['default'], null),
+            _react2['default'].createElement(
+                _reactRouter.Link,
+                { to: '/r/reditr' },
+                'Reditr'
+            ),
             this.props.children
         );
     };
@@ -6315,7 +6320,8 @@ _reactDom.render(_react2['default'].createElement(
     _react2['default'].createElement(
         _reactRouter.Route,
         { path: '/', component: App },
-        _react2['default'].createElement(_reactRouter.IndexRoute, { component: _viewsStreamViewJs2['default'] })
+        _react2['default'].createElement(_reactRouter.IndexRoute, { component: _viewsStreamViewJs2['default'] }),
+        _react2['default'].createElement(_reactRouter.Route, { path: '/r/:subreddit', component: _viewsStreamViewJs2['default'] })
     )
 ), document.getElementById('App'));
 /*
@@ -6673,6 +6679,8 @@ var _modelsPostModelJs = require('../models/PostModel.js');
 
 var _modelsPostModelJs2 = _interopRequireDefault(_modelsPostModelJs);
 
+var _reactRouter = require('react-router');
+
 var StreamView = (function (_React$Component) {
     _inherits(StreamView, _React$Component);
 
@@ -6681,24 +6689,31 @@ var StreamView = (function (_React$Component) {
 
         _React$Component.call(this, props);
 
+        var subreddit = this.props.params.subreddit || "gaming";
         this.state = {
-            subreddit: "gaming",
+            subreddit: subreddit,
             posts: []
         };
 
         this.redditApi = new _apiRedditJs2['default']();
-
         this.load();
     }
 
     StreamView.prototype.load = function load() {
         var _this = this;
 
-        this.redditApi.getPostsFromSubreddit(this.state.subreddit, {}, function (err, posts) {
+        var subreddit = arguments.length <= 0 || arguments[0] === undefined ? this.state.subreddit : arguments[0];
+
+        this.redditApi.getPostsFromSubreddit(subreddit, {}, function (err, posts) {
             _this.setState({
+                subreddit: subreddit,
                 posts: posts.body.data.children
             });
         });
+    };
+
+    StreamView.prototype.componentWillReceiveProps = function componentWillReceiveProps(props) {
+        this.load(props.params.subreddit); // loads new prop info
     };
 
     StreamView.prototype.render = function render() {
@@ -6711,7 +6726,7 @@ var StreamView = (function (_React$Component) {
 
         return _react2['default'].createElement(
             'div',
-            { key: 'what', className: 'StreamView' },
+            { className: 'StreamView' },
             postViews
         );
     };
@@ -6722,7 +6737,7 @@ var StreamView = (function (_React$Component) {
 exports['default'] = StreamView;
 module.exports = exports['default'];
 
-},{"../api/reddit.js":71,"../models/PostModel.js":72,"./StreamItemView.js":75,"react":232,"react-dom":77}],77:[function(require,module,exports){
+},{"../api/reddit.js":71,"../models/PostModel.js":72,"./StreamItemView.js":75,"react":232,"react-dom":77,"react-router":38}],77:[function(require,module,exports){
 'use strict';
 
 module.exports = require('react/lib/ReactDOM');

@@ -44,6 +44,7 @@ render((
   <Router history={history}>
     <Route path="/" component={App}>
         <IndexRoute component={StreamView} />
+        <Route path="/r/:subreddit" component={StreamView} />
     </Route>
   </Router>
 ), document.getElementById('App'))
