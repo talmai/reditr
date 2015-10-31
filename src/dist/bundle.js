@@ -25405,15 +25405,7 @@ var HeaderView = (function (_React$Component) {
             'div',
             { id: 'HeaderView' },
             _react2['default'].createElement('img', { className: 'logo', src: 'images/logo.png' }),
-            _react2['default'].createElement(
-                'ul',
-                { className: 'mini-nav' },
-                _react2['default'].createElement(
-                    'a',
-                    { onClick: this.onClickLogout.bind(this) },
-                    'Logout'
-                )
-            )
+            _react2['default'].createElement('ul', { className: 'mini-nav' })
         );
     };
 
@@ -25635,7 +25627,7 @@ var StreamView = (function (_React$Component) {
 
         return _react2['default'].createElement(
             'div',
-            { className: 'StreamView' },
+            { className: 'stream-view' },
             postViews
         );
     };
