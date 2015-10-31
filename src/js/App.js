@@ -1,12 +1,12 @@
-import React from 'react'
-import { render } from 'react-dom'
-import createHistory from 'history/lib/createBrowserHistory'
+import React from 'react';
+import { render } from 'react-dom';
+import createHistory from 'history/lib/createBrowserHistory';
 
-import HeaderView from './views/HeaderView.js'
-import StreamView from './views/StreamView.js'
+import HeaderView from './views/HeaderView.js';
+import StreamView from './views/StreamView.js';
 
 // First we import some components...
-import { Router, Route, IndexRoute, Link } from 'react-router'
+import { Router, Route, IndexRoute, Link } from 'react-router';
 
 // Opt-out of persistent state, not recommended.
 var history = createHistory({
@@ -18,7 +18,7 @@ var history = createHistory({
 class App extends React.Component {
 
     constructor(props) {
-        super(props)
+        super(props);
     }
 
     render() {
@@ -47,4 +47,4 @@ render((
         <Route path="/r/:subreddit" component={StreamView} />
     </Route>
   </Router>
-), document.getElementById('App'))
+), document.getElementById('App'));

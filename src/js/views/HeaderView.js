@@ -1,12 +1,12 @@
-import React from 'react'
-import { render } from 'react-dom'
-import { Link } from 'react-router'
+import React from 'react';
+import { render } from 'react-dom';
+import { Link } from 'react-router';
 
 class HeaderView extends React.Component {
 
     onClickLogout() {
-        Parse.User.logOut()
-        window.location.href = './index.html'
+        Parse.User.logOut();
+        window.location.href = './index.html';
     }
 
     render() {

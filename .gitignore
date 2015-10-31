@@ -2,3 +2,6 @@ node_modules
 .DS_Store
 Icon
 .sync
+.#HeaderView.less
+src/less/#
+src/less/#HeaderView.less#
