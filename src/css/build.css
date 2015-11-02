@@ -135,6 +135,9 @@ body {
   max-width: 800px;
 }
 .stream-item-comment .stream-item-comment-body .md blockquote {
+  border-left: 2px solid #aeaeae;
+  margin-left: 0;
+  padding-left: 40px;
   font-style: italic;
 }
 .stream-item-comment p {
