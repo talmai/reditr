@@ -11,7 +11,7 @@ class StreamView extends React.Component {
     constructor(props) {
         super(props);
 
-        // temporarily assume gaming to be the default sub
+        // temporarily assume all to be the default sub
         let subreddit = this.props.params.subreddit || "all";
         this.state = {
             subreddit: subreddit,
@@ -106,10 +106,10 @@ class StreamView extends React.Component {
             postViews.push(<StreamItemView key={postObj.get('id')} post={postObj} />);
         });
 
-        var loading = this.state.isLoading ? <StreamSpinnerView/> : <div></div>;
+        var loading = this.state.isLoading ? <StreamSpinnerView/> : false;
 
         return (
-                <div className="stream-view">
+            <div className="stream-view">
                 {postViews}
                 {loading}
             </div>

@@ -45681,14 +45681,14 @@ var reddit = (function () {
     function reddit() {
         _classCallCheck(this, reddit);
 
-        this.baseUrl = "https://www.reddit.com/";
+        this.baseUrl = "https://www.reddit.com";
         this.extension = ".json";
     }
 
     reddit.prototype.getPostsFromSubreddit = function getPostsFromSubreddit(subreddit, options, callback) {
         if (options === undefined) options = { sort: "hot" };
 
-        _superagent2["default"].get(this.baseUrl + "r/" + subreddit + "/" + options.sort + this.extension).query(options).end(callback);
+        _superagent2["default"].get(this.baseUrl + "/r/" + subreddit + "/" + options.sort + this.extension).query(options).end(callback);
     };
 
     reddit.prototype.getCommentsFromPermalink = function getCommentsFromPermalink(permalink, options, callback) {
@@ -46091,8 +46091,8 @@ var StreamItemView = (function (_React$Component) {
                     post.get("score")
                 ),
                 _react2['default'].createElement(
-                    'span',
-                    { className: 'stream-item-title' },
+                    'a',
+                    { href: _apiRedditJs2['default'].baseUrl + post.get("permalink"), target: '_blank', className: 'stream-item-title' },
                     post.get("title")
                 ),
                 _react2['default'].createElement(
@@ -46203,7 +46203,7 @@ var StreamView = (function (_React$Component) {
 
         _React$Component.call(this, props);
 
-        // temporarily assume gaming to be the default sub
+        // temporarily assume all to be the default sub
         var subreddit = this.props.params.subreddit || "all";
         this.state = {
             subreddit: subreddit,
@@ -46300,7 +46300,7 @@ var StreamView = (function (_React$Component) {
             postViews.push(_react2['default'].createElement(_StreamItemViewJs2['default'], { key: postObj.get('id'), post: postObj }));
         });
 
-        var loading = this.state.isLoading ? _react2['default'].createElement(_StreamSpinnerViewJs2['default'], null) : _react2['default'].createElement('div', null);
+        var loading = this.state.isLoading ? _react2['default'].createElement(_StreamSpinnerViewJs2['default'], null) : false;
 
         return _react2['default'].createElement(
             'div',

@@ -154,6 +154,12 @@ body {
 .stream-item-view .stream-item-content .stream-item-title {
   font-weight: bold;
   margin-left: 10px;
+  color: #333;
+  text-decoration: none;
+}
+.stream-item-view .stream-item-content .stream-item-title:hover {
+  color: black;
+  text-decoration: underline;
 }
 .stream-item-view .stream-item-content .stream-item-media {
   display: block;

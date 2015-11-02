@@ -3,7 +3,7 @@ import Request from 'superagent';
 class reddit {
 
     constructor() {
-        this.baseUrl = "https://www.reddit.com/";
+        this.baseUrl = "https://www.reddit.com";
         this.extension = ".json";
     }
 
@@ -11,7 +11,7 @@ class reddit {
 
         Request
             .get(this.baseUrl
-                + "r/"
+                + "/r/"
                 + subreddit
                 + "/"
                 + options.sort
