@@ -46034,8 +46034,6 @@ var StreamItemView = (function (_React$Component) {
 
         _React$Component.call(this, props);
 
-        this.redditApi = new _apiRedditJs2['default']();
-
         // set default
         this.state = {
             voteCount: this.props.post.get("score"),
@@ -46050,7 +46048,7 @@ var StreamItemView = (function (_React$Component) {
     StreamItemView.prototype.loadComments = function loadComments() {
         var _this = this;
 
-        this.redditApi.getCommentsFromPermalink(this.props.post.get("permalink"), null, function (err, data) {
+        _apiRedditJs2['default'].getCommentsFromPermalink(this.props.post.get("permalink"), null, function (err, data) {
 
             var comments = data.body[1].data.children;
 
