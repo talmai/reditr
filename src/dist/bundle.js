@@ -2910,6 +2910,7 @@ Readable.prototype.pipe = function(dest, pipeOpts) {
   var ondrain = pipeOnDrain(src);
   dest.on('drain', ondrain);
 
+  var cleanedUp = false;
   function cleanup() {
     debug('cleanup');
     // cleanup event handlers once the pipe is broken
@@ -2921,6 +2922,8 @@ Readable.prototype.pipe = function(dest, pipeOpts) {
     src.removeListener('end', onend);
     src.removeListener('end', cleanup);
     src.removeListener('data', ondata);
+
+    cleanedUp = true;
 
     // if the reader is waiting for a drain event from this
     // specific writer, then it would cause it to never start
@@ -2937,9 +2940,16 @@ Readable.prototype.pipe = function(dest, pipeOpts) {
     debug('ondata');
     var ret = dest.write(chunk);
     if (false === ret) {
-      debug('false write response, pause',
-            src._readableState.awaitDrain);
-      src._readableState.awaitDrain++;
+      // If the user unpiped during `dest.write()`, it is possible
+      // to get stuck in a permanently paused state if that write
+      // also returned false.
+      if (state.pipesCount === 1 &&
+          state.pipes[0] === dest &&
+          src.listenerCount('data') === 1 &&
+          !cleanedUp) {
+        debug('false write response, pause', src._readableState.awaitDrain);
+        src._readableState.awaitDrain++;
+      }
       src.pause();
     }
   }
@@ -3239,6 +3249,8 @@ function fromList(n, state) {
     // read it all, truncate the array.
     if (stringMode)
       ret = list.join('');
+    else if (list.length === 1)
+      ret = list[0];
     else
       ret = Buffer.concat(list, length);
     list.length = 0;
@@ -3522,7 +3534,7 @@ function done(stream, er) {
 
 },{"./_stream_duplex":12,"core-util-is":17,"inherits":7}],16:[function(require,module,exports){
 // A bit simpler than readable streams.
-// Implement an async ._write(chunk, cb), and it'll handle all
+// Implement an async ._write(chunk, encoding, cb), and it'll handle all
 // the drain event emission and buffering.
 
 'use strict';
@@ -28473,6 +28485,7 @@ var HTMLDOMPropertyConfig = {
     icon: null,
     id: MUST_USE_PROPERTY,
     inputMode: MUST_USE_ATTRIBUTE,
+    integrity: null,
     is: MUST_USE_ATTRIBUTE,
     keyParams: MUST_USE_ATTRIBUTE,
     keyType: MUST_USE_ATTRIBUTE,
@@ -31548,6 +31561,7 @@ var registrationNameModules = ReactBrowserEventEmitter.registrationNameModules;
 // For quickly matching children type, to test if can be treated as content.
 var CONTENT_TYPES = { 'string': true, 'number': true };
 
+var CHILDREN = keyOf({ children: null });
 var STYLE = keyOf({ style: null });
 var HTML = keyOf({ __html: null });
 
@@ -32038,7 +32052,9 @@ ReactDOMComponent.Mixin = {
         }
         var markup = null;
         if (this._tag != null && isCustomComponent(this._tag, props)) {
-          markup = DOMPropertyOperations.createMarkupForCustomAttribute(propKey, propValue);
+          if (propKey !== CHILDREN) {
+            markup = DOMPropertyOperations.createMarkupForCustomAttribute(propKey, propValue);
+          }
         } else {
           markup = DOMPropertyOperations.createMarkupForProperty(propKey, propValue);
         }
@@ -32297,6 +32313,9 @@ ReactDOMComponent.Mixin = {
       } else if (isCustomComponent(this._tag, nextProps)) {
         if (!node) {
           node = ReactMount.getNode(this._rootNodeID);
+        }
+        if (propKey === CHILDREN) {
+          nextProp = null;
         }
         DOMPropertyOperations.setValueForAttribute(node, propKey, nextProp);
       } else if (DOMProperty.properties[propKey] || DOMProperty.isCustomAttribute(propKey)) {
@@ -34980,11 +34999,12 @@ if (process.env.NODE_ENV !== 'production') {
     var fakeNode = document.createElement('react');
     ReactErrorUtils.invokeGuardedCallback = function (name, func, a, b) {
       var boundFunc = func.bind(null, a, b);
-      fakeNode.addEventListener(name, boundFunc, false);
+      var evtType = 'react-' + name;
+      fakeNode.addEventListener(evtType, boundFunc, false);
       var evt = document.createEvent('Event');
-      evt.initEvent(name, false, false);
+      evt.initEvent(evtType, false, false);
       fakeNode.dispatchEvent(evt);
-      fakeNode.removeEventListener(name, boundFunc, false);
+      fakeNode.removeEventListener(evtType, boundFunc, false);
     };
   }
 }
@@ -39152,7 +39172,7 @@ module.exports = ReactUpdates;
 
 'use strict';
 
-module.exports = '0.14.1';
+module.exports = '0.14.2';
 },{}],217:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -41185,7 +41205,7 @@ module.exports = adler32;
 var canDefineProperty = false;
 if (process.env.NODE_ENV !== 'production') {
   try {
-    Object.defineProperty({}, 'x', {});
+    Object.defineProperty({}, 'x', { get: function () {} });
     canDefineProperty = true;
   } catch (x) {
     // IE will fail on defineProperty
@@ -45953,18 +45973,28 @@ var StreamCommentView = (function (_React$Component) {
 
     StreamCommentView.prototype.render = function render() {
         // WARNING, MOVE THIS TO A UTILITIES FILE
-        window.decode_html_entities_node = document.createElement('DIV');
-        function decode_html_entities(content) {
-            window.decode_html_entities_node.innerHTML = content;
-            return window.decode_html_entities_node.textContent;
-        }
+        var decodeEntities = (function () {
+            // this prevents any overhead from creating the object each time
+            var element = document.createElement('div');
+
+            function decodeHTMLEntities(str) {
+                if (str && typeof str === 'string') {
+                    // strip script/html tags
+                    str = str.replace(/<script[^>]*>([\S\s]*?)<\/script>/gmi, '');
+                    str = str.replace(/<\/?\w(?:[^"'>]|"[^"]*"|'[^']*')*>/gmi, '');
+                    element.innerHTML = str;
+                    str = element.textContent;
+                    element.textContent = '';
+                }
+
+                return str;
+            }
+
+            return decodeHTMLEntities;
+        })();
 
         var comment = this.props.comment;
-        var body_html = decode_html_entities(comment.get("body_html"));
-
-        // convert reddits html entities into something react can use
-        var htmlToReactParser = new _htmlToReact2['default'].Parser(_react2['default']);
-        var reactComponent = htmlToReactParser.parse(body_html);
+        var body_html = decodeEntities(comment.get("body_html"));
 
         return _react2['default'].createElement(
             'div',
@@ -45974,11 +46004,7 @@ var StreamCommentView = (function (_React$Component) {
                 { className: 'stream-item-comment-score' },
                 comment.get("score")
             ),
-            _react2['default'].createElement(
-                'div',
-                { className: 'stream-item-comment-body' },
-                reactComponent
-            ),
+            _react2['default'].createElement('div', { className: 'stream-item-comment-body', dangerouslySetInnerHTML: { __html: body_html } }),
             _react2['default'].createElement(
                 'span',
                 { className: 'stream-item-comment-author' },
@@ -45992,6 +46018,10 @@ var StreamCommentView = (function (_React$Component) {
 
 exports['default'] = StreamCommentView;
 module.exports = exports['default'];
+
+/*
+WARNING: Last resort using dangerouslySetInnerHTML, decoding html entities with every solution that could be found online did not help
+*/
 
 },{"html-to-react":45,"react":288}],301:[function(require,module,exports){
 'use strict';
