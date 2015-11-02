@@ -1,12 +1,7 @@
-class PostModel {
+import BaseModel from './BaseModel.js'
 
-    constructor(postJson) {
-        this.json = postJson
-    }
-
-    get(prop) {
-        return this.json.data[prop]
-    }
+class PostModel extends BaseModel {
+    // post specific methods here
 
 }
 

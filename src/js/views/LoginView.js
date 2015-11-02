@@ -1,12 +1,11 @@
 import React from 'react'
-import { render } from 'react-dom'
 import { Link } from 'react-router'
 
 class LoginView extends React.Component {
 
     constructor(props) {
         super(props)
-        
+
         this.state = {
             username: "",
             password: ""
@@ -35,10 +34,6 @@ class LoginView extends React.Component {
         this.setState({
             password: event.target.value
         })
-    }
-
-    componentDidMount() {
-        this.refs.usernameField.getDOMNode().focus()
     }
 
     render() {

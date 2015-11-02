@@ -47,7 +47,6 @@ class StreamView extends React.Component {
         // retreive the posts
         this.redditApi.getPostsFromSubreddit(subreddit, { sort: this.state.sort, after: this.state.after }, (err, posts) => {
             // update state to re render
-
             let newPosts = posts.body.data.children
             let oldPosts = this.state.posts
             oldPosts.push(...newPosts)
@@ -57,7 +56,7 @@ class StreamView extends React.Component {
             this.setState({
                 subreddit: subreddit,
                 posts: filteredPosts,
-                after: lastPost.kind + "_" + lastPost.data.id, // get last child
+                after: posts.body.data.after,
                 isLoading: false
             })
         })
