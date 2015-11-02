@@ -45578,7 +45578,7 @@ _reactDom.render(_react2['default'].createElement(
    the router will figure out the children for us
 */
 
-},{"./views/HeaderView.js":298,"./views/StreamView.js":302,"history/lib/createBrowserHistory":33,"react":288,"react-dom":86,"react-router":106}],293:[function(require,module,exports){
+},{"./views/HeaderView.js":298,"./views/StreamView.js":303,"history/lib/createBrowserHistory":33,"react":288,"react-dom":86,"react-router":106}],293:[function(require,module,exports){
 /**
     MediaParser class
     All parsing methods must have format:
@@ -45700,7 +45700,7 @@ var reddit = (function () {
     return reddit;
 })();
 
-exports["default"] = reddit;
+exports["default"] = new reddit();
 module.exports = exports["default"];
 
 },{"superagent":289}],295:[function(require,module,exports){
@@ -46135,6 +46135,50 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactDom = require('react-dom');
 
+var StreamSpinnerView = (function (_React$Component) {
+    _inherits(StreamSpinnerView, _React$Component);
+
+    function StreamSpinnerView(props) {
+        _classCallCheck(this, StreamSpinnerView);
+
+        _React$Component.call(this, props);
+    }
+
+    StreamSpinnerView.prototype.render = function render() {
+        return _react2['default'].createElement(
+            'div',
+            { className: 'stream-spinner-view' },
+            _react2['default'].createElement(
+                'div',
+                { className: 'pulse-loader' },
+                'loading…'
+            )
+        );
+    };
+
+    return StreamSpinnerView;
+})(_react2['default'].Component);
+
+exports['default'] = StreamSpinnerView;
+module.exports = exports['default'];
+
+},{"react":288,"react-dom":86}],303:[function(require,module,exports){
+'use strict';
+
+exports.__esModule = true;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactDom = require('react-dom');
+
 var _reactDom2 = _interopRequireDefault(_reactDom);
 
 var _apiRedditJs = require('../api/reddit.js');
@@ -46144,6 +46188,10 @@ var _apiRedditJs2 = _interopRequireDefault(_apiRedditJs);
 var _StreamItemViewJs = require('./StreamItemView.js');
 
 var _StreamItemViewJs2 = _interopRequireDefault(_StreamItemViewJs);
+
+var _StreamSpinnerViewJs = require('./StreamSpinnerView.js');
+
+var _StreamSpinnerViewJs2 = _interopRequireDefault(_StreamSpinnerViewJs);
 
 var _modelsPostModelJs = require('../models/PostModel.js');
 
@@ -46158,7 +46206,7 @@ var StreamView = (function (_React$Component) {
         _React$Component.call(this, props);
 
         // temporarily assume gaming to be the default sub
-        var subreddit = this.props.params.subreddit || "gaming";
+        var subreddit = this.props.params.subreddit || "all";
         this.state = {
             subreddit: subreddit,
             posts: [],
@@ -46166,9 +46214,6 @@ var StreamView = (function (_React$Component) {
             after: null,
             isLoading: false
         };
-
-        // get the api
-        this.redditApi = new _apiRedditJs2['default']();
     }
 
     StreamView.prototype.removeDuplicatePosts = function removeDuplicatePosts(posts) {
@@ -46195,7 +46240,7 @@ var StreamView = (function (_React$Component) {
             isLoading: true
         });
         // retreive the posts
-        this.redditApi.getPostsFromSubreddit(subreddit, { sort: this.state.sort, after: this.state.after }, function (err, posts) {
+        _apiRedditJs2['default'].getPostsFromSubreddit(subreddit, { sort: this.state.sort, after: this.state.after }, function (err, posts) {
             // update state to re render
             var newPosts = posts.body.data.children;
             var oldPosts = _this.state.posts;
@@ -46226,9 +46271,7 @@ var StreamView = (function (_React$Component) {
         this.load();
     };
 
-    StreamView.prototype.componentDidUpdate = function componentDidUpdate() {
-        this.attachScrollListener();
-    };
+    StreamView.prototype.componentDidUpdate = function componentDidUpdate(self, props) {};
 
     StreamView.prototype.scrollListener = function scrollListener() {
         var node = _reactDom2['default'].findDOMNode(this);
@@ -46253,17 +46296,19 @@ var StreamView = (function (_React$Component) {
     };
 
     StreamView.prototype.render = function render() {
-
         var postViews = [];
         this.state.posts.forEach(function (post) {
             var postObj = new _modelsPostModelJs2['default'](post);
             postViews.push(_react2['default'].createElement(_StreamItemViewJs2['default'], { key: postObj.get('id'), post: postObj }));
         });
 
+        var loading = this.state.isLoading ? _react2['default'].createElement(_StreamSpinnerViewJs2['default'], null) : _react2['default'].createElement('div', null);
+
         return _react2['default'].createElement(
             'div',
             { className: 'stream-view' },
-            postViews
+            postViews,
+            loading
         );
     };
 
@@ -46273,4 +46318,4 @@ var StreamView = (function (_React$Component) {
 exports['default'] = StreamView;
 module.exports = exports['default'];
 
-},{"../api/reddit.js":294,"../models/PostModel.js":297,"./StreamItemView.js":301,"react":288,"react-dom":86}]},{},[292]);
+},{"../api/reddit.js":294,"../models/PostModel.js":297,"./StreamItemView.js":301,"./StreamSpinnerView.js":302,"react":288,"react-dom":86}]},{},[292]);

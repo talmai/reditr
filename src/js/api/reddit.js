@@ -1,4 +1,4 @@
-import Request from 'superagent'
+import Request from 'superagent';
 
 class reddit {
 
@@ -30,4 +30,4 @@ class reddit {
 
 }
 
-export default reddit
+export default new reddit;
