@@ -14,7 +14,7 @@ class StreamCommentView extends React.Component {
     }
 
     render() {
-        // WARNING, MOVE THIS TO A UTITLITIES FILE
+        // WARNING, MOVE THIS TO A UTILITIES FILE
         window.decode_html_entities_node = document.createElement('DIV');
         function decode_html_entities(content) {
         	window.decode_html_entities_node.innerHTML = content;

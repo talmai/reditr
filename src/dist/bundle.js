@@ -45601,20 +45601,20 @@ var MediaParser = (function () {
     MediaParser.prototype.parse = function parse(url, callback) {
 
         this.regex = {
+            RAW_IMAGE: /\.(png|gif$|jpg|jpeg)/gi,
             IMGUR_ALBUM: /(http|https):\/\/*(.?)imgur.com\/(a|gallery)\/([a-zA-Z0-9]{5,})/gi,
             IMGUR_IMAGE: /(http|https):\/\/*(.?)imgur.com\/([a-zA-Z0-9]{5,})$/gi,
-            IMGUR_GIFV: /.*?i\.imgur\.com\/([a-z0-9]{5,})\.gifv$/gi,
-            IMGUR_RAW_IMAGE: /(http|https):\/\/*(.?)i\.imgur\.com\/[a-z0-9]{5,}\.(png|gif$|jpg|jpeg)/gi
+            IMGUR_GIFV: /.*?i\.imgur\.com\/([a-z0-9]{5,})\.gifv$/gi
         };
 
-        if (this.regex.IMGUR_ALBUM.test(url)) {
+        if (this.regex.RAW_IMAGE.test(url)) {
+            this.handleRawImage(url, callback);
+        } else if (this.regex.IMGUR_ALBUM.test(url)) {
             this.handleImgurAlbum(url, callback);
         } else if (this.regex.IMGUR_IMAGE.test(url)) {
             this.handleImgurImage(url, callback);
         } else if (this.regex.IMGUR_GIFV.test(url)) {
             this.handleImgurGifv(url, callback);
-        } else if (this.regex.IMGUR_RAW_IMAGE.test(url)) {
-            this.handleImgurRawImage(url, callback);
         }
     };
 
@@ -45642,7 +45642,7 @@ var MediaParser = (function () {
 
     /** returns consistent object for image */
 
-    MediaParser.prototype.handleImgurRawImage = function handleImgurRawImage(url, callback) {
+    MediaParser.prototype.handleRawImage = function handleRawImage(url, callback) {
         callback({
             url: url,
             parsedUrl: url, // probably a smarter way to do this
@@ -45952,7 +45952,7 @@ var StreamCommentView = (function (_React$Component) {
     }
 
     StreamCommentView.prototype.render = function render() {
-        // WARNING, MOVE THIS TO A UTITLITIES FILE
+        // WARNING, MOVE THIS TO A UTILITIES FILE
         window.decode_html_entities_node = document.createElement('DIV');
         function decode_html_entities(content) {
             window.decode_html_entities_node.innerHTML = content;
