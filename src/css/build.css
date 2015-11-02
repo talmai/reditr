@@ -132,6 +132,10 @@ body {
 .stream-item-comment .stream-item-comment-body {
   padding-top: 6px;
   display: block;
+  max-width: 800px;
+}
+.stream-item-comment .stream-item-comment-body .md blockquote {
+  font-style: italic;
 }
 .stream-item-comment p {
   margin: 0;

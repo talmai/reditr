@@ -45996,6 +45996,9 @@ var StreamCommentView = (function (_React$Component) {
         var comment = this.props.comment;
         var body_html = decodeEntities(comment.get("body_html"));
 
+        // forces all links to open in new tab (faster than regex in newer versions of V8) http://jsperf.com/replace-all-vs-split-join
+        var parsedHtml = body_html.split("<a ").join("<a target=\"_blank\" ");
+
         return _react2['default'].createElement(
             'div',
             { key: this.props.key, className: 'stream-item-comment' },
@@ -46004,7 +46007,7 @@ var StreamCommentView = (function (_React$Component) {
                 { className: 'stream-item-comment-score' },
                 comment.get("score")
             ),
-            _react2['default'].createElement('div', { className: 'stream-item-comment-body', dangerouslySetInnerHTML: { __html: body_html } }),
+            _react2['default'].createElement('div', { className: 'stream-item-comment-body', dangerouslySetInnerHTML: { __html: parsedHtml } }),
             _react2['default'].createElement(
                 'span',
                 { className: 'stream-item-comment-author' },
