@@ -46157,7 +46157,7 @@ var PostView = (function (_React$Component) {
                 ),
                 _react2['default'].createElement(
                     'a',
-                    { href: _apiRedditJs2['default'].baseUrl + post.get("permalink"), target: '_blank', className: 'post-title' },
+                    { href: post.get("url"), target: '_blank', className: 'post-title' },
                     post.get("title")
                 ),
                 _react2['default'].createElement(
