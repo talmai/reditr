@@ -138,7 +138,7 @@ body {
   display: block;
   max-height: 400px;
   max-width: 90%;
-  margin: 10px auto 0 auto;
+  margin: 10px auto 20px auto;
 }
 .post-view .post-separator {
   height: 32px;
@@ -235,19 +235,25 @@ body {
 .stream-item-view .stream-item-content {
   padding: 10px;
 }
-.stream-item-view .stream-item-content .stream-item-author {
+.stream-item-view .stream-item-content .stream-item-vote-count {
   float: right;
+}
+.stream-item-view .stream-item-content .stream-item-author {
   color: #999;
 }
 .stream-item-view .stream-item-content .stream-item-title {
   font-weight: bold;
-  margin-left: 10px;
   color: #333;
   text-decoration: none;
 }
 .stream-item-view .stream-item-content .stream-item-title:hover {
   color: black;
   text-decoration: underline;
+}
+.stream-item-view .stream-item-content .stream-item-domain {
+  font-size: 12px;
+  color: #535353;
+  margin-left: 10px;
 }
 .stream-item-view .stream-item-content .media {
   display: block;

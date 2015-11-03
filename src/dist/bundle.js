@@ -46365,21 +46365,28 @@ var StreamItemView = (function (_React$Component) {
                 'div',
                 { className: 'stream-item-content' },
                 _react2['default'].createElement(
-                    'span',
-                    { className: 'stream-item-vote-count' },
-                    post.get("score")
-                ),
-                _react2['default'].createElement(
                     'a',
-                    { href: _apiRedditJs2['default'].baseUrl + post.get("permalink"), target: '_blank', className: 'stream-item-title' },
+                    { href: post.get("link"), target: '_blank', className: 'stream-item-title' },
                     post.get("title")
                 ),
                 _react2['default'].createElement(
                     'span',
+                    { className: 'stream-item-domain' },
+                    '(',
+                    post.get("domain"),
+                    ')'
+                ),
+                _react2['default'].createElement(
+                    'span',
+                    { className: 'stream-item-vote-count' },
+                    post.get("score")
+                ),
+                _react2['default'].createElement(_MediaParserViewJs2['default'], { url: post.get("url") }),
+                _react2['default'].createElement(
+                    'span',
                     { className: 'stream-item-author' },
                     post.get("author")
-                ),
-                _react2['default'].createElement(_MediaParserViewJs2['default'], { url: post.get("url") })
+                )
             ),
             _react2['default'].createElement(
                 'div',

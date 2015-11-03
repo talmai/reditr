@@ -57,10 +57,11 @@ class StreamItemView extends React.Component {
         return (
             <div key={this.props.key} className="stream-item-view">
                 <div className="stream-item-content">
+                    <a href={post.get("link")} target="_blank" className="stream-item-title">{post.get("title")}</a>
+                    <span className="stream-item-domain">({post.get("domain")})</span>
                     <span className="stream-item-vote-count">{post.get("score")}</span>
-                    <a href={reddit.baseUrl + post.get("permalink")} target="_blank" className="stream-item-title">{post.get("title")}</a>
-                    <span className="stream-item-author">{post.get("author")}</span>
                     <MediaParserView url={post.get("url")} />
+                    <span className="stream-item-author">{post.get("author")}</span>
                 </div>
 
                 <div className="stream-item-comments">
