@@ -5,6 +5,7 @@ import MediaParserView from './MediaParserView.js'
 import reddit from '../api/reddit.js'
 import CommentModel from '../models/CommentModel.js'
 import StreamCommentView from './StreamCommentView.js'
+import { Link } from 'react-router'
 
 class StreamItemView extends React.Component {
 
@@ -64,6 +65,7 @@ class StreamItemView extends React.Component {
 
                 <div className="stream-item-comments">
                     {commentsView}
+                    <Link to={post.get("permalink")} className="view-more-comments">View More Comments</Link>
                 </div>
             </div>
         )

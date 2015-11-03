@@ -4,6 +4,7 @@ import createHistory from 'history/lib/createBrowserHistory';
 
 import HeaderView from './views/HeaderView.js';
 import StreamView from './views/StreamView.js';
+import PostView from './views/PostView.js';
 
 // First we import some components...
 import { Router, Route, IndexRoute, Link } from 'react-router';
@@ -45,6 +46,8 @@ render((
     <Route path="/" component={App}>
         <IndexRoute component={StreamView} />
         <Route path="/r/:subreddit" component={StreamView} />
+        <Route path="/r/:subreddit/comments/:id/" component={PostView} />
+        <Route path="/r/:subreddit/comments/:id/:title/" component={PostView} />
     </Route>
   </Router>
 ), document.getElementById('App'));

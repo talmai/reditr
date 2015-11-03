@@ -123,6 +123,9 @@ body {
   border-bottom: 1px solid #dedede;
   position: relative;
 }
+.stream-item-comment:last-child {
+  border-bottom: none;
+}
 .stream-item-comment .stream-item-comment-author {
   position: absolute;
   top: 10px;
@@ -179,7 +182,26 @@ body {
   background-color: #eee;
   border-top: 1px solid #dedede;
   width: 100%;
-  min-height: 120px;
+  height: 100%;
+}
+.stream-item-view .stream-item-comments .view-more-comments {
+  display: block;
+  width: 200px;
+  font-size: 12px;
+  color: white;
+  border: 1px solid #ACB2B8;
+  background-color: #C9CDD1;
+  text-decoration: none;
+  border-radius: 3px;
+  padding: 10px;
+  text-align: center;
+  margin: 10px auto;
+}
+.stream-item-view .stream-item-comments .view-more-comments:hover {
+  background-color: #d9dadb;
+}
+.stream-item-view .stream-item-comments .view-more-comments:active {
+  background-color: #C9CDD1;
 }
 
 

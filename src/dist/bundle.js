@@ -45544,6 +45544,10 @@ var _viewsStreamViewJs = require('./views/StreamView.js');
 
 var _viewsStreamViewJs2 = _interopRequireDefault(_viewsStreamViewJs);
 
+var _viewsPostViewJs = require('./views/PostView.js');
+
+var _viewsPostViewJs2 = _interopRequireDefault(_viewsPostViewJs);
+
 // First we import some components...
 
 var _reactRouter = require('react-router');
@@ -45590,7 +45594,9 @@ _reactDom.render(_react2['default'].createElement(
         _reactRouter.Route,
         { path: '/', component: App },
         _react2['default'].createElement(_reactRouter.IndexRoute, { component: _viewsStreamViewJs2['default'] }),
-        _react2['default'].createElement(_reactRouter.Route, { path: '/r/:subreddit', component: _viewsStreamViewJs2['default'] })
+        _react2['default'].createElement(_reactRouter.Route, { path: '/r/:subreddit', component: _viewsStreamViewJs2['default'] }),
+        _react2['default'].createElement(_reactRouter.Route, { path: '/r/:subreddit/comments/:id/', component: _viewsPostViewJs2['default'] }),
+        _react2['default'].createElement(_reactRouter.Route, { path: '/r/:subreddit/comments/:id/:title/', component: _viewsPostViewJs2['default'] })
     )
 ), document.getElementById('App'));
 /*
@@ -45598,7 +45604,7 @@ _reactDom.render(_react2['default'].createElement(
    the router will figure out the children for us
 */
 
-},{"./views/HeaderView.js":298,"./views/StreamView.js":303,"history/lib/createBrowserHistory":33,"react":288,"react-dom":86,"react-router":106}],293:[function(require,module,exports){
+},{"./views/HeaderView.js":298,"./views/PostView.js":300,"./views/StreamView.js":304,"history/lib/createBrowserHistory":33,"react":288,"react-dom":86,"react-router":106}],293:[function(require,module,exports){
 /**
     MediaParser class
     All parsing methods must have format:
@@ -45953,6 +45959,44 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var PostView = (function (_React$Component) {
+    _inherits(PostView, _React$Component);
+
+    function PostView(props) {
+        _classCallCheck(this, PostView);
+
+        _React$Component.call(this, props);
+    }
+
+    PostView.prototype.render = function render() {
+        return _react2['default'].createElement(
+            'div',
+            null,
+            'PostView'
+        );
+    };
+
+    return PostView;
+})(_react2['default'].Component);
+
+exports['default'] = PostView;
+module.exports = exports['default'];
+
+},{"react":288}],301:[function(require,module,exports){
+'use strict';
+
+exports.__esModule = true;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
 var _htmlToReact = require('html-to-react');
 
 var _htmlToReact2 = _interopRequireDefault(_htmlToReact);
@@ -46026,7 +46070,7 @@ module.exports = exports['default'];
 WARNING: Last resort using dangerouslySetInnerHTML, decoding html entities with every solution that could be found online did not help
 */
 
-},{"html-to-react":45,"react":288}],301:[function(require,module,exports){
+},{"html-to-react":45,"react":288}],302:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -46058,6 +46102,8 @@ var _modelsCommentModelJs2 = _interopRequireDefault(_modelsCommentModelJs);
 var _StreamCommentViewJs = require('./StreamCommentView.js');
 
 var _StreamCommentViewJs2 = _interopRequireDefault(_StreamCommentViewJs);
+
+var _reactRouter = require('react-router');
 
 var StreamItemView = (function (_React$Component) {
     _inherits(StreamItemView, _React$Component);
@@ -46138,7 +46184,12 @@ var StreamItemView = (function (_React$Component) {
             _react2['default'].createElement(
                 'div',
                 { className: 'stream-item-comments' },
-                commentsView
+                commentsView,
+                _react2['default'].createElement(
+                    _reactRouter.Link,
+                    { to: post.get("permalink"), className: 'view-more-comments' },
+                    'View More Comments'
+                )
             )
         );
     };
@@ -46149,7 +46200,7 @@ var StreamItemView = (function (_React$Component) {
 exports['default'] = StreamItemView;
 module.exports = exports['default'];
 
-},{"../api/reddit.js":294,"../models/CommentModel.js":296,"./MediaParserView.js":299,"./StreamCommentView.js":300,"react":288,"react-dom":86}],302:[function(require,module,exports){
+},{"../api/reddit.js":294,"../models/CommentModel.js":296,"./MediaParserView.js":299,"./StreamCommentView.js":301,"react":288,"react-dom":86,"react-router":106}],303:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -46193,7 +46244,7 @@ var StreamSpinnerView = (function (_React$Component) {
 exports['default'] = StreamSpinnerView;
 module.exports = exports['default'];
 
-},{"react":288,"react-dom":86}],303:[function(require,module,exports){
+},{"react":288,"react-dom":86}],304:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -46349,4 +46400,4 @@ var StreamView = (function (_React$Component) {
 exports['default'] = StreamView;
 module.exports = exports['default'];
 
-},{"../api/reddit.js":294,"../models/PostModel.js":297,"./StreamItemView.js":301,"./StreamSpinnerView.js":302,"react":288,"react-dom":86}]},{},[292]);
+},{"../api/reddit.js":294,"../models/PostModel.js":297,"./StreamItemView.js":302,"./StreamSpinnerView.js":303,"react":288,"react-dom":86}]},{},[292]);
