@@ -3,6 +3,8 @@ import React from 'react';
 import PostModel from '../models/PostModel.js';
 import MediaParserView from './MediaParserView.js';
 import reddit from '../api/reddit.js';
+import PostCommentView from './PostCommentView.js';
+import CommentModel from '../models/CommentModel.js';
 
 class PostView extends React.Component {
 
@@ -35,8 +37,17 @@ class PostView extends React.Component {
             return <div>Loading</div>;
 
         let post = this.state.post;
-        console.log(post);
         let comments = this.state.comments;
+
+        let commentViews = [];
+        comments.forEach(comment => {
+
+                console.log(comment.kind)
+            if (comment.kind != "more") {
+                let commentObj = new CommentModel(comment);
+                commentViews.push(<PostCommentView key={commentObj.get("id")} comment={commentObj} />);
+            }
+        });
 
         return (
             <div className="post-view">
@@ -47,6 +58,9 @@ class PostView extends React.Component {
                     <MediaParserView url={post.get("url")} />
                 </div>
                 <div className="post-separator"></div>
+                <div className="post-comments">
+                    {commentViews}
+                </div>
             </div>
         );
     }

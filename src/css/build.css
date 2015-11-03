@@ -146,6 +146,41 @@ body {
   border-top: 1px solid #efefef;
   border-bottom: 1px solid #efefef;
 }
+.post-view .post-comments .post-comment {
+  font-size: 12px;
+  padding: 10px;
+  border: 1px solid #dedede;
+  position: relative;
+}
+.post-view .post-comments .post-comment:even {
+  background-color: #efefef;
+}
+.post-view .post-comments .post-comment .post-comment-children {
+  margin-left: 25px;
+}
+.post-view .post-comments .post-comment .post-comment-children .post-comment {
+  margin-top: 10px;
+}
+.post-view .post-comments .post-comment .post-comment-author {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: #aeaeae;
+}
+.post-view .post-comments .post-comment .post-comment-body {
+  padding-top: 6px;
+  display: block;
+  max-width: 800px;
+}
+.post-view .post-comments .post-comment .post-comment-body p {
+  margin: 0;
+}
+.post-view .post-comments .post-comment .post-comment-body .md blockquote {
+  border-left: 2px solid #aeaeae;
+  margin-left: 0;
+  padding-left: 40px;
+  font-style: italic;
+}
 
 .stream-spinner-view {
   text-align: center;

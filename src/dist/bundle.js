@@ -45604,7 +45604,7 @@ _reactDom.render(_react2['default'].createElement(
    the router will figure out the children for us
 */
 
-},{"./views/HeaderView.js":298,"./views/PostView.js":300,"./views/StreamView.js":304,"history/lib/createBrowserHistory":33,"react":288,"react-dom":86,"react-router":106}],293:[function(require,module,exports){
+},{"./views/HeaderView.js":298,"./views/PostView.js":301,"./views/StreamView.js":305,"history/lib/createBrowserHistory":33,"react":288,"react-dom":86,"react-router":106}],293:[function(require,module,exports){
 /**
     MediaParser class
     All parsing methods must have format:
@@ -45959,6 +45959,120 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _modelsCommentModelJs = require('../models/CommentModel.js');
+
+var _modelsCommentModelJs2 = _interopRequireDefault(_modelsCommentModelJs);
+
+var PostCommentView = (function (_React$Component) {
+    _inherits(PostCommentView, _React$Component);
+
+    function PostCommentView(props) {
+        _classCallCheck(this, PostCommentView);
+
+        _React$Component.call(this, props);
+
+        this.state = {
+            comment: this.props.comment
+        };
+    }
+
+    PostCommentView.prototype.render = function render() {
+        var _this = this;
+
+        // WARNING, MOVE THIS TO A UTILITIES FILE
+        var decodeEntities = (function () {
+            // this prevents any overhead from creating the object each time
+            var element = document.createElement('div');
+
+            function decodeHTMLEntities(str) {
+                if (str && typeof str === 'string') {
+                    // strip script/html tags
+                    str = str.replace(/<script[^>]*>([\S\s]*?)<\/script>/gmi, '');
+                    str = str.replace(/<\/?\w(?:[^"'>]|"[^"]*"|'[^']*')*>/gmi, '');
+                    element.innerHTML = str;
+                    str = element.textContent;
+                    element.textContent = '';
+                }
+
+                return str;
+            }
+
+            return decodeHTMLEntities;
+        })();
+
+        var comment = this.props.comment;
+        var body_html = decodeEntities(comment.get("body_html"));
+        console.log(body_html, comment);
+        // forces all links to open in new tab (faster than regex in newer versions of V8) http://jsperf.com/replace-all-vs-split-join
+        var parsedHtml = body_html.split("<a ").join("<a target=\"_blank\" ");
+
+        try {
+            var _ret = (function () {
+                var replies = comment.get('replies').data.children;
+                var replyViews = [];
+                replies.forEach(function (comment) {
+                    console.log(comment.kind);
+                    if (comment.kind != "more") {
+                        var commentObj = new _modelsCommentModelJs2['default'](comment);
+                        replyViews.push(_react2['default'].createElement(PostCommentView, { key: commentObj.get("id"), comment: commentObj }));
+                    }
+                });
+
+                return {
+                    v: _react2['default'].createElement(
+                        'div',
+                        { key: _this.props.key, className: 'post-comment' },
+                        _react2['default'].createElement(
+                            'span',
+                            { className: 'post-comment-score' },
+                            comment.get("score")
+                        ),
+                        _react2['default'].createElement('div', { className: 'post-comment-body', dangerouslySetInnerHTML: { __html: parsedHtml } }),
+                        _react2['default'].createElement(
+                            'span',
+                            { className: 'post-comment-author' },
+                            comment.get("author")
+                        ),
+                        _react2['default'].createElement(
+                            'div',
+                            { className: 'post-comment-children' },
+                            replyViews
+                        )
+                    )
+                };
+            })();
+
+            if (typeof _ret === 'object') return _ret.v;
+        } catch (e) {
+            return false;
+        }
+    };
+
+    return PostCommentView;
+})(_react2['default'].Component);
+
+exports['default'] = PostCommentView;
+module.exports = exports['default'];
+
+/*
+WARNING: Last resort using dangerouslySetInnerHTML, decoding html entities with every solution that could be found online did not help
+*/
+
+},{"../models/CommentModel.js":296,"react":288}],301:[function(require,module,exports){
+'use strict';
+
+exports.__esModule = true;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
 var _modelsPostModelJs = require('../models/PostModel.js');
 
 var _modelsPostModelJs2 = _interopRequireDefault(_modelsPostModelJs);
@@ -45970,6 +46084,14 @@ var _MediaParserViewJs2 = _interopRequireDefault(_MediaParserViewJs);
 var _apiRedditJs = require('../api/reddit.js');
 
 var _apiRedditJs2 = _interopRequireDefault(_apiRedditJs);
+
+var _PostCommentViewJs = require('./PostCommentView.js');
+
+var _PostCommentViewJs2 = _interopRequireDefault(_PostCommentViewJs);
+
+var _modelsCommentModelJs = require('../models/CommentModel.js');
+
+var _modelsCommentModelJs2 = _interopRequireDefault(_modelsCommentModelJs);
 
 var PostView = (function (_React$Component) {
     _inherits(PostView, _React$Component);
@@ -46010,8 +46132,17 @@ var PostView = (function (_React$Component) {
         );
 
         var post = this.state.post;
-        console.log(post);
         var comments = this.state.comments;
+
+        var commentViews = [];
+        comments.forEach(function (comment) {
+
+            console.log(comment.kind);
+            if (comment.kind != "more") {
+                var commentObj = new _modelsCommentModelJs2['default'](comment);
+                commentViews.push(_react2['default'].createElement(_PostCommentViewJs2['default'], { key: commentObj.get("id"), comment: commentObj }));
+            }
+        });
 
         return _react2['default'].createElement(
             'div',
@@ -46036,7 +46167,12 @@ var PostView = (function (_React$Component) {
                 ),
                 _react2['default'].createElement(_MediaParserViewJs2['default'], { url: post.get("url") })
             ),
-            _react2['default'].createElement('div', { className: 'post-separator' })
+            _react2['default'].createElement('div', { className: 'post-separator' }),
+            _react2['default'].createElement(
+                'div',
+                { className: 'post-comments' },
+                commentViews
+            )
         );
     };
 
@@ -46046,7 +46182,7 @@ var PostView = (function (_React$Component) {
 exports['default'] = PostView;
 module.exports = exports['default'];
 
-},{"../api/reddit.js":294,"../models/PostModel.js":297,"./MediaParserView.js":299,"react":288}],301:[function(require,module,exports){
+},{"../api/reddit.js":294,"../models/CommentModel.js":296,"../models/PostModel.js":297,"./MediaParserView.js":299,"./PostCommentView.js":300,"react":288}],302:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -46075,7 +46211,7 @@ var StreamCommentView = (function (_React$Component) {
 
         // no media as default
         this.state = {
-            comment: {}
+            comment: this.props.comment
         };
     }
 
@@ -46101,7 +46237,7 @@ var StreamCommentView = (function (_React$Component) {
             return decodeHTMLEntities;
         })();
 
-        var comment = this.props.comment;
+        var comment = this.state.comment;
         var body_html = decodeEntities(comment.get("body_html"));
 
         // forces all links to open in new tab (faster than regex in newer versions of V8) http://jsperf.com/replace-all-vs-split-join
@@ -46134,7 +46270,7 @@ module.exports = exports['default'];
 WARNING: Last resort using dangerouslySetInnerHTML, decoding html entities with every solution that could be found online did not help
 */
 
-},{"html-to-react":45,"react":288}],302:[function(require,module,exports){
+},{"html-to-react":45,"react":288}],303:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -46264,7 +46400,7 @@ var StreamItemView = (function (_React$Component) {
 exports['default'] = StreamItemView;
 module.exports = exports['default'];
 
-},{"../api/reddit.js":294,"../models/CommentModel.js":296,"./MediaParserView.js":299,"./StreamCommentView.js":301,"react":288,"react-dom":86,"react-router":106}],303:[function(require,module,exports){
+},{"../api/reddit.js":294,"../models/CommentModel.js":296,"./MediaParserView.js":299,"./StreamCommentView.js":302,"react":288,"react-dom":86,"react-router":106}],304:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -46308,7 +46444,7 @@ var StreamSpinnerView = (function (_React$Component) {
 exports['default'] = StreamSpinnerView;
 module.exports = exports['default'];
 
-},{"react":288,"react-dom":86}],304:[function(require,module,exports){
+},{"react":288,"react-dom":86}],305:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -46464,4 +46600,4 @@ var StreamView = (function (_React$Component) {
 exports['default'] = StreamView;
 module.exports = exports['default'];
 
-},{"../api/reddit.js":294,"../models/PostModel.js":297,"./StreamItemView.js":302,"./StreamSpinnerView.js":303,"react":288,"react-dom":86}]},{},[292]);
+},{"../api/reddit.js":294,"../models/PostModel.js":297,"./StreamItemView.js":303,"./StreamSpinnerView.js":304,"react":288,"react-dom":86}]},{},[292]);

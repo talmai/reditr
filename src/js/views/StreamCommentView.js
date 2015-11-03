@@ -9,7 +9,7 @@ class StreamCommentView extends React.Component {
 
         // no media as default
         this.state = {
-            comment: {}
+            comment: this.props.comment
         }
     }
 
@@ -35,7 +35,7 @@ class StreamCommentView extends React.Component {
           return decodeHTMLEntities;
         })();
 
-        let comment = this.props.comment;
+        let comment = this.state.comment;
         let body_html = decodeEntities(comment.get("body_html"));
 
         // forces all links to open in new tab (faster than regex in newer versions of V8) http://jsperf.com/replace-all-vs-split-join

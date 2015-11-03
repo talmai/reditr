@@ -46,4 +46,52 @@
         border-top: 1px solid #efefef;
         border-bottom: 1px solid #efefef;
     }
+
+    .post-comments {
+        .post-comment {
+            font-size: 12px;
+            padding: 10px;
+            border: 1px solid #dedede;
+            position: relative;
+
+            &:even {
+                background-color: #efefef;
+            }
+
+            .post-comment-children {
+                margin-left: 25px;
+
+                .post-comment {
+                    margin-top: 10px;
+                }
+            }
+
+            .post-comment-author {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                color: #aeaeae;
+            }
+
+            .post-comment-body {
+                padding-top: 6px;
+                display: block;
+                max-width: 800px;
+
+                p {
+                    margin: 0;
+                }
+
+                .md {
+                    blockquote {
+                        border-left: 2px solid #aeaeae;
+                        margin-left: 0;
+                        padding-left: 40px;
+                        font-style: italic;
+                    }
+                }
+            }
+
+        }
+    }
 }
