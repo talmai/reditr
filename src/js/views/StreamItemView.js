@@ -24,7 +24,7 @@ class StreamItemView extends React.Component {
     }
 
     loadComments() {
-        reddit.getCommentsFromPermalink(this.props.post.get("permalink"), null, (err, data) => {
+        reddit.getPostFromPermalink(this.props.post.get("permalink"), null, (err, data) => {
 
             let comments = data.body[1].data.children;
 

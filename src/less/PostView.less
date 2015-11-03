@@ -1,0 +1,49 @@
+@import "Variables";
+
+.post-view {
+    position: relative;
+    width: 100%;
+    height: calc(~"100% -" @header-height);
+    overflow-y: scroll; /* has to be scroll, not auto */
+    -webkit-overflow-scrolling: touch;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    background-color: white;
+    display: block;
+    border-bottom: 1px solid #ccc;
+
+    .post-content {
+        padding: 10px;
+
+        .post-author {
+            float: right;
+            color: #999;
+        }
+
+        .post-title {
+            font-weight: bold;
+            margin-left: 10px;
+            color: #333;
+            text-decoration: none;
+
+            &:hover {
+                color: black;
+                text-decoration: underline;
+            }
+        }
+
+        .media {
+            display: block;
+            max-height: 400px;
+            max-width: 90%;
+            margin: 10px auto 0 auto;
+        }
+    }
+
+    .post-separator {
+        height: 32px;
+        background-color: #eee;
+        border-top: 1px solid #efefef;
+        border-bottom: 1px solid #efefef;
+    }
+}

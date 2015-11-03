@@ -45717,7 +45717,7 @@ var reddit = (function () {
         _superagent2["default"].get(this.baseUrl + "/r/" + subreddit + "/" + options.sort + this.extension).query(options).end(callback);
     };
 
-    reddit.prototype.getCommentsFromPermalink = function getCommentsFromPermalink(permalink, options, callback) {
+    reddit.prototype.getPostFromPermalink = function getPostFromPermalink(permalink, options, callback) {
         if (options === undefined) options = { sort: "hot" };
 
         _superagent2["default"].get(this.baseUrl + permalink + this.extension).query(options).end(callback);
@@ -45923,12 +45923,12 @@ var MediaParserView = (function (_React$Component) {
         switch (this.state.media.type) {
             case "image":
                 // simply return image tag
-                return _react2['default'].createElement('img', { src: this.state.media.parsedUrl, className: 'stream-item-media' });
+                return _react2['default'].createElement('img', { src: this.state.media.parsedUrl, className: 'media' });
                 break;
             case "video":
                 return _react2['default'].createElement(
                     'video',
-                    { className: 'stream-item-media', autoPlay: true, loop: true, muted: true },
+                    { className: 'media', autoPlay: true, loop: true, muted: true },
                     _react2['default'].createElement('source', { type: 'video/webm', src: this.state.media.parsedUrl })
                 );
                 break;
@@ -45959,6 +45959,18 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _modelsPostModelJs = require('../models/PostModel.js');
+
+var _modelsPostModelJs2 = _interopRequireDefault(_modelsPostModelJs);
+
+var _MediaParserViewJs = require('./MediaParserView.js');
+
+var _MediaParserViewJs2 = _interopRequireDefault(_MediaParserViewJs);
+
+var _apiRedditJs = require('../api/reddit.js');
+
+var _apiRedditJs2 = _interopRequireDefault(_apiRedditJs);
+
 var PostView = (function (_React$Component) {
     _inherits(PostView, _React$Component);
 
@@ -45966,13 +45978,65 @@ var PostView = (function (_React$Component) {
         _classCallCheck(this, PostView);
 
         _React$Component.call(this, props);
+
+        this.state = {
+            post: null,
+            comments: [],
+            loading: true
+        };
     }
 
+    PostView.prototype.componentDidMount = function componentDidMount() {
+        this.load();
+    };
+
+    PostView.prototype.load = function load() {
+        var _this = this;
+
+        _apiRedditJs2['default'].getPostFromPermalink(window.location.pathname, null, function (err, data) {
+            _this.setState({
+                post: new _modelsPostModelJs2['default'](data.body[0].data.children[0]),
+                comments: data.body[1].data.children,
+                loading: false
+            });
+        });
+    };
+
     PostView.prototype.render = function render() {
-        return _react2['default'].createElement(
+        if (this.state.loading) return _react2['default'].createElement(
             'div',
             null,
-            'PostView'
+            'Loading'
+        );
+
+        var post = this.state.post;
+        console.log(post);
+        var comments = this.state.comments;
+
+        return _react2['default'].createElement(
+            'div',
+            { className: 'post-view' },
+            _react2['default'].createElement(
+                'div',
+                { className: 'post-content' },
+                _react2['default'].createElement(
+                    'span',
+                    { className: 'post-vote-count' },
+                    post.get("score")
+                ),
+                _react2['default'].createElement(
+                    'a',
+                    { href: _apiRedditJs2['default'].baseUrl + post.get("permalink"), target: '_blank', className: 'post-title' },
+                    post.get("title")
+                ),
+                _react2['default'].createElement(
+                    'span',
+                    { className: 'post-author' },
+                    post.get("author")
+                ),
+                _react2['default'].createElement(_MediaParserViewJs2['default'], { url: post.get("url") })
+            ),
+            _react2['default'].createElement('div', { className: 'post-separator' })
         );
     };
 
@@ -45982,7 +46046,7 @@ var PostView = (function (_React$Component) {
 exports['default'] = PostView;
 module.exports = exports['default'];
 
-},{"react":288}],301:[function(require,module,exports){
+},{"../api/reddit.js":294,"../models/PostModel.js":297,"./MediaParserView.js":299,"react":288}],301:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -46127,7 +46191,7 @@ var StreamItemView = (function (_React$Component) {
     StreamItemView.prototype.loadComments = function loadComments() {
         var _this = this;
 
-        _apiRedditJs2['default'].getCommentsFromPermalink(this.props.post.get("permalink"), null, function (err, data) {
+        _apiRedditJs2['default'].getPostFromPermalink(this.props.post.get("permalink"), null, function (err, data) {
 
             var comments = data.body[1].data.children;
 

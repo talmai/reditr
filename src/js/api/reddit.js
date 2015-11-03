@@ -21,7 +21,7 @@ class reddit {
 
     }
 
-    getCommentsFromPermalink(permalink, options = { sort: "hot" }, callback) {
+    getPostFromPermalink(permalink, options = { sort: "hot" }, callback) {
 
         Request
             .get(this.baseUrl + permalink + this.extension)

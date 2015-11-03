@@ -37,11 +37,11 @@ class MediaParserView extends React.Component {
 
         switch (this.state.media.type) {
             case "image": // simply return image tag
-                return <img src={this.state.media.parsedUrl} className="stream-item-media" />
+                return <img src={this.state.media.parsedUrl} className="media" />
                 break
             case "video":
                 return (
-                    <video className="stream-item-media" autoPlay loop muted>
+                    <video className="media" autoPlay loop muted>
                         <source type="video/webm" src={this.state.media.parsedUrl} />
                     </video>
                 )
