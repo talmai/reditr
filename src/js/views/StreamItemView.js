@@ -57,7 +57,7 @@ class StreamItemView extends React.Component {
         return (
             <div key={this.props.key} className="stream-item-view">
                 <div className="stream-item-content">
-                    <a href={post.get("link")} target="_blank" className="stream-item-title">{post.get("title")}</a>
+                    <a href={post.get("url")} target="_blank" className="stream-item-title">{post.get("title")}</a>
                     <span className="stream-item-domain">({post.get("domain")})</span>
                     <span className="stream-item-vote-count">{post.get("score")}</span>
                     <MediaParserView url={post.get("url")} />

@@ -46366,7 +46366,7 @@ var StreamItemView = (function (_React$Component) {
                 { className: 'stream-item-content' },
                 _react2['default'].createElement(
                     'a',
-                    { href: post.get("link"), target: '_blank', className: 'stream-item-title' },
+                    { href: post.get("url"), target: '_blank', className: 'stream-item-title' },
                     post.get("title")
                 ),
                 _react2['default'].createElement(

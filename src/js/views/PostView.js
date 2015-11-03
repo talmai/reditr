@@ -53,7 +53,7 @@ class PostView extends React.Component {
             <div className="post-view">
                 <div className="post-content">
                     <span className="post-vote-count">{post.get("score")}</span>
-                    <a href={reddit.baseUrl + post.get("permalink")} target="_blank" className="post-title">{post.get("title")}</a>
+                    <a href={post.get("url")} target="_blank" className="post-title">{post.get("title")}</a>
                     <span className="post-author">{post.get("author")}</span>
                     <MediaParserView url={post.get("url")} />
                 </div>
