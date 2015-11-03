@@ -209,7 +209,9 @@ body {
   position: relative;
   width: 100%;
   height: calc(100% - 60px);
-  overflow: auto;
+  overflow-y: scroll;
+  /* has to be scroll, not auto */
+  -webkit-overflow-scrolling: touch;
   box-sizing: border-box;
   overflow-x: hidden;
 }
