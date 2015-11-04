@@ -6,26 +6,35 @@ import MediaParser from '../api/MediaParser.js'
 class MediaParserView extends React.Component {
 
     constructor(props) {
-        super(props)
+        super(props);
 
         // get the parser
-        this.parser = new MediaParser()
+        this.parser = new MediaParser();
 
         // no media as default
         this.state = {
             media: {}
-        }
+        };
     }
-//
+
     /**
       Takes the url and determines what type of media we have
     */
     parseMedia() {
-        this.parser.parse(this.props.url, media => {
-            this.setState({
-                media: media
+        // is this a self post?
+        if (this.props.post.get('selftext_html')) {
+            this.parser.parseText(this.props.post.get('selftext_html'), media => {
+                this.setState({
+                    media: media
+                })
             })
-        })
+        } else {
+            this.parser.parse(this.props.url, media => {
+                this.setState({
+                    media: media
+                })
+            })
+        }
     }
 
     componentDidMount() {
@@ -46,6 +55,11 @@ class MediaParserView extends React.Component {
                     </video>
                 )
                 break
+            case "text":
+                return (
+                    <div className="media text" dangerouslySetInnerHTML={{__html: this.state.media.parsedText}}></div>
+                )
+                break;
             default:
                 return false
                 break

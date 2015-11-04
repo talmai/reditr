@@ -45611,11 +45611,11 @@ _reactDom.render(_react2['default'].createElement(
         hanleMedia(url, callback)
 */
 
-"use strict";
+'use strict';
 
 exports.__esModule = true;
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 var MediaParser = (function () {
     function MediaParser() {
@@ -45642,6 +45642,34 @@ var MediaParser = (function () {
         } else if (this.regex.IMGUR_GIFV.test(url)) {
             this.handleImgurGifv(url, callback);
         }
+    };
+
+    MediaParser.prototype.parseText = function parseText(text, callback) {
+        // WARNING, MOVE THIS TO A UTILITIES FILE
+        var decodeEntities = (function () {
+            // this prevents any overhead from creating the object each time
+            var element = document.createElement('div');
+
+            function decodeHTMLEntities(str) {
+                if (str && typeof str === 'string') {
+                    // strip script/html tags
+                    str = str.replace(/<script[^>]*>([\S\s]*?)<\/script>/gmi, '');
+                    str = str.replace(/<\/?\w(?:[^"'>]|"[^"]*"|'[^']*')*>/gmi, '');
+                    element.innerHTML = str;
+                    str = element.textContent;
+                    element.textContent = '';
+                }
+
+                return str;
+            }
+
+            return decodeHTMLEntities;
+        })();
+
+        callback({
+            parsedText: decodeEntities(text),
+            type: "text"
+        });
     };
 
     MediaParser.prototype.handleImgurGifv = function handleImgurGifv(url, callback) {
@@ -45687,8 +45715,8 @@ var MediaParser = (function () {
     return MediaParser;
 })();
 
-exports["default"] = MediaParser;
-module.exports = exports["default"];
+exports['default'] = MediaParser;
+module.exports = exports['default'];
 
 },{}],294:[function(require,module,exports){
 "use strict";
@@ -45898,7 +45926,6 @@ var MediaParserView = (function (_React$Component) {
         };
     }
 
-    //
     /**
       Takes the url and determines what type of media we have
     */
@@ -45906,11 +45933,20 @@ var MediaParserView = (function (_React$Component) {
     MediaParserView.prototype.parseMedia = function parseMedia() {
         var _this = this;
 
-        this.parser.parse(this.props.url, function (media) {
-            _this.setState({
-                media: media
+        // is this a self post?
+        if (this.props.post.get('selftext_html')) {
+            this.parser.parseText(this.props.post.get('selftext_html'), function (media) {
+                _this.setState({
+                    media: media
+                });
             });
-        });
+        } else {
+            this.parser.parse(this.props.url, function (media) {
+                _this.setState({
+                    media: media
+                });
+            });
+        }
     };
 
     MediaParserView.prototype.componentDidMount = function componentDidMount() {
@@ -45931,6 +45967,9 @@ var MediaParserView = (function (_React$Component) {
                     { className: 'media', autoPlay: true, loop: true, muted: true },
                     _react2['default'].createElement('source', { type: 'video/webm', src: this.state.media.parsedUrl })
                 );
+                break;
+            case "text":
+                return _react2['default'].createElement('div', { className: 'media text', dangerouslySetInnerHTML: { __html: this.state.media.parsedText } });
                 break;
             default:
                 return false;
@@ -46339,7 +46378,7 @@ var StreamItemView = (function (_React$Component) {
 
     StreamItemView.prototype.render = function render() {
 
-        var post = this.props.post;
+        var post = this.props.post; // typeof = PostModel
 
         var topComments = this.state.topComments;
         var commentsView = [];
@@ -46381,7 +46420,7 @@ var StreamItemView = (function (_React$Component) {
                     { className: 'stream-item-vote-count' },
                     post.get("score")
                 ),
-                _react2['default'].createElement(_MediaParserViewJs2['default'], { url: post.get("url") }),
+                _react2['default'].createElement(_MediaParserViewJs2['default'], { url: post.get("url"), post: post }),
                 _react2['default'].createElement(
                     'span',
                     { className: 'stream-item-author' },

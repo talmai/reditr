@@ -259,7 +259,17 @@ body {
   display: block;
   max-height: 400px;
   max-width: 90%;
-  margin: 10px auto 0 auto;
+  margin: 10px auto;
+}
+.stream-item-view .stream-item-content .media.text {
+  background: #eee;
+  padding: 10px;
+  font-size: 14px;
+  border-radius: 3px;
+  border: 1px solid #dfdfdf;
+}
+.stream-item-view .stream-item-content .media.text p {
+  margin: 0;
 }
 .stream-item-view .stream-item-comments {
   position: relative;

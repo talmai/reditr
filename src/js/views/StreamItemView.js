@@ -39,7 +39,7 @@ class StreamItemView extends React.Component {
 
     render() {
 
-        let post = this.props.post;
+        let post = this.props.post; // typeof = PostModel
 
         let topComments = this.state.topComments;
         let commentsView = [];
@@ -53,14 +53,14 @@ class StreamItemView extends React.Component {
                 commentsView.push(<StreamCommentView key={commentObj.get("id")} comment={commentObj} />);
             });
         }
-
+        
         return (
             <div key={this.props.key} className="stream-item-view">
                 <div className="stream-item-content">
                     <a href={post.get("url")} target="_blank" className="stream-item-title">{post.get("title")}</a>
                     <span className="stream-item-domain">({post.get("domain")})</span>
                     <span className="stream-item-vote-count">{post.get("score")}</span>
-                    <MediaParserView url={post.get("url")} />
+                    <MediaParserView url={post.get("url")} post={post} />
                     <span className="stream-item-author">{post.get("author")}</span>
                 </div>
 

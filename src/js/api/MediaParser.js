@@ -28,6 +28,34 @@ class MediaParser {
 
     }
 
+    parseText(text, callback) {
+        // WARNING, MOVE THIS TO A UTILITIES FILE
+        var decodeEntities = (function() {
+          // this prevents any overhead from creating the object each time
+          var element = document.createElement('div');
+
+          function decodeHTMLEntities (str) {
+            if(str && typeof str === 'string') {
+              // strip script/html tags
+              str = str.replace(/<script[^>]*>([\S\s]*?)<\/script>/gmi, '');
+              str = str.replace(/<\/?\w(?:[^"'>]|"[^"]*"|'[^']*')*>/gmi, '');
+              element.innerHTML = str;
+              str = element.textContent;
+              element.textContent = '';
+            }
+
+            return str;
+          }
+
+          return decodeHTMLEntities;
+        })();
+
+        callback({
+            parsedText: decodeEntities(text),
+            type: "text"
+        });
+    }
+
     handleImgurGifv(url, callback) {
         // reset regex pos
         this.regex.IMGUR_GIFV.lastIndex = 0
