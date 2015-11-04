@@ -56,6 +56,7 @@ class MediaParserView extends React.Component {
                 )
                 break
             case "text":
+            case "article":
                 return (
                     <div className="media text" dangerouslySetInnerHTML={{__html: this.state.media.parsedText}}></div>
                 )

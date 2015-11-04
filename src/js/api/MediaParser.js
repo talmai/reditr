@@ -3,6 +3,7 @@
     All parsing methods must have format:
         hanleMedia(url, callback)
 */
+import Request from 'superagent';
 
 class MediaParser {
 
@@ -24,6 +25,8 @@ class MediaParser {
             this.handleImgurImage(url, callback);
         } else if (this.regex.IMGUR_GIFV.test(url)) {
             this.handleImgurGifv(url, callback);
+        } else {
+            this.handleAnyUrl(url, callback);
         }
 
     }
@@ -54,6 +57,25 @@ class MediaParser {
             parsedText: decodeEntities(text),
             type: "text"
         });
+    }
+
+    handleAnyUrl(url, callback) {
+
+        let jsonp = require('superagent-jsonp');
+
+        Request
+            .get('https://www.readability.com/api/content/v1/parser')
+            .use(jsonp)
+            .query({
+                url: url,
+                token: 'e97c4f658162139ec8e04c4cbb2e80518c66757f'
+            }).end(function(err, res) {
+                callback({
+                    url: url,
+                    parsedText: res.body.content,
+                    type: "article"
+                });
+            });
     }
 
     handleImgurGifv(url, callback) {

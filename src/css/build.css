@@ -269,6 +269,7 @@ body {
   font-size: 14px;
   border-radius: 3px;
   border: 1px solid #dfdfdf;
+  overflow: auto;
 }
 .stream-item-view .stream-item-content .media.text p {
   margin: 0;
