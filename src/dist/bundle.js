@@ -46302,7 +46302,8 @@ var StreamItemView = (function (_React$Component) {
         // set default
         this.state = {
             voteCount: this.props.post.get("score"),
-            topComments: []
+            topComments: [],
+            isLoading: true
         };
     }
 
@@ -46318,19 +46319,21 @@ var StreamItemView = (function (_React$Component) {
             var comments = data.body[1].data.children;
 
             _this.setState({
+                isLoading: true,
                 topComments: [comments[0], comments[1]]
             });
         });
     };
 
     StreamItemView.prototype.render = function render() {
+        var _this2 = this;
 
         var post = this.props.post; // typeof = PostModel
 
         var topComments = this.state.topComments;
         var commentsView = [];
 
-        // if no comments, say no comments, WARNING: MUST HANDLE CASE WHERE WE ARE JUST LOADING
+        // if no comments, say no comments
         if (topComments.length == 0) {
             commentsView = _react2['default'].createElement(
                 'span',
@@ -46369,21 +46372,45 @@ var StreamItemView = (function (_React$Component) {
                 ),
                 _react2['default'].createElement(_MediaParserViewJs2['default'], { url: post.get("url"), post: post }),
                 _react2['default'].createElement(
-                    'span',
-                    { className: 'stream-item-author' },
-                    post.get("author")
+                    'div',
+                    { className: 'mini-details' },
+                    _react2['default'].createElement(
+                        'span',
+                        { className: 'stream-item-author' },
+                        post.get("author")
+                    ),
+                    ' in ',
+                    _react2['default'].createElement(
+                        _reactRouter.Link,
+                        { to: "/r/" + post.get("subreddit"), className: 'stream-item-subreddit' },
+                        "/r/" + post.get('subreddit')
+                    )
                 )
             ),
-            _react2['default'].createElement(
-                'div',
-                { className: 'stream-item-comments' },
-                commentsView,
-                _react2['default'].createElement(
-                    _reactRouter.Link,
-                    { to: post.get("permalink"), className: 'view-more-comments' },
-                    'View More Comments'
-                )
-            )
+            (function () {
+                if (_this2.state.isLoading) {
+                    return _react2['default'].createElement(
+                        'div',
+                        { className: 'stream-item-comments' },
+                        _react2['default'].createElement(
+                            'div',
+                            { className: 'loading' },
+                            'Loading...'
+                        )
+                    );
+                } else {
+                    return _react2['default'].createElement(
+                        'div',
+                        { className: 'stream-item-comments' },
+                        commentsView,
+                        _react2['default'].createElement(
+                            _reactRouter.Link,
+                            { to: post.get("permalink"), className: 'view-more-comments' },
+                            'View More Comments'
+                        )
+                    );
+                }
+            })()
         );
     };
 
@@ -46480,8 +46507,10 @@ var StreamView = (function (_React$Component) {
 
         _React$Component.call(this, props);
 
+        this.defaultSubreddit = "all";
+
         // temporarily assume all to be the default sub
-        var subreddit = this.props.params.subreddit || "all";
+        var subreddit = this.props.params.subreddit || this.defaultSubreddit;
         this.state = {
             subreddit: subreddit,
             posts: [],
@@ -46507,33 +46536,48 @@ var StreamView = (function (_React$Component) {
     StreamView.prototype.load = function load() {
         var _this = this;
 
-        var subreddit = arguments.length <= 0 || arguments[0] === undefined ? this.state.subreddit : arguments[0];
+        var subreddit = arguments.length <= 0 || arguments[0] === undefined ? this.defaultSubreddit : arguments[0];
+        var options = arguments.length <= 1 || arguments[1] === undefined ? { reset: false } : arguments[1];
 
         if (this.state.isLoading) return;
 
-        this.setState({
-            isLoading: true
-        });
-        // retreive the posts
-        _apiRedditJs2['default'].getPostsFromSubreddit(subreddit, { sort: this.state.sort, after: this.state.after }, function (err, posts) {
-            // update state to re render
-            var newPosts = posts.body.data.children;
-            var oldPosts = _this.state.posts;
-            oldPosts.push.apply(oldPosts, newPosts);
+        var loadPosts = (function () {
+            // retreive the posts
+            _apiRedditJs2['default'].getPostsFromSubreddit(subreddit, { sort: _this.state.sort, after: _this.state.after }, function (err, posts) {
+                // update state to re render
+                var newPosts = posts.body.data.children;
+                var oldPosts = _this.state.posts;
+                oldPosts.push.apply(oldPosts, newPosts);
 
-            var filteredPosts = _this.removeDuplicatePosts(oldPosts);
-            var lastPost = filteredPosts[filteredPosts.length - 1];
-            _this.setState({
-                subreddit: subreddit,
-                posts: filteredPosts,
-                after: posts.body.data.after,
-                isLoading: false
+                var filteredPosts = _this.removeDuplicatePosts(oldPosts);
+                var lastPost = filteredPosts[filteredPosts.length - 1];
+                _this.setState({
+                    subreddit: subreddit,
+                    posts: filteredPosts,
+                    after: posts.body.data.after,
+                    isLoading: false
+                });
             });
-        });
+        }).bind(this);
+
+        if (options.reset) {
+            // reset
+            this.setState({
+                subreddit: subreddit,
+                posts: [],
+                sort: "hot",
+                after: null,
+                isLoading: true
+            }, loadPosts);
+        } else {
+            this.setState({
+                isLoading: true
+            }, loadPosts);
+        }
     };
 
     StreamView.prototype.componentWillReceiveProps = function componentWillReceiveProps(props) {
-        this.load(props.params.subreddit); // loads new prop info
+        this.load(props.params.subreddit, { reset: true }); // loads new prop info
     };
 
     StreamView.prototype.componentWillUnmount = function componentWillUnmount() {
@@ -46546,11 +46590,8 @@ var StreamView = (function (_React$Component) {
         this.load();
     };
 
-    StreamView.prototype.componentDidUpdate = function componentDidUpdate(self, props) {};
-
     StreamView.prototype.scrollListener = function scrollListener() {
         var node = _reactDom2['default'].findDOMNode(this);
-
         // detect scrolling to the bottom
         if (node.scrollHeight - (node.scrollTop + node.offsetHeight) < 100) {
             this.load();
@@ -46561,7 +46602,6 @@ var StreamView = (function (_React$Component) {
         var node = _reactDom2['default'].findDOMNode(this);
         node.addEventListener('scroll', this.scrollListener.bind(this));
         node.addEventListener('resize', this.scrollListener.bind(this));
-        this.scrollListener();
     };
 
     StreamView.prototype.detachScrollListener = function detachScrollListener() {
