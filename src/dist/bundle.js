@@ -46319,7 +46319,7 @@ var StreamItemView = (function (_React$Component) {
             var comments = data.body[1].data.children;
 
             _this.setState({
-                isLoading: true,
+                isLoading: false,
                 topComments: [comments[0], comments[1]]
             });
         });

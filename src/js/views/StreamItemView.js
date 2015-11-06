@@ -30,7 +30,7 @@ class StreamItemView extends React.Component {
             let comments = data.body[1].data.children;
 
             this.setState({
-                isLoading: true,
+                isLoading: false,
                 topComments: [
                     comments[0],
                     comments[1]
