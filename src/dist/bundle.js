@@ -45830,9 +45830,9 @@ function decodeEntities(str) {
 
 function prettyNumber(number) {
     if (number >= 1000000) {
-        return Math.round(number * 10) / 10 + 'm';
+        return Math.round(number / 1000000 * 10) / 10 + 'm';
     } else if (number >= 1000) {
-        return Math.round(number * 10) / 10 + 'k';
+        return Math.round(number / 1000 * 10) / 10 + 'k';
     } else {
         return number;
     }
@@ -46685,7 +46685,6 @@ var StreamItemView = (function (_React$Component) {
                 )
             ));
         }
-        console.log(post.json);
         return _react2['default'].createElement(
             'div',
             { key: this.props.key, className: 'stream-item-view' },
@@ -46863,8 +46862,26 @@ var StreamView = (function (_React$Component) {
         var subreddit = arguments.length <= 0 || arguments[0] === undefined ? this.defaultSubreddit : arguments[0];
         var options = arguments.length <= 1 || arguments[1] === undefined ? { reset: false } : arguments[1];
 
-        if (this.state.isLoading) return;
-        var loadPosts = (function () {
+        if (this.state.isLoading && !options.reset) return;
+
+        var state;
+        if (options.reset) {
+            state = {
+                subreddit: subreddit,
+                posts: [],
+                sort: "hot",
+                after: null,
+                isLoading: true,
+                notFound: false
+            };
+        } else {
+            state = {
+                isLoading: true,
+                notFound: false
+            };
+        }
+
+        this.setState(state, function () {
             // retreive the posts
             _apiRedditJs2['default'].getPostsFromSubreddit(subreddit, { sort: _this.state.sort, after: _this.state.after }, function (err, posts) {
                 // subreddit not found
@@ -46886,24 +46903,7 @@ var StreamView = (function (_React$Component) {
                     isLoading: false
                 });
             });
-        }).bind(this);
-
-        if (options.reset) {
-            // reset
-            this.setState({
-                subreddit: subreddit,
-                posts: [],
-                sort: "hot",
-                after: null,
-                isLoading: true,
-                notFound: false
-            }, loadPosts);
-        } else {
-            this.setState({
-                isLoading: true,
-                notFound: false
-            }, loadPosts);
-        }
+        });
     };
 
     StreamView.prototype.componentWillReceiveProps = function componentWillReceiveProps(props) {

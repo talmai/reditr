@@ -16,9 +16,9 @@ export function decodeEntities (str) {
 
 export function prettyNumber(number) {
     if(number >= 1000000) {
-        return (Math.round(number*10)/10) + 'm';
+        return (Math.round((number/1000000)*10)/10) + 'm';
     }else if(number >= 1000) {
-        return (Math.round(number*10)/10) + 'k';
+        return (Math.round((number/1000)*10)/10) + 'k';
     }else{
         return number;
     }

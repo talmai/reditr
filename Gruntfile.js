@@ -21,7 +21,7 @@ module.exports = function(grunt) {
             options: {
                transform: [
                   ["babelify", {
-                     loose: "all"
+                      loose: "all"
                   }]
                ]
             },
