@@ -14,8 +14,9 @@ class StreamItemView extends React.Component {
         // set default
         this.state = {
             voteCount: this.props.post.get("score"),
-            topComments: []
-        };
+            topComments: [],
+            isLoading: true
+        }
     }
 
     componentDidMount() {
@@ -28,7 +29,7 @@ class StreamItemView extends React.Component {
             var topComments = [];
             if(comments[0]) topComments.push(comments[0]);
             if(comments[1]) topComments.push(comments[1]);
-            this.setState({ topComments: topComments });
+            this.setState({ isLoading: false, topComments: topComments });
         });
     }
 
@@ -39,7 +40,7 @@ class StreamItemView extends React.Component {
         let topComments = this.state.topComments;
         let commentsView = [];
 
-        // if no comments, say no comments, WARNING: MUST HANDLE CASE WHERE WE ARE JUST LOADING
+        // if no comments, say no comments
         if (topComments.length == 0) {
             commentsView = <span className="no-comments">No top comments!</span>;
         } else {
@@ -56,13 +57,30 @@ class StreamItemView extends React.Component {
                     <span className="stream-item-domain">({post.get("domain")})</span>
                     <span className="stream-item-vote-count">{post.get("score")}</span>
                     <MediaParserView url={post.get("url")} post={post} />
-                    <span className="stream-item-author">{post.get("author")}</span>
+                    <div className="mini-details">
+                        <span className="stream-item-author">{post.get("author")}</span> in <Link to={"/r/" + post.get("subreddit")} className="stream-item-subreddit">{"/r/" + post.get('subreddit')}</Link>
+                    </div>
                 </div>
-
-                <div className="stream-item-comments">
-                    {commentsView}
-                    <Link to={post.get("permalink")} className="view-more-comments">View More Comments</Link>
-                </div>
+                {
+                    (
+                        () => {
+                            if (this.state.isLoading) {
+                                return (
+                                    <div className="stream-item-comments">
+                                        <div className="loading">Loading...</div>
+                                    </div>
+                                );
+                            } else {
+                                return (
+                                    <div className="stream-item-comments">
+                                        {commentsView}
+                                        <Link to={post.get("permalink")} className="view-more-comments">View More Comments</Link>
+                                    </div>
+                                )
+                            }
+                        }
+                    )()
+                }
             </div>
         );
 

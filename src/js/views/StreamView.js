@@ -11,8 +11,10 @@ class StreamView extends React.Component {
     constructor(props) {
         super(props);
 
+        this.defaultSubreddit = "all";
+
         // temporarily assume all to be the default sub
-        let subreddit = this.props.params.subreddit || "all";
+        let subreddit = this.props.params.subreddit || this.defaultSubreddit;
         this.state = {
             subreddit: subreddit,
             posts: [],
@@ -36,41 +38,52 @@ class StreamView extends React.Component {
         return finalArray;
     }
 
-    load(subreddit = this.state.subreddit) {
+    load(subreddit = this.defaultSubreddit, options = { reset: false }) {
         if (this.state.isLoading) return;
-        if(subreddit != this.state.subreddit) {
-            this.state.after = null;
-            this.state.posts = [];
-        }
-        this.setState({
-            isLoading: true,
-            notFound: false
-        });
-        // retreive the posts
-        reddit.getPostsFromSubreddit(subreddit, { sort: this.state.sort, after: this.state.after }, (err, posts) => {
-            if(!posts || !posts.body) {
-                this.setState({ subreddit: subreddit, notFound: true, isLoading: false });
-                return;
-            }
-            // update state to re render
-            let newPosts = posts.body.data.children;
-            let oldPosts = this.state.posts;
-            oldPosts.push(...newPosts);
+		let loadPosts = () => {
+            // retreive the posts
+            reddit.getPostsFromSubreddit(subreddit, { sort: this.state.sort, after: this.state.after }, (err, posts) => {
+            	// subreddit not found
+	            if(!posts || !posts.body) {
+	                this.setState({ subreddit: subreddit, notFound: true, isLoading: false });
+	                return;
+	            }
+                // update state to re render
+                let newPosts = posts.body.data.children;
+                let oldPosts = this.state.posts;
+                oldPosts.push(...newPosts);
 
-            let filteredPosts = this.removeDuplicatePosts(oldPosts);
-            let lastPost = filteredPosts[filteredPosts.length - 1];
+                let filteredPosts = this.removeDuplicatePosts(oldPosts);
+                let lastPost = filteredPosts[filteredPosts.length - 1];
+                this.setState({
+                    subreddit: subreddit,
+                    posts: filteredPosts,
+                    after: posts.body.data.after,
+                    isLoading: false
+                });
+            });
+        }.bind(this);
+
+        if (options.reset) {
+            // reset
             this.setState({
                 subreddit: subreddit,
-                posts: filteredPosts,
-                after: posts.body.data.after,
-                isLoading: false,
+                posts: [],
+                sort: "hot",
+                after: null,
+                isLoading: true,
                 notFound: false
-            });
-        });
+            }, loadPosts);
+        } else {
+            this.setState({
+                isLoading: true,
+                notFound: false
+            }, loadPosts);
+        }
     }
 
     componentWillReceiveProps(props) {
-        this.load(props.params.subreddit); // loads new prop info
+        this.load(props.params.subreddit, { reset: true }); // loads new prop info
     }
 
     componentWillUnmount() {
@@ -83,12 +96,8 @@ class StreamView extends React.Component {
         this.load();
     }
 
-    componentDidUpdate(self, props) {
-    }
-
     scrollListener() {
         let node = ReactDOM.findDOMNode(this);
-
         // detect scrolling to the bottom
         if (node.scrollHeight - (node.scrollTop + node.offsetHeight) < 100) {
             this.load();
@@ -99,7 +108,6 @@ class StreamView extends React.Component {
         let node = ReactDOM.findDOMNode(this);
         node.addEventListener('scroll', this.scrollListener.bind(this));
         node.addEventListener('resize', this.scrollListener.bind(this));
-        this.scrollListener();
     }
 
     detachScrollListener() {

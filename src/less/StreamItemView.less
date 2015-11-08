@@ -12,8 +12,23 @@
             float: right;
         }
 
-        .stream-item-author {
+        .mini-details {
+            font-size: 13px;
             color: #999;
+
+            .stream-item-author {
+                font-weight: bold;
+            }
+
+            .stream-item-subreddit {
+                font-weight: bold;
+                text-decoration: none;
+                color: #333;
+
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
         }
 
         .stream-item-title {
@@ -60,6 +75,11 @@
         border-top: 1px solid #dedede;
         width: 100%;
         height: 100%;
+
+        .loading {            
+            padding: 20px;
+            text-align: center;
+        }
 
         .view-more-comments {
             color: white;

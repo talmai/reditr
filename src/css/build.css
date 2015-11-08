@@ -281,8 +281,20 @@ body {
 .stream-item-view .stream-item-content .stream-item-vote-count {
   float: right;
 }
-.stream-item-view .stream-item-content .stream-item-author {
+.stream-item-view .stream-item-content .mini-details {
+  font-size: 13px;
   color: #999;
+}
+.stream-item-view .stream-item-content .mini-details .stream-item-author {
+  font-weight: bold;
+}
+.stream-item-view .stream-item-content .mini-details .stream-item-subreddit {
+  font-weight: bold;
+  text-decoration: none;
+  color: #333;
+}
+.stream-item-view .stream-item-content .mini-details .stream-item-subreddit:hover {
+  text-decoration: underline;
 }
 .stream-item-view .stream-item-content .stream-item-title {
   font-weight: bold;
@@ -321,6 +333,10 @@ body {
   border-top: 1px solid #dedede;
   width: 100%;
   height: 100%;
+}
+.stream-item-view .stream-item-comments .loading {
+  padding: 20px;
+  text-align: center;
 }
 .stream-item-view .stream-item-comments .view-more-comments {
   display: block;
