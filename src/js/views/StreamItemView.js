@@ -74,9 +74,11 @@ class StreamItemView extends React.Component {
                                 return (
                                     <div className="stream-item-comments">
                                         {commentsView}
-                                        <Link to={post.get("permalink")} className="view-more-comments">View More Comments</Link>
+                                        <Link to={post.get("permalink")} className="view-more-comments">
+                                            <div className='icon'>More Comments</div>
+                                        </Link>
                                     </div>
-                                )
+                                );
                             }
                         }
                     )()

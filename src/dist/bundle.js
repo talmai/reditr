@@ -46565,21 +46565,16 @@ var StreamCommentView = (function (_React$Component) {
         var body_html = _Utilities2['default'].decodeEntities(comment.get("body_html"));
         if (!body_html) console.log(comment);
         // forces all links to open in new tab (faster than regex in newer versions of V8) http://jsperf.com/replace-all-vs-split-join
-        var parsedHtml = body_html.split("<a ").join("<a target=\"_blank\" ");
+        var parsedHtml = body_html.split("<a ").join("<a target=\"_blank\" ").replace('<div class="md"><p>', '<div class="md"><p><div class="stream-item-comment-author">' + comment.get("author") + ':</div>');
 
         return _react2['default'].createElement(
             'div',
             { key: this.props.key, className: 'stream-item-comment' },
+            _react2['default'].createElement('div', { className: 'stream-item-comment-body', dangerouslySetInnerHTML: { __html: parsedHtml } }),
             _react2['default'].createElement(
                 'span',
                 { className: 'stream-item-comment-score' },
                 comment.get("score")
-            ),
-            _react2['default'].createElement('div', { className: 'stream-item-comment-body', dangerouslySetInnerHTML: { __html: parsedHtml } }),
-            _react2['default'].createElement(
-                'span',
-                { className: 'stream-item-comment-author' },
-                comment.get("author")
             )
         );
     };
@@ -46738,7 +46733,11 @@ var StreamItemView = (function (_React$Component) {
                         _react2['default'].createElement(
                             _reactRouter.Link,
                             { to: post.get("permalink"), className: 'view-more-comments' },
-                            'View More Comments'
+                            _react2['default'].createElement(
+                                'div',
+                                { className: 'icon' },
+                                'More Comments'
+                            )
                         )
                     );
                 }

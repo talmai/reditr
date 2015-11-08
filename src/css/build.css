@@ -239,7 +239,7 @@ body {
 }
 
 .stream-item-comment {
-  font-size: 12px;
+  font-size: 11px;
   padding: 10px;
   border-bottom: 1px solid #dedede;
   position: relative;
@@ -248,13 +248,17 @@ body {
   border-bottom: none;
 }
 .stream-item-comment .stream-item-comment-author {
+  display: inline-block;
+  font-weight: bold;
+  margin-right: 3px;
+}
+.stream-item-comment .stream-item-comment-score {
   position: absolute;
   top: 10px;
   right: 10px;
   color: #aeaeae;
 }
 .stream-item-comment .stream-item-comment-body {
-  padding-top: 6px;
   display: block;
   max-width: 800px;
 }
@@ -271,9 +275,15 @@ body {
 .stream-item-view {
   background-color: white;
   display: block;
-  width: 100%;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 25px;
   border-bottom: 1px solid #ccc;
   box-sizing: border-box;
+  text-align: left;
+  border: 1px solid #c6c6c6;
+  border-radius: 4px;
 }
 .stream-item-view .stream-item-content {
   padding: 10px;
@@ -333,6 +343,8 @@ body {
   border-top: 1px solid #dedede;
   width: 100%;
   height: 100%;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
 }
 .stream-item-view .stream-item-comments .loading {
   padding: 20px;
@@ -340,16 +352,26 @@ body {
 }
 .stream-item-view .stream-item-comments .view-more-comments {
   display: block;
-  width: 200px;
-  font-size: 12px;
-  color: white;
-  border: 1px solid #ACB2B8;
-  background-color: #C9CDD1;
   text-decoration: none;
-  border-radius: 3px;
-  padding: 10px;
   text-align: center;
-  margin: 10px auto;
+  width: 100%;
+  padding: 0;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin: 0;
+  border: none;
+  background: rgba(0, 0, 0, 0.02);
+  color: #7f7f7f;
+  font-weight: bold;
+  font-size: 11px;
+}
+.stream-item-view .stream-item-comments .view-more-comments .icon {
+  background-image: url(../images/stream-item-comment-icon.png);
+  background-size: 16px auto;
+  background-position: left center;
+  background-repeat: no-repeat;
+  display: inline-block;
+  padding-left: 22px;
 }
 .stream-item-view .stream-item-comments .view-more-comments:hover {
   background-color: #d9dadb;
@@ -368,5 +390,6 @@ body {
   -webkit-overflow-scrolling: touch;
   box-sizing: border-box;
   overflow-x: hidden;
+  text-align: center;
 }
 
