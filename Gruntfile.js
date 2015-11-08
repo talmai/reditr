@@ -38,8 +38,15 @@ module.exports = function(grunt) {
         options:  {
           port: 3000,
           hostname: '127.0.0.1',
-          base: 'src',
-          keepalive: true
+            base: 'src',
+            keepalive: true,
+            middleware: function(connect, options, wares) {
+                wares.unshift(function(req, res, next) {
+                    var filename = './src' + req.url;
+                    return !grunt.file.exists(filename) || filename == './src/' ? res.end(grunt.file.read('./src/index.html')) : next();
+                });
+                return wares;
+            }
         }
       }
     },

@@ -1,13 +1,13 @@
 class BaseModel {
 
     constructor(postJson) {
-        this.json = postJson
+        this.json = postJson;
     }
 
     get(prop) {
-        return this.json.data[prop]
+        return this.json ? this.json.data[prop] : undefined;
     }
 
 }
 
-export default BaseModel
+export default BaseModel;

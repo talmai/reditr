@@ -1,5 +1,5 @@
 import React from 'react';
-
+import Utilities from '../Utilities.js';
 import CommentModel from '../models/CommentModel.js';
 
 class PostCommentView extends React.Component {
@@ -9,35 +9,14 @@ class PostCommentView extends React.Component {
 
         this.state = {
             comment: this.props.comment
-        }
+        };
     }
 
     render() {
 
-        // WARNING, MOVE THIS TO A UTILITIES FILE
-        var decodeEntities = (function() {
-          // this prevents any overhead from creating the object each time
-          var element = document.createElement('div');
-
-          function decodeHTMLEntities (str) {
-            if(str && typeof str === 'string') {
-              // strip script/html tags
-              str = str.replace(/<script[^>]*>([\S\s]*?)<\/script>/gmi, '');
-              str = str.replace(/<\/?\w(?:[^"'>]|"[^"]*"|'[^']*')*>/gmi, '');
-              element.innerHTML = str;
-              str = element.textContent;
-              element.textContent = '';
-            }
-
-            return str;
-          }
-
-          return decodeHTMLEntities;
-        })();
-
         let comment = this.props.comment;
-        let body_html = decodeEntities(comment.get("body_html"));
-        console.log(body_html, comment);
+        let body_html = Utilities.decodeEntities(comment.get("body_html"));
+
         // forces all links to open in new tab (faster than regex in newer versions of V8) http://jsperf.com/replace-all-vs-split-join
         let parsedHtml = body_html.split("<a ").join("<a target=\"_blank\" ");
 
@@ -45,7 +24,6 @@ class PostCommentView extends React.Component {
             let replies = comment.get('replies').data.children;
             let replyViews = [];
             replies.forEach(comment => {
-                console.log(comment.kind)
                 if (comment.kind != "more") {
                     let commentObj = new CommentModel(comment);
                     replyViews.push(<PostCommentView key={commentObj.get("id")} comment={commentObj} />);
@@ -66,11 +44,11 @@ class PostCommentView extends React.Component {
                         {replyViews}
                     </div>
                 </div>
-            )
+            );
         } catch (e) {
-            return false
+            return false;
         }
     }
 }
 
-export default PostCommentView
+export default PostCommentView;

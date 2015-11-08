@@ -184,6 +184,47 @@ body {
   font-style: italic;
 }
 
+.quick-switch-view {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.7);
+}
+.quick-switch-view .input-container {
+  background-color: rgba(255, 255, 255, 0.9);
+  height: 52px;
+  border-radius: 11px;
+  width: 500px;
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  margin-left: -250px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+.quick-switch-view .input-container .type {
+  display: inline-block;
+  color: #aaaaaa;
+  padding: 10px;
+  padding-left: 16px;
+  font-size: 20px;
+}
+.quick-switch-view .input-container input {
+  width: calc(100% - 67px);
+  height: calc(100% - 12px);
+  color: #3a3a3a;
+  margin: 0;
+  padding: 0;
+  background: none;
+  border: none;
+  font-size: 20px;
+}
+.quick-switch-view .input-container input:focus,
+.quick-switch-view .input-container input:active {
+  outline: none;
+}
+
 .stream-spinner-view {
   text-align: center;
   width: 100%;

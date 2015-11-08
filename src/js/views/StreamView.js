@@ -38,12 +38,20 @@ class StreamView extends React.Component {
 
     load(subreddit = this.state.subreddit) {
         if (this.state.isLoading) return;
-
+        if(subreddit != this.state.subreddit) {
+            this.state.after = null;
+            this.state.posts = [];
+        }
         this.setState({
-            isLoading: true
+            isLoading: true,
+            notFound: false
         });
         // retreive the posts
         reddit.getPostsFromSubreddit(subreddit, { sort: this.state.sort, after: this.state.after }, (err, posts) => {
+            if(!posts || !posts.body) {
+                this.setState({ subreddit: subreddit, notFound: true, isLoading: false });
+                return;
+            }
             // update state to re render
             let newPosts = posts.body.data.children;
             let oldPosts = this.state.posts;
@@ -55,7 +63,8 @@ class StreamView extends React.Component {
                 subreddit: subreddit,
                 posts: filteredPosts,
                 after: posts.body.data.after,
-                isLoading: false
+                isLoading: false,
+                notFound: false
             });
         });
     }
@@ -100,20 +109,25 @@ class StreamView extends React.Component {
     }
 
     render() {
+
         let postViews = [];
+        if(this.state.posts) {
         this.state.posts.forEach(post => {
             let postObj = new PostModel(post);
             postViews.push(<StreamItemView key={postObj.get('id')} post={postObj} />);
         });
+        }
 
         var loading = this.state.isLoading ? <StreamSpinnerView/> : false;
+        var notFound = this.state.notFound ? <div>Subreddit {this.state.subreddit} does not exist.</div> : false;
 
         return (
             <div className="stream-view">
                 {postViews}
                 {loading}
+                {notFound}
             </div>
-        )
+        );
     }
 
 }

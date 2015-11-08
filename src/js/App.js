@@ -1,18 +1,12 @@
 import React from 'react';
 import { render } from 'react-dom';
-import createHistory from 'history/lib/createBrowserHistory';
-
-import HeaderView from './views/HeaderView.js';
-import StreamView from './views/StreamView.js';
-import PostView from './views/PostView.js';
-
-// First we import some components...
+import history from './History';
+import HeaderView from './views/HeaderView';
+import QuickSwitchView from './views/QuickSwitchView';
+import StreamView from './views/StreamView';
+import PostView from './views/PostView';
+import Keystrokes from './Keystrokes';
 import { Router, Route, IndexRoute, Link } from 'react-router';
-
-// Opt-out of persistent state, not recommended.
-var history = createHistory({
-  queryKey: false
-});
 
 // Then we delete a bunch of code from App and
 // add some <Link> elements...
@@ -20,19 +14,28 @@ class App extends React.Component {
 
     constructor(props) {
         super(props);
+        this.state = { quickSwitchVisible: false };
+        Keystrokes.listen(['⌘o','⌃o'], event => this.setState({ quickSwitchVisible: !this.state.quickSwitchVisible }));
+        Keystrokes.listen("⎋", event => {
+            if(this.state.quickSwitchVisible) this.setState({ quickSwitchVisible: false });
+        });
+    }
+
+    // this method is invoked when the user hits enter within the quickSwitcher, and
+    // we want to close the quick switcher from here
+    closeQuickSwitcher() {
+        this.setState({ quickSwitchVisible: false });
     }
 
     render() {
+        var quickSwitch = this.state.quickSwitchVisible ? <QuickSwitchView onSubredditChanged={this.closeQuickSwitcher.bind(this)}/> : false;
         return (
             <div className="app-view">
                 <HeaderView />
-                {/*
-                    next we replace `<Child>` with `this.props.children`
-                    the router will figure out the children for us
-                */}
                 {this.props.children}
+                {quickSwitch}
             </div>
-        )
+        );
     }
 }
 

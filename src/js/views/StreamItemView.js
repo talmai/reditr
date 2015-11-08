@@ -1,11 +1,10 @@
-import React from 'react'
-import { render } from 'react-dom'
-
-import MediaParserView from './MediaParserView.js'
-import reddit from '../api/reddit.js'
-import CommentModel from '../models/CommentModel.js'
-import StreamCommentView from './StreamCommentView.js'
-import { Link } from 'react-router'
+import React from 'react';
+import { render } from 'react-dom';
+import MediaParserView from './MediaParserView.js';
+import reddit from '../api/reddit.js';
+import CommentModel from '../models/CommentModel.js';
+import StreamCommentView from './StreamCommentView.js';
+import { Link } from 'react-router';
 
 class StreamItemView extends React.Component {
 
@@ -16,7 +15,7 @@ class StreamItemView extends React.Component {
         this.state = {
             voteCount: this.props.post.get("score"),
             topComments: []
-        }
+        };
     }
 
     componentDidMount() {
@@ -25,15 +24,11 @@ class StreamItemView extends React.Component {
 
     loadComments() {
         reddit.getPostFromPermalink(this.props.post.get("permalink"), null, (err, data) => {
-
             let comments = data.body[1].data.children;
-
-            this.setState({
-                topComments: [
-                    comments[0],
-                    comments[1]
-                ]
-            });
+            var topComments = [];
+            if(comments[0]) topComments.push(comments[0]);
+            if(comments[1]) topComments.push(comments[1]);
+            this.setState({ topComments: topComments });
         });
     }
 
@@ -53,7 +48,7 @@ class StreamItemView extends React.Component {
                 commentsView.push(<StreamCommentView key={commentObj.get("id")} comment={commentObj} />);
             });
         }
-        
+
         return (
             <div key={this.props.key} className="stream-item-view">
                 <div className="stream-item-content">
@@ -69,10 +64,10 @@ class StreamItemView extends React.Component {
                     <Link to={post.get("permalink")} className="view-more-comments">View More Comments</Link>
                 </div>
             </div>
-        )
+        );
 
     }
 
 }
 
-export default StreamItemView
+export default StreamItemView;

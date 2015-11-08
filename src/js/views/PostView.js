@@ -41,8 +41,6 @@ class PostView extends React.Component {
 
         let commentViews = [];
         comments.forEach(comment => {
-
-                console.log(comment.kind)
             if (comment.kind != "more") {
                 let commentObj = new CommentModel(comment);
                 commentViews.push(<PostCommentView key={commentObj.get("id")} comment={commentObj} />);
@@ -66,4 +64,4 @@ class PostView extends React.Component {
     }
 }
 
-export default PostView
+export default PostView;
