@@ -72,7 +72,7 @@ class MediaParser {
             }).end(function(err, res) {
                 callback({
                     url: url,
-                    parsedText: res.body.content,
+                    parsedText: res.body.excerpt,
                     type: "article"
                 });
             });
