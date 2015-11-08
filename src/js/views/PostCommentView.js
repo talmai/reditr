@@ -1,5 +1,5 @@
 import React from 'react';
-import Utilities from '../Utilities.js';
+import { decodeEntities } from '../Utilities.js';
 import CommentModel from '../models/CommentModel.js';
 
 class PostCommentView extends React.Component {
@@ -15,7 +15,7 @@ class PostCommentView extends React.Component {
     render() {
 
         let comment = this.props.comment;
-        let body_html = Utilities.decodeEntities(comment.get("body_html"));
+        let body_html = decodeEntities(comment.get("body_html"));
 
         // forces all links to open in new tab (faster than regex in newer versions of V8) http://jsperf.com/replace-all-vs-split-join
         let parsedHtml = body_html.split("<a ").join("<a target=\"_blank\" ");

@@ -45807,34 +45807,36 @@ exports["default"] = new Keystrokes();
 module.exports = exports["default"];
 
 },{}],296:[function(require,module,exports){
+// this prevents any overhead from creating the object each time
 'use strict';
 
 exports.__esModule = true;
-var Utilities = {};
+exports.decodeEntities = decodeEntities;
+exports.prettyNumber = prettyNumber;
+var element = document.createElement('div');
 
-Utilities.decodeEntities = (function () {
-
-    // this prevents any overhead from creating the object each time
-    var element = document.createElement('div');
-
-    function decodeHTMLEntities(str) {
-        if (str && typeof str === 'string') {
-            // strip script/html tags
-            str = str.replace(/<script[^>]*>([\S\s]*?)<\/script>/gmi, '');
-            str = str.replace(/<\/?\w(?:[^"'>]|"[^"]*"|'[^']*')*>/gmi, '');
-            element.innerHTML = str;
-            str = element.textContent;
-            element.textContent = '';
-        }
-
-        return str;
+function decodeEntities(str) {
+    if (str && typeof str === 'string') {
+        // strip script/html tags
+        str = str.replace(/<script[^>]*>([\S\s]*?)<\/script>/gmi, '');
+        str = str.replace(/<\/?\w(?:[^"'>]|"[^"]*"|'[^']*')*>/gmi, '');
+        element.innerHTML = str;
+        str = element.textContent;
+        element.textContent = '';
     }
 
-    return decodeHTMLEntities;
-})();
+    return str;
+}
 
-exports['default'] = Utilities;
-module.exports = exports['default'];
+function prettyNumber(number) {
+    if (number >= 1000000) {
+        return Math.round(number * 10) / 10 + 'm';
+    } else if (number >= 1000) {
+        return Math.round(number * 10) / 10 + 'k';
+    } else {
+        return number;
+    }
+}
 
 },{}],297:[function(require,module,exports){
 /**
@@ -46256,8 +46258,6 @@ var _react2 = _interopRequireDefault(_react);
 
 var _UtilitiesJs = require('../Utilities.js');
 
-var _UtilitiesJs2 = _interopRequireDefault(_UtilitiesJs);
-
 var _modelsCommentModelJs = require('../models/CommentModel.js');
 
 var _modelsCommentModelJs2 = _interopRequireDefault(_modelsCommentModelJs);
@@ -46279,7 +46279,7 @@ var PostCommentView = (function (_React$Component) {
         var _this = this;
 
         var comment = this.props.comment;
-        var body_html = _UtilitiesJs2['default'].decodeEntities(comment.get("body_html"));
+        var body_html = _UtilitiesJs.decodeEntities(comment.get("body_html"));
 
         // forces all links to open in new tab (faster than regex in newer versions of V8) http://jsperf.com/replace-all-vs-split-join
         var parsedHtml = body_html.split("<a ").join("<a target=\"_blank\" ");
@@ -46543,8 +46543,6 @@ var _htmlToReact2 = _interopRequireDefault(_htmlToReact);
 
 var _Utilities = require('../Utilities');
 
-var _Utilities2 = _interopRequireDefault(_Utilities);
-
 var StreamCommentView = (function (_React$Component) {
     _inherits(StreamCommentView, _React$Component);
 
@@ -46562,7 +46560,7 @@ var StreamCommentView = (function (_React$Component) {
     StreamCommentView.prototype.render = function render() {
 
         var comment = this.state.comment;
-        var body_html = _Utilities2['default'].decodeEntities(comment.get("body_html"));
+        var body_html = _Utilities.decodeEntities(comment.get("body_html"));
         if (!body_html) console.log(comment);
         // forces all links to open in new tab (faster than regex in newer versions of V8) http://jsperf.com/replace-all-vs-split-join
         var parsedHtml = body_html.split("<a ").join("<a target=\"_blank\" ").replace('<div class="md"><p>', '<div class="md"><p><div class="stream-item-comment-author">' + comment.get("author") + ':</div>');
@@ -46602,23 +46600,25 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactDom = require('react-dom');
 
-var _MediaParserViewJs = require('./MediaParserView.js');
+var _MediaParserView = require('./MediaParserView');
 
-var _MediaParserViewJs2 = _interopRequireDefault(_MediaParserViewJs);
+var _MediaParserView2 = _interopRequireDefault(_MediaParserView);
 
 var _apiRedditJs = require('../api/reddit.js');
 
 var _apiRedditJs2 = _interopRequireDefault(_apiRedditJs);
 
-var _modelsCommentModelJs = require('../models/CommentModel.js');
+var _modelsCommentModel = require('../models/CommentModel');
 
-var _modelsCommentModelJs2 = _interopRequireDefault(_modelsCommentModelJs);
+var _modelsCommentModel2 = _interopRequireDefault(_modelsCommentModel);
 
-var _StreamCommentViewJs = require('./StreamCommentView.js');
+var _StreamCommentView = require('./StreamCommentView');
 
-var _StreamCommentViewJs2 = _interopRequireDefault(_StreamCommentViewJs);
+var _StreamCommentView2 = _interopRequireDefault(_StreamCommentView);
 
 var _reactRouter = require('react-router');
+
+var _Utilities = require('../Utilities');
 
 var StreamItemView = (function (_React$Component) {
     _inherits(StreamItemView, _React$Component);
@@ -46653,7 +46653,6 @@ var StreamItemView = (function (_React$Component) {
     };
 
     StreamItemView.prototype.render = function render() {
-        var _this2 = this;
 
         var post = this.props.post; // typeof = PostModel
 
@@ -46665,15 +46664,28 @@ var StreamItemView = (function (_React$Component) {
             commentsView = _react2['default'].createElement(
                 'span',
                 { className: 'no-comments' },
-                'No top comments!'
+                'No comments!'
             );
         } else {
+            var commentCount = post.get("num_comments");
             topComments.forEach(function (comment) {
-                var commentObj = new _modelsCommentModelJs2['default'](comment);
-                commentsView.push(_react2['default'].createElement(_StreamCommentViewJs2['default'], { key: commentObj.get("id"), comment: commentObj }));
+                commentCount--;
+                var commentObj = new _modelsCommentModel2['default'](comment);
+                commentsView.push(_react2['default'].createElement(_StreamCommentView2['default'], { key: commentObj.get("id"), comment: commentObj }));
             });
+            commentCount = commentCount <= 0 ? '' : _Utilities.prettyNumber(commentCount);
+            commentsView.push(_react2['default'].createElement(
+                _reactRouter.Link,
+                { to: post.get("permalink"), className: 'view-more-comments' },
+                _react2['default'].createElement(
+                    'div',
+                    { className: 'icon' },
+                    commentCount,
+                    ' More Comments'
+                )
+            ));
         }
-
+        console.log(post.json);
         return _react2['default'].createElement(
             'div',
             { key: this.props.key, className: 'stream-item-view' },
@@ -46683,21 +46695,21 @@ var StreamItemView = (function (_React$Component) {
                 _react2['default'].createElement(
                     'a',
                     { href: post.get("url"), target: '_blank', className: 'stream-item-title' },
-                    post.get("title")
-                ),
-                _react2['default'].createElement(
-                    'span',
-                    { className: 'stream-item-domain' },
-                    '(',
-                    post.get("domain"),
-                    ')'
+                    post.get("title"),
+                    _react2['default'].createElement(
+                        'span',
+                        { className: 'stream-item-domain' },
+                        '(',
+                        post.get("domain"),
+                        ')'
+                    )
                 ),
                 _react2['default'].createElement(
                     'span',
                     { className: 'stream-item-vote-count' },
                     post.get("score")
                 ),
-                _react2['default'].createElement(_MediaParserViewJs2['default'], { url: post.get("url"), post: post }),
+                _react2['default'].createElement(_MediaParserView2['default'], { url: post.get("url"), post: post }),
                 _react2['default'].createElement(
                     'div',
                     { className: 'mini-details' },
@@ -46714,34 +46726,15 @@ var StreamItemView = (function (_React$Component) {
                     )
                 )
             ),
-            (function () {
-                if (_this2.state.isLoading) {
-                    return _react2['default'].createElement(
-                        'div',
-                        { className: 'stream-item-comments' },
-                        _react2['default'].createElement(
-                            'div',
-                            { className: 'loading' },
-                            'Loading...'
-                        )
-                    );
-                } else {
-                    return _react2['default'].createElement(
-                        'div',
-                        { className: 'stream-item-comments' },
-                        commentsView,
-                        _react2['default'].createElement(
-                            _reactRouter.Link,
-                            { to: post.get("permalink"), className: 'view-more-comments' },
-                            _react2['default'].createElement(
-                                'div',
-                                { className: 'icon' },
-                                'More Comments'
-                            )
-                        )
-                    );
-                }
-            })()
+            _react2['default'].createElement(
+                'div',
+                { className: 'stream-item-comments' },
+                this.state.isLoading ? _react2['default'].createElement(
+                    'div',
+                    { className: 'loading' },
+                    'Loading...'
+                ) : commentsView
+            )
         );
     };
 
@@ -46751,7 +46744,7 @@ var StreamItemView = (function (_React$Component) {
 exports['default'] = StreamItemView;
 module.exports = exports['default'];
 
-},{"../api/reddit.js":298,"../models/CommentModel.js":300,"./MediaParserView.js":303,"./StreamCommentView.js":307,"react":288,"react-dom":86,"react-router":106}],309:[function(require,module,exports){
+},{"../Utilities":296,"../api/reddit.js":298,"../models/CommentModel":300,"./MediaParserView":303,"./StreamCommentView":307,"react":288,"react-dom":86,"react-router":106}],309:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
