@@ -16,7 +16,7 @@ Our Website & Current App: http://reditr.com
 5. You are ready to dev!
 
 # GNU License
-Reditr is free and open. We work on Reditr completely for fun and so we're developing it under the GNU general publice license. To read the GNU GENERAL PUBLIC LICENSE under which our software abides by, please see the file LICENSE.
+Reditr is free and open. We work on Reditr completely for fun and so we're developing it under the GNU General Public License. To read the GNU GENERAL PUBLIC LICENSE under which our software abides by, please see the file LICENSE.
 
 # Colour Guide
 ![Color palette](https://dl.dropboxusercontent.com/s/j9r547mygvm6qm3/Screenshot%202015-10-31%2013.53.03.png?dl=0)
