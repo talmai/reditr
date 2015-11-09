@@ -11,13 +11,12 @@ class StreamItemView extends React.Component {
 
     constructor(props) {
         super(props);
-
         // set default
         this.state = {
             voteCount: this.props.post.get("score"),
             topComments: [],
             isLoading: true
-        }
+        };
     }
 
     componentDidMount() {
@@ -52,7 +51,7 @@ class StreamItemView extends React.Component {
                 commentsView.push(<StreamCommentView key={commentObj.get("id")} comment={commentObj} />);
             });
             commentCount = commentCount <= 0 ? '' : prettyNumber(commentCount);
-            commentsView.push(<Link to={post.get("permalink")} className="view-more-comments">
+            commentsView.push(<Link key="more" to={post.get("permalink")} className="view-more-comments">
                                   <div className='icon'>{commentCount} More Comments</div>
                               </Link>);
         }

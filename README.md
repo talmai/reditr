@@ -1,4 +1,6 @@
-# Reditr
+![Reditr](http://i.imgur.com/4euH4KX.png)
+
+# About
 This is the **official** Reditr repo. Current state of the project is unfinished, we are starting from scratch using more modern technologies. Bonus is we're going Open Source!
 
 Our Website: http://reditr.com
@@ -7,9 +9,8 @@ Our Website: http://reditr.com
 1. Get npm
 2. cd to directory
 3. Run ``npm install``
-4. Run ``grunt`` (To manually build, run ``grunt build``)
-6. Open a new tab in terminal, and run ``grunt connect``
-7. Go to your browser and go to http://localhost:3000
+4. Run ``grunt`` and keep this running as you develop (To manually build, run ``grunt build``)
+7. The app is now running in dev mode and you can open http://localhost:3000 in your browser
 5. You are ready to dev!
 
 # Style
