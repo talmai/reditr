@@ -298,6 +298,7 @@ body {
   border-left: 1px solid #dedede;
   height: 100%;
   padding: 10px;
+  border-top-right-radius: 5px;
   text-align: center;
 }
 .stream-item-view .stream-item-top .stream-item-sidebar .stream-item-vote-count {
