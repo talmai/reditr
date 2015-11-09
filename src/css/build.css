@@ -328,7 +328,6 @@ body {
   font-weight: bold;
   color: #333;
   text-decoration: none;
-  display: inline-block;
   width: calc(100% - 50px);
 }
 .stream-item-view .stream-item-top .stream-item-content .stream-item-title:hover {
@@ -338,7 +337,7 @@ body {
 .stream-item-view .stream-item-top .stream-item-content .stream-item-domain {
   font-size: 12px;
   color: #535353;
-  margin-left: 10px;
+  margin-left: 5px;
 }
 .stream-item-view .stream-item-top .stream-item-content .media {
   display: block;
