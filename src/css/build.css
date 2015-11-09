@@ -307,7 +307,7 @@ body {
 .stream-item-view .stream-item-top .stream-item-content {
   padding: 10px;
   padding-top: 7px;
-  width: calc(100% - 50px);
+  width: calc(100% - 90px);
 }
 .stream-item-view .stream-item-top .stream-item-content .mini-details {
   font-size: 13px;
