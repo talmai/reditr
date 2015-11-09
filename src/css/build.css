@@ -307,7 +307,7 @@ body {
 .stream-item-view .stream-item-top .stream-item-content {
   padding: 10px;
   padding-top: 7px;
-  width: calc(100% - 70px);
+  width: calc(100% - 50px);
 }
 .stream-item-view .stream-item-top .stream-item-content .mini-details {
   font-size: 13px;
@@ -328,7 +328,6 @@ body {
   font-weight: bold;
   color: #333;
   text-decoration: none;
-  width: calc(100% - 50px);
 }
 .stream-item-view .stream-item-top .stream-item-content .stream-item-title:hover {
   color: black;
