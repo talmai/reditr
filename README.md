@@ -3,6 +3,8 @@
 # About
 This is the **official** Reditr repo. Current state of the project is unfinished, we are starting from scratch using more modern technologies. Bonus is we're going Open Source!
 
+Check out our progress at: http://master.reditr.com/
+
 Our Website: http://reditr.com
 
 # How to Build
