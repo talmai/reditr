@@ -304,10 +304,29 @@ body {
 .stream-item-view .stream-item-top .stream-item-sidebar .stream-item-vote-count {
   font-size: 13px;
 }
+@media screen and (max-width: 768px) {
+  .stream-item-view .stream-item-top .stream-item-sidebar {
+    position: relative;
+    height: 50px;
+    width: 100%;
+    border-radius: 0;
+    border-left: 0;
+    border-top: 1px solid #dedede;
+  }
+  .stream-item-view .stream-item-top .stream-item-sidebar .stream-item-vote-count {
+    line-height: calc(30px);
+    float: right;
+  }
+}
 .stream-item-view .stream-item-top .stream-item-content {
   padding: 10px;
   padding-top: 7px;
   width: calc(100% - 70px);
+}
+@media screen and (max-width: 768px) {
+  .stream-item-view .stream-item-top .stream-item-content {
+    width: 100%;
+  }
 }
 .stream-item-view .stream-item-top .stream-item-content .mini-details {
   font-size: 13px;
