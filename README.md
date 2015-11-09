@@ -3,9 +3,9 @@
 # About
 This is the **official** Reditr repo. Current state of the project is unfinished, we are starting from scratch using more modern technologies. Bonus is we're going Open Source!
 
-Check out our progress at: http://master.reditr.com/
+This app (live self updating preview of master): http://master.reditr.com/
 
-Our Website: http://reditr.com
+Our Website & Current App: http://reditr.com
 
 # How to Build
 1. Get npm
@@ -14,6 +14,9 @@ Our Website: http://reditr.com
 4. Run ``grunt`` and keep this running as you develop (To manually build, run ``grunt build``)
 7. The app is now running in dev mode and you can open http://localhost:3000 in your browser
 5. You are ready to dev!
+
+# GNU License
+Reditr is free and open. We work on Reditr completely for fun and so we're developing it under the GNU general publice license. To read the GNU GENERAL PUBLIC LICENSE under which our software abides by, please see the file LICENSE.
 
 # Style
 ![Color palette](https://dl.dropboxusercontent.com/s/j9r547mygvm6qm3/Screenshot%202015-10-31%2013.53.03.png?dl=0)
