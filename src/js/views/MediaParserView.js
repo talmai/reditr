@@ -1,15 +1,13 @@
-import React from 'react'
-import { render } from 'react-dom'
+import React from 'react';
+import { render } from 'react-dom';
 
-import MediaParser from '../api/MediaParser.js'
+import MediaParser from '../api/MediaParser';
+import YoutubeView from './YoutubeView';
 
 class MediaParserView extends React.Component {
 
     constructor(props) {
         super(props);
-
-        // get the parser
-        this.parser = new MediaParser();
 
         // no media as default
         this.state = {
@@ -18,52 +16,55 @@ class MediaParserView extends React.Component {
     }
 
     /**
-      Takes the url and determines what type of media we have
-    */
+     Takes the url and determines what type of media we have
+     */
     parseMedia() {
         // is this a self post?
         if (this.props.post.get('selftext_html')) {
-            this.parser.parseText(this.props.post.get('selftext_html'), media => {
+            MediaParser.parseText(this.props.post.get('selftext_html'), media => {
                 this.setState({
                     media: media
-                })
-            })
+                });
+            });
         } else {
-            this.parser.parse(this.props.url, media => {
+            MediaParser.parse(this.props.url, media => {
                 this.setState({
                     media: media
-                })
-            })
+                });
+            });
         }
     }
 
     componentDidMount() {
         // parse the url
-        this.parseMedia()
+        this.parseMedia();
     }
 
     render() {
 
         switch (this.state.media.type) {
-            case "image": // simply return image tag
-                return <img src={this.state.media.parsedUrl} className="media" />
-                break
-            case "video":
-                return (
+        case "image": // simply return image tag
+            return <img src={this.state.media.parsedUrl} className="media" />;
+            break;
+        case "youtube":
+            return <YoutubeView videoId={this.state.media.videoId}/>;
+            break;
+        case "video":
+            return (
                     <video className="media" autoPlay loop muted>
-                        <source type="video/webm" src={this.state.media.parsedUrl} />
+                    <source type="video/webm" src={this.state.media.parsedUrl} />
                     </video>
-                )
-                break
-            case "text":
-            case "article":
-                return (
+            );
+            break;
+        case "text":
+        case "article":
+            return (
                     <div className="media text" dangerouslySetInnerHTML={{__html: this.state.media.parsedText}}></div>
-                )
-                break;
-            default:
-                return false
-                break
+            );
+            break;
+        default:
+            return false;
+            break;
         }
 
 
@@ -71,4 +72,4 @@ class MediaParserView extends React.Component {
 
 }
 
-export default MediaParserView
+export default MediaParserView;

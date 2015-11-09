@@ -1,10 +1,10 @@
 import React from 'react';
 
-import PostModel from '../models/PostModel.js';
-import MediaParserView from './MediaParserView.js';
-import reddit from '../api/reddit.js';
-import PostCommentView from './PostCommentView.js';
-import CommentModel from '../models/CommentModel.js';
+import PostModel from '../models/PostModel';
+import MediaParserView from './MediaParserView';
+import reddit from '../api/reddit';
+import PostCommentView from './PostCommentView';
+import CommentModel from '../models/CommentModel';
 
 class PostView extends React.Component {
 
@@ -53,7 +53,7 @@ class PostView extends React.Component {
                     <span className="post-vote-count">{post.get("score")}</span>
                     <a href={post.get("url")} target="_blank" className="post-title">{post.get("title")}</a>
                     <span className="post-author">{post.get("author")}</span>
-                    <MediaParserView url={post.get("url")} />
+                    <MediaParserView url={post.get("url")} post={post} />
                 </div>
                 <div className="post-separator"></div>
                 <div className="post-comments">

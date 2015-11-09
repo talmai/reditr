@@ -11,9 +11,9 @@ class HeaderView extends React.Component {
                 <ul className="mini-nav">
                 </ul>
             </div>
-        )
+        );
     }
 
 }
 
-export default HeaderView
+export default HeaderView;

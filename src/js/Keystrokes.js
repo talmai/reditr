@@ -97,8 +97,4 @@ class Keystrokes {
     }
 };
 
-
-
-
-
 export default (new Keystrokes);
