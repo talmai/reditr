@@ -57,15 +57,17 @@ class StreamItemView extends React.Component {
         }
         return (
             <div key={this.props.key} className="stream-item-view">
-                <div className="stream-item-content">
-                    <a href={post.get("url")} target="_blank" className="stream-item-title">
-                        {post.get("title")}
+                <div className="stream-item-top">
+                    <div className="stream-item-content">
+                        <a href={post.get("url")} target="_blank" className="stream-item-title">{post.get("title")}</a>
                         <span className="stream-item-domain">({post.get("domain")})</span>
-                    </a>
-                    <span className="stream-item-vote-count">{post.get("score")}</span>
-                    <MediaParserView url={post.get("url")} post={post} />
-                    <div className="mini-details">
-                        <span className="stream-item-author">{post.get("author")}</span> in <Link to={"/r/" + post.get("subreddit")} className="stream-item-subreddit">{"/r/" + post.get('subreddit')}</Link>
+                        <MediaParserView url={post.get("url")} post={post} />
+                        <div className="mini-details">
+                            <span className="stream-item-author">{post.get("author")}</span> in <Link to={"/r/" + post.get("subreddit")} className="stream-item-subreddit">{"/r/" + post.get('subreddit')}</Link>
+                        </div>
+                    </div>
+                    <div className="stream-item-sidebar">
+                        <span className="stream-item-vote-count">{post.get("score")}</span>
                     </div>
                 </div>
                 <div className="stream-item-comments">

@@ -8,8 +8,6 @@ class HeaderView extends React.Component {
         return (
             <div id="HeaderView">
                 <img className="logo" src="images/logo.png" />
-                <ul className="mini-nav">
-                </ul>
             </div>
         );
     }

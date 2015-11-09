@@ -284,54 +284,68 @@ body {
   text-align: left;
   border: 1px solid #c6c6c6;
   border-radius: 4px;
+}
+.stream-item-view .stream-item-top {
   position: relative;
 }
-.stream-item-view .stream-item-content {
+.stream-item-view .stream-item-top .stream-item-sidebar {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 70px;
+  box-sizing: border-box;
+  background: #fefefe;
+  border-left: 1px solid #dedede;
+  height: 100%;
+  padding: 10px;
+  text-align: center;
+}
+.stream-item-view .stream-item-top .stream-item-sidebar .stream-item-vote-count {
+  font-size: 13px;
+}
+.stream-item-view .stream-item-top .stream-item-content {
   padding: 10px;
   padding-top: 7px;
-  position: relative;
+  width: calc(100% - 70px);
 }
-.stream-item-view .stream-item-content .stream-item-vote-count {
-  float: right;
-}
-.stream-item-view .stream-item-content .mini-details {
+.stream-item-view .stream-item-top .stream-item-content .mini-details {
   font-size: 13px;
   color: #999;
 }
-.stream-item-view .stream-item-content .mini-details .stream-item-author {
+.stream-item-view .stream-item-top .stream-item-content .mini-details .stream-item-author {
   font-weight: bold;
 }
-.stream-item-view .stream-item-content .mini-details .stream-item-subreddit {
+.stream-item-view .stream-item-top .stream-item-content .mini-details .stream-item-subreddit {
   font-weight: bold;
   text-decoration: none;
   color: #333;
 }
-.stream-item-view .stream-item-content .mini-details .stream-item-subreddit:hover {
+.stream-item-view .stream-item-top .stream-item-content .mini-details .stream-item-subreddit:hover {
   text-decoration: underline;
 }
-.stream-item-view .stream-item-content .stream-item-title {
+.stream-item-view .stream-item-top .stream-item-content .stream-item-title {
   font-weight: bold;
   color: #333;
   text-decoration: none;
   display: inline-block;
   width: calc(100% - 50px);
 }
-.stream-item-view .stream-item-content .stream-item-title:hover {
+.stream-item-view .stream-item-top .stream-item-content .stream-item-title:hover {
   color: black;
   text-decoration: underline;
 }
-.stream-item-view .stream-item-content .stream-item-domain {
+.stream-item-view .stream-item-top .stream-item-content .stream-item-domain {
   font-size: 12px;
   color: #535353;
   margin-left: 10px;
 }
-.stream-item-view .stream-item-content .media {
+.stream-item-view .stream-item-top .stream-item-content .media {
   display: block;
   max-height: 400px;
   max-width: 90%;
   margin: 10px auto;
 }
-.stream-item-view .stream-item-content .media.text {
+.stream-item-view .stream-item-top .stream-item-content .media.text {
   background: #eee;
   padding: 10px;
   font-size: 14px;
@@ -339,7 +353,7 @@ body {
   border: 1px solid #dfdfdf;
   overflow: auto;
 }
-.stream-item-view .stream-item-content .media.text p {
+.stream-item-view .stream-item-top .stream-item-content .media.text p {
   margin: 0;
 }
 .stream-item-view .stream-item-comments {
@@ -382,7 +396,7 @@ body {
   background-color: #d9dadb;
 }
 .stream-item-view .stream-item-comments .view-more-comments:active {
-  background-color: #C9CDD1;
+  background-color: #c9cdd1;
 }
 
 
