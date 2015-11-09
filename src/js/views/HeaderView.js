@@ -9,9 +9,9 @@ class HeaderView extends React.Component {
             <div id="HeaderView">
                 <img className="logo" src="images/logo.png" />
             </div>
-        )
+        );
     }
 
 }
 
-export default HeaderView
+export default HeaderView;

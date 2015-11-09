@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import reddit from '../api/reddit.js';
-import StreamItemView from './StreamItemView.js';
-import StreamSpinnerView from './StreamSpinnerView.js';
-import PostModel from '../models/PostModel.js';
+import reddit from '../api/reddit';
+import StreamItemView from './StreamItemView';
+import StreamSpinnerView from './StreamSpinnerView';
+import PostModel from '../models/PostModel';
 
 class StreamView extends React.Component {
 
@@ -38,16 +38,35 @@ class StreamView extends React.Component {
         return finalArray;
     }
 
-    load(subreddit = this.defaultSubreddit, options = { reset: false }) {
-        if (this.state.isLoading) return;
-		let loadPosts = () => {
+    load(subreddit = this.state.subreddit, options = { reset: false }) {
+        if (this.state.isLoading && !options.reset) return;
+
+        var state;
+        if (options.reset) {
+            state = {
+                subreddit: subreddit,
+                posts: [],
+                sort: "hot",
+                after: null,
+                isLoading: true,
+                notFound: false
+            };
+        }else{
+            state = {
+                isLoading: true,
+                notFound: false
+            };
+        }
+
+        this.setState(state, () => {
             // retreive the posts
-            reddit.getPostsFromSubreddit(subreddit, { sort: this.state.sort, after: this.state.after }, (err, posts) => {
-            	// subreddit not found
-	            if(!posts || !posts.body) {
-	                this.setState({ subreddit: subreddit, notFound: true, isLoading: false });
-	                return;
-	            }
+            var options = { sort: this.state.sort, after: this.state.after };
+            reddit.getPostsFromSubreddit(subreddit, options, (err, posts) => {
+                // subreddit not found
+                if (!posts || !posts.body) {
+                    this.setState({ subreddit: subreddit, notFound: true, isLoading: false });
+                    return;
+                }
                 // update state to re render
                 let newPosts = posts.body.data.children;
                 let oldPosts = this.state.posts;
@@ -62,24 +81,7 @@ class StreamView extends React.Component {
                     isLoading: false
                 });
             });
-        }.bind(this);
-
-        if (options.reset) {
-            // reset
-            this.setState({
-                subreddit: subreddit,
-                posts: [],
-                sort: "hot",
-                after: null,
-                isLoading: true,
-                notFound: false
-            }, loadPosts);
-        } else {
-            this.setState({
-                isLoading: true,
-                notFound: false
-            }, loadPosts);
-        }
+        });
     }
 
     componentWillReceiveProps(props) {

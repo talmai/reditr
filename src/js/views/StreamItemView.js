@@ -1,22 +1,22 @@
 import React from 'react';
 import { render } from 'react-dom';
-import MediaParserView from './MediaParserView.js';
+import MediaParserView from './MediaParserView';
 import reddit from '../api/reddit.js';
-import CommentModel from '../models/CommentModel.js';
-import StreamCommentView from './StreamCommentView.js';
+import CommentModel from '../models/CommentModel';
+import StreamCommentView from './StreamCommentView';
 import { Link } from 'react-router';
+import { prettyNumber } from '../Utilities';
 
 class StreamItemView extends React.Component {
 
     constructor(props) {
         super(props);
-
         // set default
         this.state = {
             voteCount: this.props.post.get("score"),
             topComments: [],
             isLoading: true
-        }
+        };
     }
 
     componentDidMount() {
@@ -42,14 +42,19 @@ class StreamItemView extends React.Component {
 
         // if no comments, say no comments
         if (topComments.length == 0) {
-            commentsView = <span className="no-comments">No top comments!</span>;
+            commentsView = <span className="no-comments">No comments!</span>;
         } else {
+            var commentCount = post.get("num_comments");
             topComments.forEach(comment => {
+                commentCount--;
                 let commentObj = new CommentModel(comment);
                 commentsView.push(<StreamCommentView key={commentObj.get("id")} comment={commentObj} />);
             });
+            commentCount = commentCount <= 0 ? '' : prettyNumber(commentCount);
+            commentsView.push(<Link key="more" to={post.get("permalink")} className="view-more-comments">
+                                  <div className='icon'>{commentCount} More Comments</div>
+                              </Link>);
         }
-
         return (
             <div key={this.props.key} className="stream-item-view">
                 <div className="stream-item-top">
@@ -65,28 +70,9 @@ class StreamItemView extends React.Component {
                         <span className="stream-item-vote-count">{post.get("score")}</span>
                     </div>
                 </div>
-                {
-                    (
-                        () => {
-                            if (this.state.isLoading) {
-                                return (
-                                    <div className="stream-item-comments">
-                                        <div className="loading">Loading...</div>
-                                    </div>
-                                );
-                            } else {
-                                return (
-                                    <div className="stream-item-comments">
-                                        {commentsView}
-                                        <Link to={post.get("permalink")} className="view-more-comments">
-                                            <div className='icon'>More Comments</div>
-                                        </Link>
-                                    </div>
-                                );
-                            }
-                        }
-                    )()
-                }
+                <div className="stream-item-comments">
+                    { this.state.isLoading ? <div className="loading">Loading...</div> : commentsView }
+                </div>
             </div>
         );
 
