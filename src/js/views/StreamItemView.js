@@ -26,9 +26,25 @@ class StreamItemView extends React.Component {
     loadComments() {
         reddit.getPostFromPermalink(this.props.post.get("permalink"), null, (err, data) => {
             let comments = data.body[1].data.children;
+            let maxComments = Math.min(comments.length, 5);
+            var first, second;
+            for(var i = 0; i < maxComments; i++) {
+                var checking = comments[i];
+                if(checking.data.body == '[removed]') continue;
+                if(!first) {
+                    first = checking;
+                }else if(!second) {
+                    second = checking;
+                }else{
+                    var newFirst = first.data.body.length < second.data.body.length ? first : second;
+                    var rejected = newFirst == first ? second : first;
+                    first = newFirst;
+                    second = rejected.data.body.length < checking.data.body.length ? rejected : checking;
+                }
+            }
             var topComments = [];
-            if(comments[0]) topComments.push(comments[0]);
-            if(comments[1]) topComments.push(comments[1]);
+            if(first) topComments.push(first);
+            if(second) topComments.push(second);
             this.setState({ isLoading: false, topComments: topComments });
         });
     }
