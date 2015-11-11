@@ -51,13 +51,14 @@ class MediaParserView extends React.Component {
             break;
         case "video":
             return (
-                    <video className="media" autoPlay loop muted>
+                <video className="media" autoPlay loop muted>
                     <source type="video/webm" src={this.state.media.parsedUrl} />
-                    </video>
+                </video>
             );
             break;
         case "text":
         case "article":
+            if(this.state.media.parsedText.length == 0) return false;
             return (
                     <div className="media text" dangerouslySetInnerHTML={{__html: this.state.media.parsedText}}></div>
             );

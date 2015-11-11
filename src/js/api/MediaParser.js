@@ -4,6 +4,7 @@
         hanleMedia(url, callback)
 */
 import Request from 'superagent';
+import jsonp from './superagentJSONP';
 import { decodeEntities } from '../Utilities.js';
 
 class MediaParser {
@@ -13,30 +14,26 @@ class MediaParser {
             RAW_IMAGE: /\.(png|gif$|jpg|jpeg)/gi,
             IMGUR_ALBUM: /(http|https):\/\/*(.?)imgur.com\/(a|gallery)\/([a-zA-Z0-9]{5,})/gi,
             IMGUR_IMAGE: /(http|https):\/\/*(.?)imgur.com\/([a-zA-Z0-9]{5,})$/gi,
-            IMGUR_GIFV: /.*?i\.imgur\.com\/([a-z0-9]{5,})\.gifv$/gi,
+            IMGUR_GIFV: /.*?imgur\.com\/([a-z0-9]{5,})\.gifv$/gi,
             YOUTUBE_NORMAL: /youtube\.com\/watch/gi
         };
     }
 
     /** Method that delegates to the correct media type  */
     parse(url, callback) {
-
-
-
-        if (this.regex.RAW_IMAGE.test(url)) {
+        if (this.regex.IMGUR_GIFV.test(url)) {
+            this.handleImgurGifv(url, callback);
+        } else if (this.regex.RAW_IMAGE.test(url)) {
             this.handleRawImage(url, callback);
         } else if (this.regex.IMGUR_ALBUM.test(url)) {
             this.handleImgurAlbum(url, callback);
         } else if (this.regex.IMGUR_IMAGE.test(url)) {
             this.handleImgurImage(url, callback);
-        } else if (this.regex.IMGUR_GIFV.test(url)) {
-            this.handleImgurGifv(url, callback);
         } else if (this.regex.YOUTUBE_NORMAL.test(url)) {
             this.handleYouTube(url, callback);
         } else {
             this.handleAnyUrl(url, callback);
         }
-
     }
 
     handleYouTube(url, callback) {
@@ -56,11 +53,8 @@ class MediaParser {
     }
 
     handleAnyUrl(url, callback) {
-
-        let jsonp = require('superagent-jsonp');
-
         Request
-            .get('https://www.readability.com/api/content/v1/parser')
+            .get('https://www.readability.com/api/content/v1/parser?callback=?')
             .use(jsonp)
             .query({
                 url: url,
@@ -78,7 +72,6 @@ class MediaParser {
         // reset regex pos
         this.regex.IMGUR_GIFV.lastIndex = 0;
         let imgurId = this.regex.IMGUR_GIFV.exec(url).pop(); // id is last in matching group
-
         callback({
             url: url,
             parsedUrl: "http://i.imgur.com/" + imgurId + ".webm",

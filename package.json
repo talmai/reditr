@@ -22,7 +22,6 @@
     "react": "^0.14.1",
     "react-dom": "^0.14.1",
     "react-router": "^1.0.0-rc3",
-    "superagent": "^1.4.0",
-    "superagent-jsonp": "git+https://github.com/dimitryvin/superagent-jsonp.git"
+    "superagent": "^1.4.0"
   }
 }
