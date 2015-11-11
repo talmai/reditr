@@ -1,6 +1,7 @@
 import React from 'react';
 import { Router, Link } from 'react-router';
 import history from '../History.js';
+import Observable from '../api/Observable';
 
 class QuickSwitchView extends React.Component {
 
@@ -14,8 +15,9 @@ class QuickSwitchView extends React.Component {
 
     queryChanged(e) {
         if(e.keyCode == 13) {
-            let query = this.refs["query-input"].value;
-            history.pushState(null, '/r/' + query);
+            let query = '/r/' + this.refs["query-input"].value;
+            Observable.global.trigger('pushNav', { text: query, href: query });
+            //history.pushState(null, '/r/' + query);
             if(this.props.onSubredditChanged) this.props.onSubredditChanged();
         }
     }

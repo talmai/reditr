@@ -8,10 +8,56 @@
     border-bottom: 2px solid #121212;
     background-color: #333;
 
+    .header-view-left, .header-view-center, .header-view-right {
+        height: @header-height;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 33.33333333333%;
+    }
+
+    .header-view-text {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: white;
+        text-decoration: none;
+        font-size: 18px;
+        display: inline-block;
+        width: 100%;
+        padding-top: 9px;
+        padding-bottom: 9px;
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    .header-view-left {
+        left: 0;
+        padding-left: 10px;
+        .header-view-text {
+            color: #c9c9c9;
+        }
+    }
+
+    .header-view-center {
+        left: 33.33333333333%;
+        text-align: center;
+    }
+
+    .header-view-right {
+        right: 0;
+        text-align: right;
+        padding-right: 10px;
+        .header-view-text {
+            color: #c9c9c9;
+        }
+    }
+
     .logo {
         line-height: 100px;
         height: 100%;
-        margin: 0 auto;
+        margin: 0 10px;
         display: block;
     }
 

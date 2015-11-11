@@ -5,6 +5,7 @@ import reddit from '../api/reddit';
 import StreamItemView from './StreamItemView';
 import StreamSpinnerView from './StreamSpinnerView';
 import PostModel from '../models/PostModel';
+import Observable from '../api/Observable';
 
 class StreamView extends React.Component {
 
@@ -15,6 +16,16 @@ class StreamView extends React.Component {
 
         // temporarily assume all to be the default sub
         let subreddit = this.props.params.subreddit || this.defaultSubreddit;
+
+        // if a router created us then we must be the "main view" and need to
+        // offer up a title and path to this page for the breadcrumb
+        if(props.route) {
+            Observable.global.trigger('offerBreadcrumb', {
+                href: '/r/'+subreddit,
+                text: subreddit == this.defaultSubreddit ? 'Frontpage' : '/r/' + subreddit
+            });
+        }
+
         this.state = {
             subreddit: subreddit,
             posts: [],
@@ -34,7 +45,6 @@ class StreamView extends React.Component {
                 finalArray.push(post);
             }
         });
-
         return finalArray;
     }
 

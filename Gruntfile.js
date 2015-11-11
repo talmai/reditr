@@ -80,7 +80,10 @@ module.exports = function(grunt) {
             }
         },
         concurrent: {
-            watch: ['browserify:watch', 'watch:less', 'connect']
+            watch: ['browserify:watch', 'watch:less', 'connect'],
+            options: {
+                logConcurrentOutput: true
+            }
         }
     });
 

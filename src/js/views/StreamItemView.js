@@ -4,7 +4,7 @@ import MediaParserView from './MediaParserView';
 import reddit from '../api/reddit.js';
 import CommentModel from '../models/CommentModel';
 import StreamCommentView from './StreamCommentView';
-import { Link } from 'react-router';
+import Link from './Link';
 import { prettyNumber } from '../Utilities';
 
 class StreamItemView extends React.Component {
@@ -67,7 +67,7 @@ class StreamItemView extends React.Component {
                 commentsView.push(<StreamCommentView key={commentObj.get("id")} comment={commentObj} />);
             });
             commentCount = commentCount <= 0 ? '' : prettyNumber(commentCount);
-            commentsView.push(<Link key="more" to={post.get("permalink")} className="view-more-comments">
+            commentsView.push(<Link key="more" text={post.get("title")} to={post.get("permalink")} className="view-more-comments">
                                   <div className='icon'>{commentCount} More Comments</div>
                               </Link>);
         }

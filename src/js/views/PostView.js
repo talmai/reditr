@@ -5,6 +5,7 @@ import MediaParserView from './MediaParserView';
 import reddit from '../api/reddit';
 import PostCommentView from './PostCommentView';
 import CommentModel from '../models/CommentModel';
+import Observable from '../api/Observable';
 
 class PostView extends React.Component {
 
@@ -24,11 +25,18 @@ class PostView extends React.Component {
 
     load() {
         reddit.getPostFromPermalink(window.location.pathname, null, (err, data) => {
+            var post = new PostModel(data.body[0].data.children[0]);
             this.setState({
-                post: new PostModel(data.body[0].data.children[0]),
+                post,
                 comments: data.body[1].data.children,
                 loading: false
             });
+            if(this.props.route) {
+                Observable.global.trigger('offerBreadcrumb', {
+                    text: post.get("title"),
+                    href: post.get("url")
+                });
+            }
         });
     }
 
