@@ -21,7 +21,7 @@ class StreamView extends React.Component {
         // offer up a title and path to this page for the breadcrumb
         if(props.route) {
             Observable.global.trigger('offerBreadcrumb', {
-                href: '/r/'+subreddit,
+                href: window.location.href.indexOf('/r/') >= 0 ? '/r/'+subreddit : '/',
                 text: subreddit == this.defaultSubreddit ? 'Frontpage' : '/r/' + subreddit
             });
         }

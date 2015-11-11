@@ -47,7 +47,7 @@ class HeaderView extends React.Component {
     }
 
     truncateTitle(title) {
-        var words = title.split(' ');
+        var words = (title||'').split(' ');
         if(words.length <= 5) return title;
         var newTitle = [];
         for(var i = 0; i < 5; i++) newTitle.push(words[i]);
