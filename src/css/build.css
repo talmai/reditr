@@ -464,6 +464,9 @@ body {
   background-color: #c9cdd1;
 }
 
+.stream-spinner-view {
+  width: 40px;
+}
 
 .stream-view {
   position: relative;
