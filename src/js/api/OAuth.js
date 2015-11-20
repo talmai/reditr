@@ -3,9 +3,7 @@ import Request from 'superagent';
 class OAuth {
 
     constructor() {
-        this.clientId = "P3OV-qUrp57Z8A"
-        this.secret = "oZbplkCqnRj2mxVAWcwFEniatl8"
-        this.scope = "identity,edit,flair,history,modconfig,modflair,modlog,modposts,modwiki,mysubreddits,privatemessages,read,report,save,submit,subscribe,vote,wikiedit,wikiread";
+        
     }
 
     start(callback) {
