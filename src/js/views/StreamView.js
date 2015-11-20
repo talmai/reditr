@@ -128,6 +128,12 @@ class StreamView extends React.Component {
         node.removeEventListener('resize', this.scrollListener.bind(this));
     }
 
+    login() {
+        reddit.login(userObj => {
+
+        });
+    }
+
     render() {
 
         let postViews = [];
@@ -143,6 +149,7 @@ class StreamView extends React.Component {
 
         return (
             <div className="stream-view">
+                <button onClick={this.login}>Login</button>
                 {postViews}
                 {loading}
                 {notFound}
