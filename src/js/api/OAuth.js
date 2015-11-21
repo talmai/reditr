@@ -47,6 +47,22 @@ class OAuth {
                 this.callback(response.body)
             });
     }
+
+    getAccessToken(user, callback) {
+
+        Request
+            .get('http://reditr.com/api/sync/?getAccessToken')
+            .query({ oauth: user.refreshKey })
+            .end((err, response) => {
+                let data = response.body;
+
+                // make sure json
+    			data = typeof data == 'string' ? JSON.parse(data) : data;
+
+                callback(data.accesstoken);
+            });
+
+    }
 }
 
 export default new OAuth
