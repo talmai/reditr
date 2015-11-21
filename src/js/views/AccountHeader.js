@@ -18,7 +18,7 @@ class AccountHeader extends React.Component {
 
     render() {
         return (
-            <div className="header-account" onClick={this.startLogin}>Login</div>
+            <div className="account-header" onClick={this.startLogin}>Login</div>
         );
     }
 
