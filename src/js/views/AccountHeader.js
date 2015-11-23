@@ -21,7 +21,6 @@ class AccountHeader extends React.Component {
 
         UserManager.startLogin((status, user) => {
             if (status == "success") {
-                console.log(user);
                 this.setState({
                     user: user,
                     isLoggingIn: false
@@ -45,11 +44,15 @@ class AccountHeader extends React.Component {
         });
     }
 
+    logout() {
+        UserManager.logout();
+    }
+
     render() {
         // handle buttons states
         let button = <div className="account-header" onClick={this.startLogin.bind(this)}>Login</div>;
         if (this.state.user) {
-            button = <div className="account-header">{this.state.user.username}</div>;
+            button = <div className="account-header" onClick={this.logout.bind(this)}>{this.state.user.username}</div>;
         } else if (this.state.isLoggingIn) {
             button = <div className="account-header">Waiting...</div>;
         }
