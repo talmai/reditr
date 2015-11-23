@@ -48,7 +48,7 @@ class UserManager {
 
         // make sure we set reddit auth for requests to work
         reddit.setAuth(user);
-        
+
         // save
         this.dataStore.set("currentUser", user);
 

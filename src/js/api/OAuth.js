@@ -2,10 +2,6 @@ import Request from 'superagent';
 
 class OAuth {
 
-    constructor() {
-        
-    }
-
     start(callback) {
         this.callback = callback
 
@@ -23,13 +19,11 @@ class OAuth {
 
                 // interval to check when window is closed so we can perform more actions
                 let checkLoginInterval = setInterval(() => {
-
                     // if window is closed, hit up reditr.com to see if oauth was successful
-                    if (!oAuthWin.parent) {
+                    if (!oAuthWin || oAuthWin.closed || typeof oAuthWin.closed == 'undefined') {
                         clearInterval(checkLoginInterval);
                         this.complete(identification);
                     }
-
                 }, 500);
             });
     }
