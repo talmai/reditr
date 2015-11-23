@@ -1,15 +1,15 @@
 import localforage from 'localforage';
+import DataStoreChild from './DataStoreChild';
 
 class DataStore {
 
     constructor() {
         localforage.config({
+            driver      : localforage.LOCALSTORAGE,
             name        : 'Reditr',
             version     : 1.0,
             storeName   : 'keyvaluepairs'
         });
-
-        console.log(localforage);
     }
 
     createInstance(name) {
@@ -18,9 +18,7 @@ class DataStore {
             return;
         }
 
-        return localforage.createInstance({
-          name: name
-        });
+        return new DataStoreChild(name, localforage);
     }
 
 }

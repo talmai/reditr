@@ -5,6 +5,9 @@ class BaseView extends React.Component {
 
     constructor(props) {
         super(props);
+
+        this.enableCache = false;
+        this.cacheName = "base_view";
     }
 
 }
