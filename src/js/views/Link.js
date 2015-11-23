@@ -1,4 +1,4 @@
-import Observable from '../api/Observable';
+import Observable from '../utilities/Observable';
 import React from 'react';
 
 class Link extends React.Component {

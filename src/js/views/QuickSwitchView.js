@@ -1,7 +1,7 @@
 import React from 'react';
 import { Router, Link } from 'react-router';
 import history from '../History.js';
-import Observable from '../api/Observable';
+import Observable from '../utilities/Observable';
 
 class QuickSwitchView extends React.Component {
 

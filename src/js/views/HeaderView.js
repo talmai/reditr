@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 import Link from './Link';
-import Observable from '../api/Observable';
+import Observable from '../utilities/Observable';
 import history from '../History';
 import AccountHeader from './AccountHeader';
 
@@ -18,8 +18,6 @@ class HeaderView extends React.Component {
         this.state = {};
         this.history = [];
         this.future = [];
-        Observable.global.on(this, 'pushNav', this.onPushNav);
-        Observable.global.on(this, 'offerBreadcrumb', this.onOfferBreadcrumb);
     }
 
     onOfferBreadcrumb(data) {
@@ -41,6 +39,11 @@ class HeaderView extends React.Component {
             this.future = [];
         }
         this.setState({});
+    }
+
+    componenentDidMount() {
+        Observable.global.on(this, 'pushNav', this.onPushNav);
+        Observable.global.on(this, 'offerBreadcrumb', this.onOfferBreadcrumb);
     }
 
     componentWillUnmount() {

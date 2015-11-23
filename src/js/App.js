@@ -6,7 +6,7 @@ import QuickSwitchView from './views/QuickSwitchView';
 import StreamView from './views/StreamView';
 import PostView from './views/PostView';
 import Keystrokes from './Keystrokes';
-import Observable from './api/Observable';
+import Observable from './utilities/Observable';
 import { Router, Route, IndexRoute, Link } from 'react-router';
 
 // Then we delete a bunch of code from App and
@@ -16,16 +16,19 @@ class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = { quickSwitchVisible: false };
-        Keystrokes.listen(['⌘o','⌃o'], event => this.setState({ quickSwitchVisible: !this.state.quickSwitchVisible }));
-        Keystrokes.listen("⎋", event => {
-            if(this.state.quickSwitchVisible) this.setState({ quickSwitchVisible: false });
-        });
     }
 
     // this method is invoked when the user hits enter within the quickSwitcher, and
     // we want to close the quick switcher from here
     closeQuickSwitcher() {
         this.setState({ quickSwitchVisible: false });
+    }
+
+    componentDidMount() {
+        Keystrokes.listen(['⌘o','⌃o'], event => this.setState({ quickSwitchVisible: !this.state.quickSwitchVisible }));
+        Keystrokes.listen("⎋", event => {
+            if(this.state.quickSwitchVisible) this.setState({ quickSwitchVisible: false });
+        });
     }
 
     render() {
