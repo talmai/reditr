@@ -1,8 +1,9 @@
 import React from 'react';
 import { render } from 'react-dom';
 import Link from './Link';
-import Observable from '../api/Observable';
+import Observable from '../utilities/Observable';
 import history from '../History';
+import AccountHeader from './AccountHeader';
 
 class Logo extends React.Component {
     render() {
@@ -17,8 +18,6 @@ class HeaderView extends React.Component {
         this.state = {};
         this.history = [];
         this.future = [];
-        Observable.global.on(this, 'pushNav', this.onPushNav);
-        Observable.global.on(this, 'offerBreadcrumb', this.onOfferBreadcrumb);
     }
 
     onOfferBreadcrumb(data) {
@@ -42,6 +41,11 @@ class HeaderView extends React.Component {
         this.setState({});
     }
 
+    componenentDidMount() {
+        Observable.global.on(this, 'pushNav', this.onPushNav);
+        Observable.global.on(this, 'offerBreadcrumb', this.onOfferBreadcrumb);
+    }
+
     componentWillUnmount() {
         Observable.global.removeAll(this);
     }
@@ -56,28 +60,28 @@ class HeaderView extends React.Component {
 
     render() {
 
-        var text;
+//        var text;
 
-        var right = this.future[this.future.length-1];
-        var rightObj = false;
-        if(right) {
-            text = this.truncateTitle(right.text || right.href) + ' »';
-            rightObj = <Link className="header-view-text" to={right.href}>{text}</Link>;
-        }
+//        var right = this.future[this.future.length-1];
+        var rightObj = <AccountHeader />;
+        // if(right) {
+        //     text = this.truncateTitle(right.text || right.href) + ' »';
+        //     rightObj = <Link className="header-view-text" to={right.href}>{text}</Link>;
+        // }
+        //
+        // var center = this.history[this.history.length-1] || false;
+        // var centerObj = false;
+        // if(center) {
+        //     text = this.truncateTitle(center.text);
+        //     centerObj = <Link className="header-view-text" to={center.href}>{text}</Link>;
+        // }
 
-        var center = this.history[this.history.length-1] || false;
-        var centerObj = false;
-        if(center) {
-            text = this.truncateTitle(center.text);
-            centerObj = <Link className="header-view-text" to={center.href}>{text}</Link>;
-        }
-
-        var left = this.history[this.history.length-2] || false;
+//        var left = this.history[this.history.length-2] || false;
         var leftObj = <Logo/>;
-        if(left) {
-            text = '« ' + this.truncateTitle(left.text || left.href);
-            leftObj = <Link className="header-view-text" to={left.href}>{text}</Link>;
-        }
+        // if(left) {
+        //     text = '« ' + this.truncateTitle(left.text || left.href);
+        //     leftObj = <Link className="header-view-text" to={left.href}>{text}</Link>;
+        // }
 
         return (
             <div id="HeaderView">
@@ -85,7 +89,7 @@ class HeaderView extends React.Component {
                     {leftObj}
                 </div>
                 <div className="header-view-center">
-                    {centerObj}
+                    {false}
                 </div>
                 <div className="header-view-right">
                     {rightObj}

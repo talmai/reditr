@@ -1,5 +1,5 @@
 import createHistory from 'history/lib/createBrowserHistory';
-import Observable from './api/Observable';
+import Observable from './utilities/Observable';
 
 var history = createHistory({
   queryKey: false
