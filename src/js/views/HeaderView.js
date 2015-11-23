@@ -69,12 +69,12 @@ class HeaderView extends React.Component {
         //     rightObj = <Link className="header-view-text" to={right.href}>{text}</Link>;
         // }
         //
-        // var center = this.history[this.history.length-1] || false;
-        // var centerObj = false;
-        // if(center) {
-        //     text = this.truncateTitle(center.text);
-        //     centerObj = <Link className="header-view-text" to={center.href}>{text}</Link>;
-        // }
+        var center = this.history[this.history.length-1] || false;
+        var centerObj = false;
+        if(center) {
+            text = this.truncateTitle(center.text);
+            centerObj = <Link className="header-view-text" to={center.href}>{text}</Link>;
+        }
 
 //        var left = this.history[this.history.length-2] || false;
         var leftObj = <Logo/>;
@@ -89,7 +89,7 @@ class HeaderView extends React.Component {
                     {leftObj}
                 </div>
                 <div className="header-view-center">
-                    {false}
+                    {centerObj}
                 </div>
                 <div className="header-view-right">
                     {rightObj}
