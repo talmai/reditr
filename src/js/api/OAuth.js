@@ -3,7 +3,7 @@ import Request from 'superagent';
 class OAuth {
 
     start(callback) {
-        this.callback = callback
+        this.callback = callback;
 
         // get an identification number from reditr.com
         Request
@@ -34,10 +34,7 @@ class OAuth {
         Request
             .get("http://reditr.com/api/sync/")
             .query({ oauth: iden, revive: true })
-            .end((err, response) => {
-                // send the body to the callback and handle errors there
-                this.callback(response.body)
-            });
+            .end((err, response) => this.callback(response.body));
     }
 
     getAccessToken(user, callback) {
