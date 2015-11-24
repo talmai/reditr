@@ -9,9 +9,7 @@ class StreamSpinnerView extends React.Component {
 
     render() {
         return (
-            <div className="stream-spinner-view">
-                <div className="pulse-loader">loading…</div>
-            </div>
+            <img src="images/loading.gif" className="stream-spinner-view" />
         );
     }
 

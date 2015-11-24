@@ -5,7 +5,7 @@ import MediaParserView from './MediaParserView';
 import reddit from '../api/reddit';
 import PostCommentView from './PostCommentView';
 import CommentModel from '../models/CommentModel';
-import Observable from '../api/Observable';
+import Observable from '../utilities/Observable';
 
 class PostView extends React.Component {
 

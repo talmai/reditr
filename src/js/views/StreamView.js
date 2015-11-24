@@ -5,7 +5,7 @@ import reddit from '../api/reddit';
 import StreamItemView from './StreamItemView';
 import StreamSpinnerView from './StreamSpinnerView';
 import PostModel from '../models/PostModel';
-import Observable from '../api/Observable';
+import Observable from '../utilities/Observable';
 
 class StreamView extends React.Component {
 
