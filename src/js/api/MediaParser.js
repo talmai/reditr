@@ -55,7 +55,9 @@ class MediaParser {
         let name = this.regex.GYFCAT.exec(url).pop();
         callback({
             url: url,
-            parsedUrl: "http://giant.gfycat.com/" + name + ".webm",
+            parsedUrl: ["http://giant.gfycat.com/" + name + ".webm",
+                        "http://fat.gfycat.com/" + name + ".webm",
+                        "http://zippy.gfycat.com/" + name + ".webm"],
             type: "video"
         });
     }
