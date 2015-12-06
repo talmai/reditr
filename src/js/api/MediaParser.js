@@ -16,7 +16,8 @@ class MediaParser {
             IMGUR_IMAGE: /.*?imgur\.com\/([a-zA-Z0-9]{5,})$/gi,
             IMGUR_GIFV: /.*?imgur\.com\/([a-z0-9]{5,})\.gifv$/gi,
             YOUTUBE_NORMAL: /youtube\.com\/watch/gi,
-            YOUTUBE_SHORT: /youtu\.be\/(.*?)/gi
+            YOUTUBE_SHORT: /youtu\.be\/(.*?)/gi,
+            GYFCAT: /.*?gfycat\.com\/([a-zA-Z0-9]{1,})/gi
         };
     }
 
@@ -42,9 +43,21 @@ class MediaParser {
             this.handleYouTube(url, callback);
         } else if (this.regex.YOUTUBE_SHORT.test(url)) {
             this.handleYouTubeShort(url, callback);
+        } else if (this.regex.GYFCAT.test(url)) {
+            this.handleGyfcat(url, callback);
         } else {
             this.handleAnyUrl(url, callback);
         }
+    }
+
+    handleGyfcat(url, callback) {
+        this.regex.GYFCAT.lastIndex = 0;
+        let name = this.regex.GYFCAT.exec(url).pop();
+        callback({
+            url: url,
+            parsedUrl: "http://giant.gfycat.com/" + name + ".webm",
+            type: "video"
+        });
     }
 
     handleYouTubeShort(url, callback) {
