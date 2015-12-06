@@ -12,8 +12,8 @@ class MediaParser {
     constructor() {
         this.regex = {
             RAW_IMAGE: /\.(png|gif$|jpg|jpeg)/gi,
-            IMGUR_ALBUM: /(http|https):\/\/*(.?)imgur.com\/(a|gallery)\/([a-zA-Z0-9]{5,})/gi,
-            IMGUR_IMAGE: /(http|https):\/\/*(.?)imgur.com\/([a-zA-Z0-9]{5,})$/gi,
+            IMGUR_ALBUM: /.*?imgur\.com\/(a|gallery)\/([a-zA-Z0-9]{5,})/gi,
+            IMGUR_IMAGE: /.*?imgur\.com\/([a-zA-Z0-9]{5,})$/gi,
             IMGUR_GIFV: /.*?imgur\.com\/([a-z0-9]{5,})\.gifv$/gi,
             YOUTUBE_NORMAL: /youtube\.com\/watch/gi,
             YOUTUBE_SHORT: /youtu\.be\/(.*?)/gi
