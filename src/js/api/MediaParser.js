@@ -19,8 +19,16 @@ class MediaParser {
         };
     }
 
+    resetRegex() {
+        for (var prop in this.regex) {
+          this.regex[prop].lastIndex = 0;
+        }
+    }
+
     /** Method that delegates to the correct media type  */
     parse(url, callback) {
+        this.resetRegex();
+
         if (this.regex.IMGUR_GIFV.test(url)) {
             this.handleImgurGifv(url, callback);
         } else if (this.regex.RAW_IMAGE.test(url)) {
@@ -69,7 +77,6 @@ class MediaParser {
     }
 
     handleImgurGifv(url, callback) {
-        // reset regex pos
         this.regex.IMGUR_GIFV.lastIndex = 0;
         let imgurId = this.regex.IMGUR_GIFV.exec(url).pop(); // id is last in matching group
         callback({
