@@ -15,7 +15,8 @@ class MediaParser {
             IMGUR_ALBUM: /(http|https):\/\/*(.?)imgur.com\/(a|gallery)\/([a-zA-Z0-9]{5,})/gi,
             IMGUR_IMAGE: /(http|https):\/\/*(.?)imgur.com\/([a-zA-Z0-9]{5,})$/gi,
             IMGUR_GIFV: /.*?imgur\.com\/([a-z0-9]{5,})\.gifv$/gi,
-            YOUTUBE_NORMAL: /youtube\.com\/watch/gi
+            YOUTUBE_NORMAL: /youtube\.com\/watch/gi,
+            YOUTUBE_SHORT: /youtu\.be\/(.*?)/gi
         };
     }
 
@@ -39,9 +40,19 @@ class MediaParser {
             this.handleImgurImage(url, callback);
         } else if (this.regex.YOUTUBE_NORMAL.test(url)) {
             this.handleYouTube(url, callback);
+        } else if (this.regex.YOUTUBE_SHORT.test(url)) {
+            this.handleYouTubeShort(url, callback);
         } else {
             this.handleAnyUrl(url, callback);
         }
+    }
+
+    handleYouTubeShort(url, callback) {
+        var videoId = url.split('.be/')[1].split('?')[0].split('#')[0];
+        callback({
+            videoId,
+            type: "youtube"
+        });
     }
 
     handleYouTube(url, callback) {

@@ -15,33 +15,43 @@ class HeaderView extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {};
-        this.history = [];
-        this.future = [];
+        this.state = { history: [], future: [] };
+        this.didComponentMount = false;
+        this.waitedForMount = [];
+        Observable.global.on(this, 'pushNav', this.onPushNav);
+        Observable.global.on(this, 'offerBreadcrumb', this.onOfferBreadcrumb);
     }
 
     onOfferBreadcrumb(data) {
-        if(this.history.length == 0) {
+        if(this.state.history.length == 0) {
             this.onPushNav(data);
         }
     }
 
     onPushNav(data) {
+        var history = this.state.history;
+        var future = this.state.future;
+        // queue up nav tasks until component is mounted
+        if(!this.didComponentMount) {
+            this.waitedForMount.push(['onPushNav', data]);
         // go forward
-        if(this.future.length > 0 && this.future[this.future.length-1].href == data.href) {
-            this.history.push(this.future.pop());
+        }else if(future.length > 0 && future[future.length-1].href == data.href) {
+            history.push(future.pop());
         // go backward
-        }else if(this.history.length > 1 && this.history[this.history.length-2].href == data.href) {
-            this.future.push(this.history.pop());
+        }else if(history.length > 1 && history[history.length-2].href == data.href) {
+            future.push(history.pop());
         // go to new page
         }else{
-            this.history.push(data);
-            this.future = [];
+            history.push(data);
+            this.state.future = [];
         }
         this.setState({});
     }
 
-    componenentDidMount() {
+    componentDidMount() {
+        this.didComponentMount = true;
+        this.waitedForMount.forEach(data => this[data[0]](data[1]));
+        delete this.waitedForMount;
         Observable.global.on(this, 'pushNav', this.onPushNav);
         Observable.global.on(this, 'offerBreadcrumb', this.onOfferBreadcrumb);
     }
@@ -60,7 +70,8 @@ class HeaderView extends React.Component {
 
     render() {
 
-//        var text;
+        var text;
+        var history = this.state.history;
 
 //        var right = this.future[this.future.length-1];
         var rightObj = <AccountHeader />;
@@ -69,7 +80,7 @@ class HeaderView extends React.Component {
         //     rightObj = <Link className="header-view-text" to={right.href}>{text}</Link>;
         // }
         //
-        var center = this.history[this.history.length-1] || false;
+        var center = history[history.length-1];
         var centerObj = false;
         if(center) {
             text = this.truncateTitle(center.text);
