@@ -28,6 +28,9 @@ body {
   height: 450px;
   text-align: center;
 }
+.gallery-view .media {
+  max-width: calc(100% - 100px) !important;
+}
 .gallery-view .next,
 .gallery-view .prev {
   top: calc(50% - 20px);
