@@ -148,10 +148,19 @@ class MediaParser {
                         return image.link;
                     });
 
-                    callback({
-                        type: "gallery",
-                        imageUrls: images
-                    });
+                    if (images.length == 1) {
+                        callback({
+                            url: images[0],
+                            parsedUrl: images[0],
+                            type: "image"
+                        });
+                    } else {
+                        callback({
+                            type: "gallery",
+                            imageUrls: images
+                        });
+                    }
+
                 } else {
                     // if we have an error ignore
                     callback({
