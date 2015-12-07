@@ -130,11 +130,36 @@ class MediaParser {
         });
     }
 
-    /** Will do nothing useful for now */
+    /** Get imgur album to work */
     handleImgurAlbum(url, callback) {
-        callback({
-            type: "ignore"
-        });
+
+        // get the id of the gallery
+        let galleryid = url.replace(/#(.*?)$/,'').match(/\/(a|gallery)\/(.*?)(\/|$|#)/)[2];
+
+        Request
+            .get("https://api.imgur.com/3/gallery/album/" + galleryid + "/images")
+            .set("Authorization", "Client-ID 6d5f34e8c30918b")
+            .end((err, resp) => {
+
+                if (!err) {
+                    // if we don't have an error
+                    let images = resp.body.data;
+                    images = images.map(image => {
+                        return image.link;
+                    });
+
+                    callback({
+                        type: "gallery",
+                        imageUrls: images
+                    });
+                } else {
+                    // if we have an error ignore
+                    callback({
+                        type: "ignore"
+                    });
+                }
+
+            });
     }
 
 }

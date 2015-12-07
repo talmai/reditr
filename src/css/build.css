@@ -21,6 +21,35 @@ body {
   height: 100%;
 }
 
+.gallery-view {
+  width: 80%;
+  position: relative;
+  margin: 0 auto;
+  height: 450px;
+  text-align: center;
+}
+.gallery-view .next,
+.gallery-view .prev {
+  top: calc(50% - 20px);
+  position: absolute;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+}
+.gallery-view .next {
+  background: url(images/next.png) no-repeat center center;
+  background-size: 18.71px 40px;
+  right: 0;
+}
+.gallery-view .prev {
+  background: url(images/prev.png) no-repeat center center;
+  background-size: 18.71px 40px;
+  left: 0;
+}
+.gallery-view .details {
+  font-size: 11px;
+}
+
 #HeaderView {
   position: relative;
   box-sizing: border-box;

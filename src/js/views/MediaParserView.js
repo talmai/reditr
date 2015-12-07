@@ -3,6 +3,7 @@ import { render } from 'react-dom';
 
 import MediaParser from '../api/MediaParser';
 import YoutubeView from './YoutubeView';
+import GalleryView from './GalleryView';
 
 class MediaParserView extends React.Component {
 
@@ -64,6 +65,9 @@ class MediaParserView extends React.Component {
                     {sources}
                 </video>
             );
+            break;
+        case "gallery":
+            return <GalleryView imageUrls={this.state.media.imageUrls} />;
             break;
         case "text":
         case "article":
