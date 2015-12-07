@@ -6,6 +6,7 @@ import reddit from '../api/reddit';
 import PostCommentView from './PostCommentView';
 import CommentModel from '../models/CommentModel';
 import Observable from '../utilities/Observable';
+import StreamSpinnerView from './StreamSpinnerView';
 
 class PostView extends React.Component {
 
@@ -15,7 +16,7 @@ class PostView extends React.Component {
         this.state = {
             post: null,
             comments: [],
-            loading: true
+            isLoading: true
         };
     }
 
@@ -29,7 +30,7 @@ class PostView extends React.Component {
             this.setState({
                 post,
                 comments: data.body[1].data.children,
-                loading: false
+                isLoading: false
             });
             if(this.props.route) {
                 Observable.global.trigger('offerBreadcrumb', {
@@ -41,8 +42,12 @@ class PostView extends React.Component {
     }
 
     render() {
-        if (this.state.loading)
-            return <div>Loading</div>;
+        if (this.state.isLoading)
+            return (
+                <div className="post-view">
+                    <StreamSpinnerView/>
+                </div>
+            );
 
         let post = this.state.post;
         let comments = this.state.comments;

@@ -180,6 +180,11 @@ body {
   display: block;
   border-bottom: 1px solid #ccc;
 }
+.post-view .stream-spinner-view {
+  display: block;
+  margin: 0 auto;
+  padding: 10px;
+}
 .post-view .post-content {
   padding: 10px;
 }
