@@ -132,10 +132,10 @@ class StreamView extends React.Component {
 
         let postViews = [];
         if(this.state.posts) {
-        this.state.posts.forEach(post => {
-            let postObj = new PostModel(post);
-            postViews.push(<StreamItemView key={postObj.get('id')} post={postObj} />);
-        });
+            this.state.posts.forEach(post => {
+                let postObj = new PostModel(post);
+                postViews.push(<StreamItemView key={postObj.get('id')} post={postObj} />);
+            });
         }
 
         var loading = this.state.isLoading ? <StreamSpinnerView/> : false;
