@@ -15,7 +15,8 @@ class StreamItemView extends React.Component {
         this.state = {
             voteCount: this.props.post.get("score"),
             topComments: [],
-            isLoading: true
+            isLoading: true,
+            showNSFW: false
         };
     }
 
@@ -49,6 +50,12 @@ class StreamItemView extends React.Component {
         });
     }
 
+    enableNSFW() {
+        this.setState({
+            showNSFW: true
+        });
+    }
+
     render() {
 
         let post = this.props.post; // typeof = PostModel
@@ -71,6 +78,14 @@ class StreamItemView extends React.Component {
                                   <div className='icon'>{commentCount} More Comments</div>
                               </Link>);
         }
+
+        let postMedia = false;
+        if (post.get("over_18") && !this.state.showNSFW) {
+            postMedia = <div onClick={this.enableNSFW.bind(this)} className="nsfw-btn">Show NSFW Content</div>;
+        } else {
+            postMedia = <MediaParserView url={post.get("url")} post={post} />
+        }
+
         return (
             <div key={this.props.key} className="stream-item-view">
                 <div className="stream-item-top">
@@ -80,7 +95,7 @@ class StreamItemView extends React.Component {
                     <div className="stream-item-content">
                         <a href={post.get("url")} target="_blank" className="stream-item-title">{post.get("title")}</a>
                         <span className="stream-item-domain">({post.get("domain")})</span>
-                        <MediaParserView url={post.get("url")} post={post} />
+                        {postMedia}
                         <div className="mini-details">
                             <span className="stream-item-author">{post.get("author")}</span> in <Link to={"/r/" + post.get("subreddit")} className="stream-item-subreddit">{"/r/" + post.get('subreddit')}</Link>
                         </div>

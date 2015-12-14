@@ -426,6 +426,21 @@ body {
     width: 100%;
   }
 }
+.stream-item-view .stream-item-top .stream-item-content .nsfw-btn {
+  border-radius: 3px;
+  padding: 5px 10px;
+  background: #f96363;
+  border: 1px solid #ff5656;
+  cursor: pointer;
+  display: block;
+  width: 105px;
+  color: white;
+  font-size: 11px;
+  margin: 10px auto;
+}
+.stream-item-view .stream-item-top .stream-item-content .nsfw-btn:active {
+  background: #ff5656;
+}
 .stream-item-view .stream-item-top .stream-item-content .mini-details {
   font-size: 13px;
   color: #999;
