@@ -6,11 +6,13 @@ import CommentModel from '../models/CommentModel';
 import StreamCommentView from './StreamCommentView';
 import Link from './Link';
 import { prettyNumber } from '../Utilities';
+import moment from 'moment';
 
 class StreamItemView extends React.Component {
 
     constructor(props) {
         super(props);
+
         // set default
         this.state = {
             voteCount: this.props.post.get("score"),
@@ -97,7 +99,7 @@ class StreamItemView extends React.Component {
                         <span className="stream-item-domain">({post.get("domain")})</span>
                         {postMedia}
                         <div className="mini-details">
-                            <span className="stream-item-author">{post.get("author")}</span> in <Link to={"/r/" + post.get("subreddit")} className="stream-item-subreddit">{"/r/" + post.get('subreddit')}</Link>
+                            <span className="stream-item-author">{post.get("author")}</span> posted in <Link to={"/r/" + post.get("subreddit")} className="stream-item-subreddit">{"/r/" + post.get('subreddit')}</Link> {moment.unix(post.get("created_utc")).fromNow()}
                         </div>
                     </div>
                 </div>
