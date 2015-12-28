@@ -11,48 +11,42 @@ class MediaParser {
 
     constructor() {
         this.regex = {
-            RAW_IMAGE: /\.(png|gif$|jpg|jpeg)/gi,
-            IMGUR_ALBUM: /.*?imgur\.com\/(a|gallery)\/([a-zA-Z0-9]{5,})/gi,
-            IMGUR_IMAGE: /.*?imgur\.com\/([a-zA-Z0-9]{5,})$/gi,
-            IMGUR_GIFV: /.*?imgur\.com\/([a-z0-9]{5,})\.gifv$/gi,
-            YOUTUBE_NORMAL: /youtube\.com\/watch/gi,
-            YOUTUBE_SHORT: /youtu\.be\/(.*?)/gi,
-            GYFCAT: /.*?gfycat\.com\/([a-zA-Z0-9]{1,})/gi
+            RawImage: /\.(png|gif$|jpg|jpeg)/gi,
+            ImgurAlbum: /.*?imgur\.com\/(a|gallery)\/([a-zA-Z0-9]{5,})/gi,
+            ImgurImage: /.*?imgur\.com\/([a-zA-Z0-9]{5,})$/gi,
+            ImgurGifv: /.*?imgur\.com\/([a-z0-9]{5,})\.gifv$/gi,
+            YouTube: /youtube\.com\/watch/gi,
+            YouTubeShort: /youtu\.be\/(.*?)/gi,
+            Gyfcat: /.*?gfycat\.com\/([a-zA-Z0-9]{1,})/gi
         };
     }
 
-    resetRegex() {
-        for (var prop in this.regex) {
-          this.regex[prop].lastIndex = 0;
-        }
+    recycleRegex(type) {
+        var regex = this.regex[type];
+        if(!regex) return /(?:)/;
+        regex.lastIndex = 0;
+        return regex;
     }
 
     /** Method that delegates to the correct media type  */
     parse(url, callback) {
-        this.resetRegex();
 
-        if (this.regex.IMGUR_GIFV.test(url)) {
-            this.handleImgurGifv(url, callback);
-        } else if (this.regex.RAW_IMAGE.test(url)) {
-            this.handleRawImage(url, callback);
-        } else if (this.regex.IMGUR_ALBUM.test(url)) {
-            this.handleImgurAlbum(url, callback);
-        } else if (this.regex.IMGUR_IMAGE.test(url)) {
-            this.handleImgurImage(url, callback);
-        } else if (this.regex.YOUTUBE_NORMAL.test(url)) {
-            this.handleYouTube(url, callback);
-        } else if (this.regex.YOUTUBE_SHORT.test(url)) {
-            this.handleYouTubeShort(url, callback);
-        } else if (this.regex.GYFCAT.test(url)) {
-            this.handleGyfcat(url, callback);
-        } else {
+        var handled = false;
+        for (var type in this.regex) {
+            if(this.recycleRegex(type).test(url)) {
+                this['handle' + type](url, callback);
+                handled = true;
+                break;
+            }
+        }
+
+        if(!handled) {
             this.handleAnyUrl(url, callback);
         }
     }
 
     handleGyfcat(url, callback) {
-        this.regex.GYFCAT.lastIndex = 0;
-        let name = this.regex.GYFCAT.exec(url).pop();
+        let name = this.recycleRegex('Gyfcat').exec(url).pop();
         callback({
             url: url,
             parsedUrl: ["http://giant.gfycat.com/" + name + ".webm",
@@ -103,8 +97,7 @@ class MediaParser {
     }
 
     handleImgurGifv(url, callback) {
-        this.regex.IMGUR_GIFV.lastIndex = 0;
-        let imgurId = this.regex.IMGUR_GIFV.exec(url).pop(); // id is last in matching group
+        let imgurId = this.recycleRegex('ImgurGifv').exec(url).pop(); // id is last in matching group
         callback({
             url: url,
             parsedUrl: "http://i.imgur.com/" + imgurId + ".webm",
