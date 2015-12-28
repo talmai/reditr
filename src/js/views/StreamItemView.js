@@ -112,7 +112,7 @@ class StreamItemView extends React.Component {
                         <span className="stream-item-domain">({post.get("domain")})</span>
                         {postMedia}
                         <div className="mini-details">
-                            <span className="stream-item-author">{post.get("author")}</span>
+                            <Link to={"/user/" + post.get("author")} className="stream-item-author">{post.get("author")}</Link>
                             <span> posted in </span>
                             <Link to={"/r/" + post.get("subreddit")} className="stream-item-subreddit">{"/r/" + post.get('subreddit')}</Link>
                             <span> {moment.unix(post.get("created_utc")).fromNow()}</span>
