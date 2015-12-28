@@ -12,13 +12,57 @@ class StreamView extends React.Component {
     constructor(props) {
         super(props);
 
-        let { query } = this.props.location
+        let params = this.props.params;
+        if (params.subreddit) {
+            this.handleSubreddit()
+        } else if (params.user) {
+            this.handleUser();
+        } else {
+            this.handleSubreddit()
+        }
+    }
+
+    handleUser() {
+
+        let { query } = this.props.location;
+
+        this.defaults = {
+            sortType: "hot",
+            period: "all"
+        };
+
+        let user = this.props.params.user;
+        let sortType = this.props.params.sort || this.defaults.sortType;
+        let period = query.t || this.defaults.period;
+
+        if(this.props.route) {
+            Observable.global.trigger('offerBreadcrumb', {
+                href: window.location.href.indexOf('/u/') >= 0
+                        || window.location.href.indexOf('/user/') ? "/user/" + user : '/',
+                text: user
+            });
+        }
+
+        this.state = {
+            user: user,
+            posts: [],
+            sort: sortType,
+            period: period,
+            after: null,
+            isLoading: false
+        };
+
+    }
+
+    handleSubreddit() {
+
+        let { query } = this.props.location;
 
         this.defaults = {
             subreddit: "all",
             sortType: "hot",
             period: "all"
-        }
+        };
 
         // temporarily assume all to be the default sub
         let subreddit = this.props.params.subreddit || this.defaults.subreddit;
@@ -27,7 +71,7 @@ class StreamView extends React.Component {
 
         // if a router created us then we must be the "main view" and need to
         // offer up a title and path to this page for the breadcrumb
-        if(props.route) {
+        if(this.props.route) {
             Observable.global.trigger('offerBreadcrumb', {
                 href: window.location.href.indexOf('/r/') >= 0 ? '/r/'+subreddit : '/',
                 text: subreddit == this.defaultSubreddit ? 'Frontpage' : '/r/' + subreddit
@@ -42,7 +86,6 @@ class StreamView extends React.Component {
             after: null,
             isLoading: false
         };
-
     }
 
     removeDuplicatePosts(posts) {
@@ -57,10 +100,57 @@ class StreamView extends React.Component {
         return finalArray;
     }
 
+    loadUser(user = this.state.user, options = { reset: false }) {
+        if (this.state.isLoading && !options.reset) return;
+
+        var state = {};
+        if (options.reset) {
+            state = {
+                user: user,
+                posts: [],
+                sort: this.defaults.sortType,
+                period: this.defaults.period,
+                after: null,
+                isLoading: true,
+                notFound: false
+            };
+        } else {
+            state = {
+                isLoading: true,
+                notFound: false
+            };
+        }
+
+        this.setState(state, () => {
+            // retreive the posts
+            var options = { sort: this.state.sort, after: this.state.after, t: this.state.period };
+            reddit.getPostsFromUser(user, options, (err, posts) => {
+                // subreddit not found
+                if (!posts || !posts.body) {
+                    this.setState({ user: user, notFound: true, isLoading: false });
+                    return;
+                }
+                // update state to re render
+                let newPosts = posts.body.data.children;
+                let oldPosts = this.state.posts;
+                oldPosts.push(...newPosts);
+
+                let filteredPosts = this.removeDuplicatePosts(oldPosts);
+                let lastPost = filteredPosts[filteredPosts.length - 1];
+                this.setState({
+                    user: user,
+                    posts: filteredPosts,
+                    after: posts.body.data.after,
+                    isLoading: false
+                });
+            });
+        });
+    }
+
     load(subreddit = this.state.subreddit, options = { reset: false }) {
         if (this.state.isLoading && !options.reset) return;
 
-        var state;
+        var state = {};
         if (options.reset) {
             state = {
                 subreddit: this.defaults.subreddit,
@@ -71,7 +161,7 @@ class StreamView extends React.Component {
                 isLoading: true,
                 notFound: false
             };
-        }else{
+        } else {
             state = {
                 isLoading: true,
                 notFound: false
@@ -105,7 +195,11 @@ class StreamView extends React.Component {
     }
 
     componentWillReceiveProps(props) {
-        this.load(props.params.subreddit, { reset: true }); // loads new prop info
+        if (this.props.params.user) {
+            this.loadUser(props.params.user, { reset: true });
+        } else {
+            this.load(props.params.subreddit, { reset: true }); // loads new prop info
+        }
     }
 
     componentWillUnmount() {
@@ -114,8 +208,13 @@ class StreamView extends React.Component {
 
     componentDidMount() {
         this.attachScrollListener();
-        // load the posts
-        this.load();
+
+        if (this.props.params.user) {
+            this.loadUser();
+        } else {
+            // load the posts
+            this.load();
+        }
     }
 
     scrollListener() {

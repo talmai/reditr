@@ -56,6 +56,9 @@ render((
         <Route path="/r/:subreddit/:sort" component={StreamView} />
         <Route path="/r/:subreddit/comments/:id/" component={PostView} />
         <Route path="/r/:subreddit/comments/:id/:title/" component={PostView} />
+
+        <Route path="/u/:user" component={StreamView} />
+        <Route path="/user/:user" component={StreamView} />
     </Route>
   </Router>
 ), document.getElementById('App'));

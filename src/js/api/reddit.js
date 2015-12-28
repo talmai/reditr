@@ -37,6 +37,19 @@ class reddit {
 
     }
 
+    getPostsFromUser(user, options = { sort: "hot" }, callback) {
+
+        Request
+            .get(this.baseUrl
+                + "/user/"
+                + user
+                + "/"
+                + this.extension)
+            .query(options)
+            .end(callback);
+
+    }
+
     getPostFromPermalink(permalink, options = { sort: "hot" }, callback) {
 
         Request

@@ -27,29 +27,37 @@ class StreamItemView extends React.Component {
     }
 
     loadComments() {
-        reddit.getPostFromPermalink(this.props.post.get("permalink"), null, (err, data) => {
-            let comments = data.body[1].data.children;
-            let maxComments = Math.min(comments.length, 5);
-            var first, second;
-            for(var i = 0; i < maxComments; i++) {
-                var checking = comments[i];
-                if(checking.data.body == '[removed]') continue;
-                if(!first) {
-                    first = checking;
-                }else if(!second) {
-                    second = checking;
-                }else{
-                    var newFirst = first.data.body.length < second.data.body.length ? first : second;
-                    var rejected = newFirst == first ? second : first;
-                    first = newFirst;
-                    second = rejected.data.body.length < checking.data.body.length ? rejected : checking;
+        let permalink = this.props.post.get("permalink");
+
+        if (permalink) {
+            // if permalink exists, proceed
+            reddit.getPostFromPermalink(this.props.post.get("permalink"), null, (err, data) => {
+                let comments = data.body[1].data.children;
+                let maxComments = Math.min(comments.length, 5);
+                var first, second;
+                for(var i = 0; i < maxComments; i++) {
+                    var checking = comments[i];
+                    if(checking.data.body == '[removed]') continue;
+                    if(!first) {
+                        first = checking;
+                    }else if(!second) {
+                        second = checking;
+                    }else{
+                        var newFirst = first.data.body.length < second.data.body.length ? first : second;
+                        var rejected = newFirst == first ? second : first;
+                        first = newFirst;
+                        second = rejected.data.body.length < checking.data.body.length ? rejected : checking;
+                    }
                 }
-            }
-            var topComments = [];
-            if(first) topComments.push(first);
-            if(second) topComments.push(second);
-            this.setState({ isLoading: false, topComments: topComments });
-        });
+                var topComments = [];
+                if(first) topComments.push(first);
+                if(second) topComments.push(second);
+                this.setState({ isLoading: false, topComments: topComments });
+            });
+        } else {
+            this.setState({ isLoading: false, topComments: [] });
+        }
+
     }
 
     enableNSFW() {
@@ -61,6 +69,11 @@ class StreamItemView extends React.Component {
     render() {
 
         let post = this.props.post; // typeof = PostModel
+
+        // WARN: if it is a comment, ignore for now
+        if (post.kind == "t1") {
+            return false;
+        }
 
         let topComments = this.state.topComments;
         let commentsView = [];
