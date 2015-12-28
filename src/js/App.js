@@ -53,6 +53,7 @@ render((
     <Route path="/" component={App}>
         <IndexRoute component={StreamView} />
         <Route path="/r/:subreddit" component={StreamView} />
+        <Route path="/r/:subreddit/:sort" component={StreamView} />
         <Route path="/r/:subreddit/comments/:id/" component={PostView} />
         <Route path="/r/:subreddit/comments/:id/:title/" component={PostView} />
     </Route>

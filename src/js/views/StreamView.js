@@ -12,10 +12,18 @@ class StreamView extends React.Component {
     constructor(props) {
         super(props);
 
-        this.defaultSubreddit = "all";
+        let { query } = this.props.location
+
+        this.defaults = {
+            subreddit: "all",
+            sortType: "hot",
+            period: "all"
+        }
 
         // temporarily assume all to be the default sub
-        let subreddit = this.props.params.subreddit || this.defaultSubreddit;
+        let subreddit = this.props.params.subreddit || this.defaults.subreddit;
+        let sortType = this.props.params.sort || this.defaults.sortType;
+        let period = query.t || this.defaults.period;
 
         // if a router created us then we must be the "main view" and need to
         // offer up a title and path to this page for the breadcrumb
@@ -29,7 +37,8 @@ class StreamView extends React.Component {
         this.state = {
             subreddit: subreddit,
             posts: [],
-            sort: "hot",
+            sort: sortType,
+            period: period,
             after: null,
             isLoading: false
         };
@@ -54,9 +63,10 @@ class StreamView extends React.Component {
         var state;
         if (options.reset) {
             state = {
-                subreddit: subreddit,
+                subreddit: this.defaults.subreddit,
                 posts: [],
-                sort: "hot",
+                sort: this.defaults.sortType,
+                period: this.defaults.period,
                 after: null,
                 isLoading: true,
                 notFound: false
@@ -70,7 +80,7 @@ class StreamView extends React.Component {
 
         this.setState(state, () => {
             // retreive the posts
-            var options = { sort: this.state.sort, after: this.state.after };
+            var options = { sort: this.state.sort, after: this.state.after, t: this.state.period };
             reddit.getPostsFromSubreddit(subreddit, options, (err, posts) => {
                 // subreddit not found
                 if (!posts || !posts.body) {
