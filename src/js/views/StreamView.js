@@ -84,15 +84,19 @@ class StreamView extends React.Component {
 
     }
 
-    createRowsFromRedditPosts(redditPosts, appendToArray = [], postIdsHash = {}) {
+    /* Creates StreamItemView views from array of post objects from reddit (redditPosts) and
+     * appends them to the (optional) array appendToArray. (optional) array of post
+     * ids postIdsHash prevents duplicate views from being inserted
+     */
+
+    createViewsFromRedditPosts(redditPosts, appendToArray = [], postIdsHash = {}) {
         for (var i in redditPosts) {
             let post = redditPosts[i];
             // avoid duplicate posts in the same feed
             if (postIdsHash[post.data.id]) continue;
-            postIdsHash[post.data.id] = 1;
             // insert post model/view into postViews - array of posts to render later
             let postObj = new PostModel(redditPosts[i]);
-            appendToArray.push(<StreamItemView key={post.data.id} post={postObj} />);
+            appendToArray.push(<StreamItemView key={post.data.id} post={postObj} postIds={postIdsHash} />);
         }
         return appendToArray;
     }
@@ -129,7 +133,7 @@ class StreamView extends React.Component {
                 }
                 // update state to re render
                 let newPosts = posts.body.data.children;
-                this.createRowsFromRedditPosts(newPosts, this.state.postViews, this.state.postIds);
+                this.createViewsFromRedditPosts(newPosts, this.state.postViews, this.state.postIds);
 
                 this.setState({
                     user: user,
@@ -173,7 +177,7 @@ class StreamView extends React.Component {
 
                 // build new models and views here (prefer views built in render, speed sacrifice)
                 let newPosts = posts.body.data.children;
-                this.createRowsFromRedditPosts(newPosts, this.state.postViews, this.state.postIds);
+                this.createViewsFromRedditPosts(newPosts, this.state.postViews, this.state.postIds);
 
                 this.setState({
                     subreddit: subreddit,
@@ -215,6 +219,27 @@ class StreamView extends React.Component {
             // detect scrolling to the bottom and load more posts
             this.load();
         }
+        // find elements off screen
+        let postNodes = node.querySelectorAll('.stream-item-view');
+        let startY = node.scrollTop - 8*node.offsetHeight;
+        let endY = startY + 9*node.offsetHeight;
+        let postIds = this.state.postIds;
+        for (var i = 0; i < postNodes.length; i++) {
+            var post = postNodes[i];
+            if( (post.offsetTop + post.clientHeight) < startY || post.offsetTop > endY ) {
+                if(!post.classList.contains('hidden')) {
+                    post.classList.add('hidden');
+                    let postid = post.getAttribute('data-postid');
+                    postIds[postid].didDisappear(post);
+                }
+            }else{
+                if(post.classList.contains('hidden')) {
+                    post.classList.remove('hidden');
+                    let postid = post.getAttribute('data-postid');
+                    postIds[postid].didAppear(post);
+                }
+            }
+        }
     }
 
     scrollListener() {
@@ -236,7 +261,6 @@ class StreamView extends React.Component {
     }
 
     render() {
-
         var loading = this.state.isLoading ? <StreamSpinnerView/> : false;
         var notFound = this.state.notFound ? <div>Subreddit {this.state.subreddit} does not exist.</div> : false;
 

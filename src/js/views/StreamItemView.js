@@ -20,6 +20,10 @@ class StreamItemView extends React.Component {
             isLoading: true,
             showNSFW: false
         };
+
+        if(this.props.postIds) {
+            this.props.postIds[this.props.post.get("id")] = this;
+        }
     }
 
     componentDidMount() {
@@ -66,13 +70,39 @@ class StreamItemView extends React.Component {
         });
     }
 
+    didDisappear(post) {
+        this.setState({ hidden: true, height: post.clientHeight });
+    }
+
+    didAppear() {
+        //console.log('back', this.props.post.get('title'));
+        this.setState({ hidden: false });
+    }
+
     render() {
 
-        let post = this.props.post; // typeof = PostModel
+        let post = this.props.post;
 
         // WARN: if it is a comment, ignore for now
         if (post.kind == "t1") {
             return false;
+        }
+
+        let style = this.state.height ? { minHeight: this.state.height } : {};
+        if(this.state.hidden) {
+            return <div style={style}
+                        key={this.props.key}
+                        className="stream-item-view hidden"
+            data-postid={post.get("id")}>
+                <div className="stream-item-top">
+                    <div className="stream-item-sidebar">
+                        <span className="stream-item-vote-count">{post.get("score")}</span>
+                    </div>
+                    <div className="stream-item-content">
+                <a href={post.get("url")} target="_blank" className="stream-item-title">{post.get("title")}</a>
+                </div>
+                </div>
+                   </div>;
         }
 
         let topComments = this.state.topComments;
@@ -97,20 +127,22 @@ class StreamItemView extends React.Component {
         let postMedia = false;
         if (post.get("over_18") && !this.state.showNSFW) {
             postMedia = <div onClick={this.enableNSFW.bind(this)} className="nsfw-btn">Show NSFW Content</div>;
-        } else {
-            postMedia = <MediaParserView url={post.get("url")} post={post} />
+        } else if(this.state.hidden) {
+            postMedia = false;
+        }else {
+            postMedia = <MediaParserView url={post.get("url")} post={post}/>;
         }
 
         return (
-            <div key={this.props.key} className="stream-item-view">
+            <div style={style} key={this.props.key} className="stream-item-view" data-postid={post.get("id")}>
                 <div className="stream-item-top">
                     <div className="stream-item-sidebar">
                         <span className="stream-item-vote-count">{post.get("score")}</span>
                     </div>
                     <div className="stream-item-content">
                         <a href={post.get("url")} target="_blank" className="stream-item-title">{post.get("title")}</a>
-                        <span className="stream-item-domain">({post.get("domain")})</span>
-                        {postMedia}
+                <span className="stream-item-domain">({post.get("domain")})</span>
+                {postMedia}
                         <div className="mini-details">
                             <Link to={"/user/" + post.get("author")} className="stream-item-author">{post.get("author")}</Link>
                             <span> posted in </span>
