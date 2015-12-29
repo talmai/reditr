@@ -17,10 +17,12 @@ class MediaParser {
             ImgurGifv: /.*?imgur\.com\/([a-z0-9]{5,})\.gifv$/gi,
             YouTube: /youtube\.com\/watch/gi,
             YouTubeShort: /youtu\.be\/(.*?)/gi,
-            Gyfcat: /.*?gfycat\.com\/([a-zA-Z0-9]{1,})/gi
+            Gyfcat: /.*?gfycat\.com\/([a-zA-Z0-9]{1,})/gi,
+            Tweet: /twitter\.com\/.*\/status\/([^\/]+).*/i
         };
     }
 
+    /** takes the key of a used regex from this.regex and returns a re-usable regex obj */
     recycleRegex(type) {
         var regex = this.regex[type];
         if(!regex) return /(?:)/;
@@ -28,21 +30,75 @@ class MediaParser {
         return regex;
     }
 
-    /** Method that delegates to the correct media type  */
+    /** Method that delegates to the correct media type */
     parse(url, callback) {
-
-        var handled = false;
+        // try and match url to every exp in this.regex
+        var handler = 'handleAnyUrl';
         for (var type in this.regex) {
             if(this.recycleRegex(type).test(url)) {
-                this['handle' + type](url, callback);
-                handled = true;
+                handler = 'handle' + type;
                 break;
             }
         }
+        // run the default handler or the handler that matched
+        this[handler](url, callback);
+    }
 
-        if(!handled) {
-            this.handleAnyUrl(url, callback);
+    /* really disgusting tweet scraping as to avoid having to do multiple requests
+     * to their other endpoints to get everything we want to just display
+     * a single tweet...
+     */
+
+    tweetParseText(str) {
+        var start = str.search(/Tweet\-text[^>]+>([^<]+)</);
+        if(start == -1) return '';
+        var stack = 1;
+        var prevChar = false;
+        var text = '';
+        for(var pos = start+1; pos < str.length && stack > 0; pos++) {
+            var char = str[pos];
+            if(prevChar !== false) {
+                text += prevChar;
+                prevChar = char;
+            }
+            if(char == '<') {
+                // increase stack if hit open tag, decrease if hit close tag
+                stack += str[pos+1] == '/' ? -1 : 1;
+            }else if(!prevChar && char == '>') {
+                // only start tracking prevChar once we hit our first open tag
+                prevChar = '';
+            }
         }
+        return text;
+    }
+
+    handleTweet(url, callback) {
+        let id = this.recycleRegex('Tweet').exec(url).pop();
+        let embeddedTweetUrl = 'https://syndication.twitter.com/tweets.json?callback=?&ids='
+                + id
+                + '&lang=en&suppress_response_codes=true';
+        Request
+            .get(embeddedTweetUrl)
+            .use(jsonp)
+            .end((err, res) => {
+                let str = JSON.stringify(res);
+                let avatarTail = str.match(/\/profile_images\/([^\/]+)\/(.*?)\.(jpg|jpeg|png)/);
+                let avatar = avatarTail.length > 0 ? 'https://pbs.twimg.com' + avatarTail[0] : undefined;
+                let text = this.tweetParseText(str);
+                let name = str.match(/element:name[^>]+>([^<]+)</).pop();
+                let username = str.match(/element:screen_name[^>]+>([^<]+)</).pop().substr(1);
+                let datetime = str.match(/data-datetime=\\"([^\\]+)\\/).pop();
+                let retweets = (str.match(/element:retweet_count[^>]+>([^<]+)</)||[0]).pop();
+                let hearts = (str.match(/element:heart_count[^>]+>([^<]+)</)||[0]).pop();
+                var imgParts = str.match(/NaturalImage\-image.*data-srcset=\\"([^ ]+)/);
+                let image = imgParts ? decodeURIComponent(imgParts.pop()) : undefined;
+                let tweet = { avatar, text, name, username, datetime, retweets, hearts, image };
+                callback({
+                    url,
+                    tweet,
+                    type: "tweet"
+                });
+            });
     }
 
     handleGyfcat(url, callback) {
@@ -87,7 +143,7 @@ class MediaParser {
             .query({
                 url: url,
                 token: 'e97c4f658162139ec8e04c4cbb2e80518c66757f'
-            }).end(function(err, res) {
+            }).end((err, res) => {
                 callback({
                     url: url,
                     parsedText: res.body.excerpt,

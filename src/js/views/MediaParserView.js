@@ -4,6 +4,7 @@ import { render } from 'react-dom';
 import MediaParser from '../api/MediaParser';
 import YoutubeView from './YoutubeView';
 import GalleryView from './GalleryView';
+import TweetView from './TweetView';
 
 class MediaParserView extends React.Component {
 
@@ -75,6 +76,9 @@ class MediaParserView extends React.Component {
             return (
                     <div className="media text" dangerouslySetInnerHTML={{__html: this.state.media.parsedText}}></div>
             );
+            break;
+        case "tweet":
+            return <TweetView tweet={this.state.media.tweet}/>;
             break;
         default:
             return false;

@@ -7,7 +7,7 @@ class GalleryView extends React.Component {
 
         this.state = {
             currentIndex: 0
-        }
+        };
     }
 
     onNext(e) {
