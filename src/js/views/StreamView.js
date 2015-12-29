@@ -13,16 +13,27 @@ class StreamView extends React.Component {
         super(props);
 
         let params = this.props.params;
-        if (params.subreddit) {
-            this.handleSubreddit()
+
+        if (params.subreddit || !params.user) {
+            this.initForSubreddit();
         } else if (params.user) {
-            this.handleUser();
-        } else {
-            this.handleSubreddit()
+            this.initForUser();
         }
+
+        var defaults = this.defaults;
+        this.state = {
+            subreddit: defaults.subreddit,
+            postViews: [],
+            postIds: {},
+            sort: defaults.sortType,
+            period: defaults.period,
+            after: null,
+            isLoading: false
+        };
+
     }
 
-    handleUser() {
+    initForUser() {
 
         let { query } = this.props.location;
 
@@ -35,7 +46,9 @@ class StreamView extends React.Component {
         let sortType = this.props.params.sort || this.defaults.sortType;
         let period = query.t || this.defaults.period;
 
-        if(this.props.route) {
+        // if a router created us then we must be the "main view" and need to
+        // offer up a title and path to this page for the breadcrumb
+        if (this.props.route) {
             Observable.global.trigger('offerBreadcrumb', {
                 href: window.location.href.indexOf('/u/') >= 0
                         || window.location.href.indexOf('/user/') ? "/user/" + user : '/',
@@ -43,18 +56,9 @@ class StreamView extends React.Component {
             });
         }
 
-        this.state = {
-            user: user,
-            posts: [],
-            sort: sortType,
-            period: period,
-            after: null,
-            isLoading: false
-        };
-
     }
 
-    handleSubreddit() {
+    initForSubreddit() {
 
         let { query } = this.props.location;
 
@@ -71,33 +75,26 @@ class StreamView extends React.Component {
 
         // if a router created us then we must be the "main view" and need to
         // offer up a title and path to this page for the breadcrumb
-        if(this.props.route) {
+        if (this.props.route) {
             Observable.global.trigger('offerBreadcrumb', {
                 href: window.location.href.indexOf('/r/') >= 0 ? '/r/'+subreddit : '/',
                 text: subreddit == this.defaultSubreddit ? 'Frontpage' : '/r/' + subreddit
             });
         }
 
-        this.state = {
-            subreddit: subreddit,
-            posts: [],
-            sort: sortType,
-            period: period,
-            after: null,
-            isLoading: false
-        };
     }
 
-    removeDuplicatePosts(posts) {
-        let seen = {};
-        let finalArray = [];
-        posts.forEach(post => {
-            if (seen[post.data.id] !== 1) {
-                seen[post.data.id] = 1;
-                finalArray.push(post);
-            }
-        });
-        return finalArray;
+    createRowsFromRedditPosts(redditPosts, appendToArray = [], postIdsHash = {}) {
+        for (var i in redditPosts) {
+            let post = redditPosts[i];
+            // avoid duplicate posts in the same feed
+            if (postIdsHash[post.data.id]) continue;
+            postIdsHash[post.data.id] = 1;
+            // insert post model/view into postViews - array of posts to render later
+            let postObj = new PostModel(redditPosts[i]);
+            appendToArray.push(<StreamItemView key={post.data.id} post={postObj} />);
+        }
+        return appendToArray;
     }
 
     loadUser(user = this.state.user, options = { reset: false }) {
@@ -132,14 +129,10 @@ class StreamView extends React.Component {
                 }
                 // update state to re render
                 let newPosts = posts.body.data.children;
-                let oldPosts = this.state.posts;
-                oldPosts.push(...newPosts);
+                this.createRowsFromRedditPosts(newPosts, this.state.postViews, this.state.postIds);
 
-                let filteredPosts = this.removeDuplicatePosts(oldPosts);
-                let lastPost = filteredPosts[filteredPosts.length - 1];
                 this.setState({
                     user: user,
-                    posts: filteredPosts,
                     after: posts.body.data.after,
                     isLoading: false
                 });
@@ -177,16 +170,13 @@ class StreamView extends React.Component {
                     this.setState({ subreddit: subreddit, notFound: true, isLoading: false });
                     return;
                 }
-                // update state to re render
-                let newPosts = posts.body.data.children;
-                let oldPosts = this.state.posts;
-                oldPosts.push(...newPosts);
 
-                let filteredPosts = this.removeDuplicatePosts(oldPosts);
-                let lastPost = filteredPosts[filteredPosts.length - 1];
+                // build new models and views here (prefer views built in render, speed sacrifice)
+                let newPosts = posts.body.data.children;
+                this.createRowsFromRedditPosts(newPosts, this.state.postViews, this.state.postIds);
+
                 this.setState({
                     subreddit: subreddit,
-                    posts: filteredPosts,
                     after: posts.body.data.after,
                     isLoading: false
                 });
@@ -217,15 +207,23 @@ class StreamView extends React.Component {
         }
     }
 
-    scrollListener() {
+    /* scroll management */
+
+    didStopScrolling() {
         let node = ReactDOM.findDOMNode(this);
-        // detect scrolling to the bottom
         if (node.scrollHeight - (node.scrollTop + node.offsetHeight) < 100) {
+            // detect scrolling to the bottom and load more posts
             this.load();
         }
     }
 
+    scrollListener() {
+        clearTimeout(this.stopScrollingTimeout);
+        this.stopScrollingTimeout = setTimeout(this.didStopScrolling, 200);
+    }
+
     attachScrollListener() {
+        this.didStopScrolling = this.didStopScrolling.bind(this);
         let node = ReactDOM.findDOMNode(this);
         node.addEventListener('scroll', this.scrollListener.bind(this));
         node.addEventListener('resize', this.scrollListener.bind(this));
@@ -239,20 +237,12 @@ class StreamView extends React.Component {
 
     render() {
 
-        let postViews = [];
-        if(this.state.posts) {
-            this.state.posts.forEach(post => {
-                let postObj = new PostModel(post);
-                postViews.push(<StreamItemView key={postObj.get('id')} post={postObj} />);
-            });
-        }
-
         var loading = this.state.isLoading ? <StreamSpinnerView/> : false;
         var notFound = this.state.notFound ? <div>Subreddit {this.state.subreddit} does not exist.</div> : false;
 
         return (
             <div className="stream-view">
-                {postViews}
+                {this.state.postViews}
                 {loading}
                 {notFound}
             </div>
