@@ -349,6 +349,7 @@ body {
   position: relative;
   box-sizing: border-box;
   overflow: auto;
+  text-align: center;
 }
 .quick-switch-view .input-container .subreddit-sidebar .header {
   margin: 0;
@@ -357,6 +358,11 @@ body {
   box-sizing: border-box;
   border-bottom: 1px solid #dedede;
   font-size: 18px;
+}
+.quick-switch-view .input-container .subreddit-sidebar .header-image {
+  margin: 0 auto;
+  margin-top: 20px;
+  max-width: 100%;
 }
 .quick-switch-view .input-container .subreddit-sidebar .description {
   font-size: 12px;

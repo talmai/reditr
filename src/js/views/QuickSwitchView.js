@@ -155,7 +155,12 @@ class QuickSwitchView extends React.Component {
                 ));
             });
 
-            let subredditInfo = <StreamSpinnerView/>;
+            let subredditInfo = (
+                <div className="subreddit-sidebar">
+                    <h3 className="header">{this.state.suggestedSubreddits[this.state.selectedSuggestionIndex]}</h3>
+                    <StreamSpinnerView />
+                </div>
+            );
 
             if (this.state.hasSubredditBio) {
                 let subredditData = this.state.subredditBioData;
@@ -168,7 +173,11 @@ class QuickSwitchView extends React.Component {
                 }
 
                 subredditInfo = (
-                    <div className="description" dangerouslySetInnerHTML={{__html: parsedHtml}} />
+                    <div className="subreddit-sidebar">
+                        <h3 className="header">{this.state.suggestedSubreddits[this.state.selectedSuggestionIndex]}</h3>
+                        <img src={subredditData.header_img} className="header-image" />
+                        <div className="description" dangerouslySetInnerHTML={{__html: parsedHtml}} />
+                    </div>
                 );
             }
 
@@ -177,10 +186,7 @@ class QuickSwitchView extends React.Component {
                     <ul className="suggested-subreddits">
                         {this.suggestedSubredditsViews}
                     </ul>
-                    <div className="subreddit-sidebar">
-                        <h3 className="header">{this.state.suggestedSubreddits[this.state.selectedSuggestionIndex]}</h3>
-                        {subredditInfo}
-                    </div>
+                    {subredditInfo}
                 </div>
             );
         }
