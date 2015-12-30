@@ -55,7 +55,7 @@ class MediaParserView extends React.Component {
             let sources = [];
             if (Array.isArray(this.state.media.parsedUrl)) {
                 this.state.media.parsedUrl.forEach((url, index) => {
-                    sources.push(<source key={index} type="video/webm" src={url} />)
+                    sources.push(<source key={index} type="video/webm" src={url} />);
                 });
             } else {
                 sources = <source type="video/webm" src={this.state.media.parsedUrl} />;
@@ -72,7 +72,7 @@ class MediaParserView extends React.Component {
             break;
         case "text":
         case "article":
-            if(this.state.media.parsedText.length == 0) return false;
+            if (this.state.media.parsedText.length == 0) return false;
             return (
                     <div className="media text" dangerouslySetInnerHTML={{__html: this.state.media.parsedText}}></div>
             );
