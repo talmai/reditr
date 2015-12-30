@@ -81,6 +81,9 @@ class QuickSwitchView extends React.Component {
                 // fill the input bar
                 if (this.state.suggestedSubreddits.length > 0) {
                     this.refs["query-input"].value = this.state.suggestedSubreddits[this.state.selectedSuggestionIndex];
+                    this.setState({
+                        suggestedQuery: this.refs["query-input"].value
+                    });
                 }
                 break;
             case 40: // down arrow
