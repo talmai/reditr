@@ -34,6 +34,7 @@ class GalleryView extends React.Component {
         return (
             <div className="gallery-view">
                 <div onClick={this.onPrev.bind(this)} className="prev"></div>
+                <div className="helper" />
                 <img className="media" src={this.props.imageUrls[this.state.currentIndex]} />
                 <div onClick={this.onNext.bind(this)} className="next"></div>
                 <div className="details">{this.state.currentIndex + 1}/{this.props.imageUrls.length}</div>

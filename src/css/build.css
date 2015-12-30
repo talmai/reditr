@@ -28,8 +28,15 @@ body {
   height: 450px;
   text-align: center;
 }
+.gallery-view .helper {
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+}
 .gallery-view .media {
   max-width: calc(100% - 100px) !important;
+  vertical-align: middle;
+  display: inline-block !important;
 }
 .gallery-view .next,
 .gallery-view .prev {
