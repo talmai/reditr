@@ -221,8 +221,9 @@ class StreamView extends React.Component {
         }
         // find elements off screen
         let postNodes = node.querySelectorAll('.stream-item-view');
-        let startY = node.scrollTop - 8*node.offsetHeight;
-        let endY = startY + 9*node.offsetHeight;
+        var screensToPreload = 4;
+        let startY = node.scrollTop - 4*node.offsetHeight;
+        let endY = node.scrollTop + (screensToPreload+1)*node.offsetHeight;
         let postIds = this.state.postIds;
         for (var i = 0; i < postNodes.length; i++) {
             var post = postNodes[i];
