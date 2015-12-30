@@ -7,6 +7,10 @@ class QuickSwitchView extends React.Component {
 
     constructor(props, context) {
         super(props, context);
+
+        this.state = {
+            
+        }
     }
 
     componentDidMount() {
@@ -29,7 +33,7 @@ class QuickSwitchView extends React.Component {
                     <div className="type">
                         /r/
                     </div>
-                    <input ref="query-input" onKeyDown={this.queryChanged.bind(this)}/>
+                    <input ref="query-input" onKeyUp={this.queryChanged.bind(this)}/>
                 </div>
             </div>
         );

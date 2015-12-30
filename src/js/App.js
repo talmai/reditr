@@ -25,7 +25,7 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-        Keystrokes.listen(['⌘o','⌃o'], event => this.setState({ quickSwitchVisible: !this.state.quickSwitchVisible }));
+        Keystrokes.listen(['⌘e','⌃e'], event => this.setState({ quickSwitchVisible: !this.state.quickSwitchVisible }));
         Keystrokes.listen("⎋", event => {
             if(this.state.quickSwitchVisible) this.setState({ quickSwitchVisible: false });
         });
