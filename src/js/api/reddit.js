@@ -24,7 +24,6 @@ class reddit {
     }
 
     getPostsFromSubreddit(subreddit, options = { sort: "hot" }, callback) {
-
         Request
             .get(this.baseUrl
                 + "/r/"

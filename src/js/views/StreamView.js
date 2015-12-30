@@ -14,74 +14,44 @@ class StreamView extends React.Component {
 
         let params = this.props.params;
 
+        this.state = {
+            sort: params.sort || "hot",
+            period: params.period || "all",
+            postViews: [],
+            postIds: {},
+            after: null,
+            isLoading: false
+        };
+
         if (params.subreddit || !params.user) {
             this.initForSubreddit();
         } else if (params.user) {
             this.initForUser();
         }
 
-        var defaults = this.defaults;
-        this.state = {
-            subreddit: defaults.subreddit,
-            postViews: [],
-            postIds: {},
-            sort: defaults.sortType,
-            period: defaults.period,
-            after: null,
-            isLoading: false
-        };
+        // if a router created us then we must be the "main view" and need to
+        // offer up a title and path to this page for the breadcrumb
+        if (this.props.route) {
+            Observable.global.trigger('offerBreadcrumb', {
+                href: this.state.href,
+                text: this.state.text
+            });
+        }
 
     }
 
     initForUser() {
-
-        let { query } = this.props.location;
-
-        this.defaults = {
-            sortType: "hot",
-            period: "all"
-        };
-
-        let user = this.props.params.user;
-        let sortType = this.props.params.sort || this.defaults.sortType;
-        let period = query.t || this.defaults.period;
-
-        // if a router created us then we must be the "main view" and need to
-        // offer up a title and path to this page for the breadcrumb
-        if (this.props.route) {
-            Observable.global.trigger('offerBreadcrumb', {
-                href: window.location.href.indexOf('/u/') >= 0
-                        || window.location.href.indexOf('/user/') ? "/user/" + user : '/',
-                text: user
-            });
-        }
-
+        var state = this.state;
+        state.user = this.props.params.user;
+        state.href = (window.location.href.search(/\/(u|user)\//) >= 0) ? "/user/" + state.user : '/';
+        state.text = state.user; // title of stream
     }
 
     initForSubreddit() {
-
-        let { query } = this.props.location;
-
-        this.defaults = {
-            subreddit: "all",
-            sortType: "hot",
-            period: "all"
-        };
-
-        // temporarily assume all to be the default sub
-        let subreddit = this.props.params.subreddit || this.defaults.subreddit;
-        let sortType = this.props.params.sort || this.defaults.sortType;
-        let period = query.t || this.defaults.period;
-
-        // if a router created us then we must be the "main view" and need to
-        // offer up a title and path to this page for the breadcrumb
-        if (this.props.route) {
-            Observable.global.trigger('offerBreadcrumb', {
-                href: window.location.href.indexOf('/r/') >= 0 ? '/r/'+subreddit : '/',
-                text: subreddit == this.defaultSubreddit ? 'Frontpage' : '/r/' + subreddit
-            });
-        }
-
+        var state = this.state;
+        state.subreddit = this.props.params.subreddit || "all";
+        state.href = (window.location.href.indexOf('/r/') >= 0) ? '/r/' + state.subreddit : '/';
+        state.text = (state.subreddit == this.defaultSubreddit) ? 'Frontpage' : '/r/' + state.subreddit;
     }
 
     /* Creates StreamItemView views from array of post objects from reddit (redditPosts) and
@@ -108,8 +78,9 @@ class StreamView extends React.Component {
         if (options.reset) {
             state = {
                 user: user,
-                posts: [],
-                sort: this.defaults.sortType,
+                postViews: [],
+                postIds: {},
+                sort: this.defaults.sort,
                 period: this.defaults.period,
                 after: null,
                 isLoading: true,
@@ -150,10 +121,11 @@ class StreamView extends React.Component {
         var state = {};
         if (options.reset) {
             state = {
-                subreddit: this.defaults.subreddit,
-                posts: [],
-                sort: this.defaults.sortType,
-                period: this.defaults.period,
+                subreddit,
+                postViews: [],
+                postIds: {},
+                sort: this.state.sort,
+                period: this.state.period,
                 after: null,
                 isLoading: true,
                 notFound: false
@@ -169,21 +141,16 @@ class StreamView extends React.Component {
             // retreive the posts
             var options = { sort: this.state.sort, after: this.state.after, t: this.state.period };
             reddit.getPostsFromSubreddit(subreddit, options, (err, posts) => {
-                // subreddit not found
                 if (!posts || !posts.body) {
-                    this.setState({ subreddit: subreddit, notFound: true, isLoading: false });
+                    // subreddit not found
+                    this.setState({ subreddit, notFound: true, isLoading: false });
                     return;
                 }
 
                 // build new models and views here (prefer views built in render, speed sacrifice)
                 let newPosts = posts.body.data.children;
                 this.createViewsFromRedditPosts(newPosts, this.state.postViews, this.state.postIds);
-
-                this.setState({
-                    subreddit: subreddit,
-                    after: posts.body.data.after,
-                    isLoading: false
-                });
+                this.setState({ subreddit, after: posts.body.data.after, isLoading: false });
             });
         });
     }
