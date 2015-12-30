@@ -291,7 +291,7 @@ body {
   background: rgba(0, 0, 0, 0.7);
 }
 .quick-switch-view .input-container {
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: rgba(255, 255, 255, 0.6);
   height: 52px;
   border-radius: 11px;
   width: 500px;
@@ -300,10 +300,12 @@ body {
   left: 50%;
   margin-left: -250px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  -webkit-backdrop-filter: blur(20px);
+  /* only safari currenly supports */
 }
 .quick-switch-view .input-container .type {
   display: inline-block;
-  color: #aaaaaa;
+  color: #333;
   padding: 10px;
   padding-left: 16px;
   font-size: 20px;
@@ -311,7 +313,7 @@ body {
 .quick-switch-view .input-container input {
   width: calc(100% - 67px);
   height: calc(100% - 12px);
-  color: #3a3a3a;
+  color: #2a2a2a;
   margin: 0;
   padding: 0;
   background: none;
