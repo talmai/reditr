@@ -7,11 +7,16 @@
     margin-left: auto;
     margin-right: auto;
     margin-top: 25px;
-    border-bottom: 1px solid #ccc;
     box-sizing: border-box;
     text-align: left;
     border: 1px solid #c6c6c6;
     border-radius: 4px;
+
+    @media screen and (max-width: @stream-item-min-large-screen) {
+        width: calc(~"100% -" 20px);
+        margin-left: 10px;
+        margin-top: 10px;
+    }
 
     .stream-item-top {
         position: relative;
@@ -33,18 +38,8 @@
                 font-size: 13px;
             }
 
-            @media screen and (max-width: 768px) {
-                position: relative;
-                height: @stream-item-sidebar-height;
-                width: 100%;
-                border-radius: 0;
-                border-left: 0;
-                border-top: 1px solid #dedede;
-
-                .stream-item-vote-count {
-                    line-height: calc(@stream-item-sidebar-height - 20px);
-                    float: right;
-                }
+            @media screen and (max-width: @stream-item-max-small-screen) {
+                display: none;
             }
         }
 
@@ -53,8 +48,8 @@
             padding-top: 7px;
             width: calc(~"100% -" ( @stream-item-sidebar-width + 20));
 
-            @media screen and (max-width: 768px) {
-                width: 100%;
+            @media screen and (max-width: @stream-item-max-small-screen) {
+                width: auto;
             }
 
             .nsfw-btn {

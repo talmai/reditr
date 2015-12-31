@@ -50,7 +50,7 @@ module.exports = function(grunt) {
             web: {
                 options:  {
                     port: 3000,
-                    hostname: '127.0.0.1',
+                    hostname: '*',
                     base: 'src',
                     keepalive: true,
                     middleware: function(connect, options, wares) {
