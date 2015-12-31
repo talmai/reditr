@@ -17,6 +17,9 @@ class UserManager {
                 this.users[user.username] = user;
             }
             this.setCurrentUser(new User(results[1]));
+
+            // notify that we are ready
+            Observable.global.trigger("UserManagerInitialized", this);
         });
     }
 
@@ -87,4 +90,4 @@ class UserManager {
 
 }
 
-export default new UserManager
+export default new UserManager;

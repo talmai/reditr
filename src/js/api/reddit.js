@@ -26,15 +26,23 @@ class reddit {
     }
 
     getPostsFromSubreddit(subreddit, options = { sort: "hot" }, callback) {
-        Request
-            .get(this.baseUrl
+
+        let baseUrl = this.authUser ? this.baseOAuthUrl : this.baseUrl;
+
+        let req = Request
+            .get(baseUrl
                 + "/r/"
                 + subreddit
                 + "/"
                 + options.sort
                 + this.extension)
-            .query(options)
-            .end(callback);
+            .query(options);
+
+        if (this.authUser) {
+            req.set("Authorization", "bearer " + this.authUser.accessToken);
+        }
+
+        req.end(callback);
 
     }
 
@@ -46,6 +54,7 @@ class reddit {
                 + user
                 + "/"
                 + this.extension)
+            .set("Authorization", "bearer " + this.authUser.accessToken)
             .query(options)
             .end(callback);
 

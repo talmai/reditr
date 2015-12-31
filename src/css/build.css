@@ -487,12 +487,43 @@ body {
   background: #fefefe;
   border-left: 1px solid #dedede;
   height: 100%;
-  padding: 10px;
   border-top-right-radius: 5px;
   text-align: center;
 }
 .stream-item-view .stream-item-top .stream-item-sidebar .stream-item-vote-count {
   font-size: 13px;
+}
+.stream-item-view .stream-item-top .stream-item-sidebar .vote {
+  cursor: pointer;
+  background: url(images/vote.png) center center no-repeat;
+  background-size: 20%;
+  width: 100%;
+  height: 40px;
+}
+.stream-item-view .stream-item-top .stream-item-sidebar .vote:hover {
+  background-color: rgba(200, 200, 200, 0.2);
+}
+.stream-item-view .stream-item-top .stream-item-sidebar .vote:active {
+  background-color: rgba(200, 200, 200, 0.3);
+}
+.stream-item-view .stream-item-top .stream-item-sidebar .vote.up.selected {
+  background-image: url(images/upvote.png);
+}
+.stream-item-view .stream-item-top .stream-item-sidebar .vote.up:active {
+  background-image: url(images/upvote.png);
+}
+.stream-item-view .stream-item-top .stream-item-sidebar .vote.down {
+  -ms-transform: rotate(180deg);
+  /* IE 9 */
+  -webkit-transform: rotate(180deg);
+  /* Chrome, Safari, Opera */
+  transform: rotate(180deg);
+}
+.stream-item-view .stream-item-top .stream-item-sidebar .vote.down:active {
+  background-image: url(images/downvote.png);
+}
+.stream-item-view .stream-item-top .stream-item-sidebar .vote.down.selected {
+  background-image: url(images/downvote.png);
 }
 @media screen and (max-width: 500px) {
   .stream-item-view .stream-item-top .stream-item-sidebar {

@@ -149,6 +149,7 @@ class StreamView extends React.Component {
 
                 // build new models and views here (prefer views built in render, speed sacrifice)
                 let newPosts = posts.body.data.children;
+
                 this.createViewsFromRedditPosts(newPosts, this.state.postViews, this.state.postIds);
                 this.setState({ subreddit, after: posts.body.data.after, isLoading: false });
             });
@@ -175,6 +176,17 @@ class StreamView extends React.Component {
         } else {
             // load the posts
             this.load();
+        }
+
+        Observable.global.on(this, 'updateCurrentUser', this.onUpdateCurrentUser);
+    }
+
+    onUpdateCurrentUser(data) {
+        if (this.props.params.user) {
+            this.loadUser(this.state.user, { reset: true });
+        } else {
+            // load the posts
+            this.load(this.state.subreddit, { reset: true });
         }
     }
 
@@ -229,6 +241,7 @@ class StreamView extends React.Component {
     }
 
     render() {
+
         var loading = this.state.isLoading ? <StreamSpinnerView/> : false;
         var notFound = this.state.notFound ? <div>Subreddit {this.state.subreddit} does not exist.</div> : false;
 
