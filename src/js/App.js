@@ -7,6 +7,7 @@ import StreamView from './views/StreamView';
 import PostView from './views/PostView';
 import Keystrokes from './utilities/Keystrokes';
 import Observable from './utilities/Observable';
+import Device from './utilities/Device';
 import { Router, Route, IndexRoute, Link } from 'react-router';
 
 // Then we delete a bunch of code from App and
@@ -33,15 +34,19 @@ class App extends React.Component {
 
     classForAppView() {
         var curClass = 'app-view';
-        if (window.navigator.userAgent.indexOf("MSIE ")) {
+        if (Device.isIE()) {
             curClass += ' isie';
+        } else if (Device.isIOS()) {
+            curClass += ' isios';
         }
+        return curClass;
     }
 
     render() {
         var quickSwitch = this.state.quickSwitchVisible ? <QuickSwitchView onSubredditChanged={this.closeQuickSwitcher.bind(this)}/> : false;
+        var curClass = this.classForAppView();
         return (
-            <div className="app-view">
+            <div className={curClass}>
                 <HeaderView/>
                 {this.props.children}
                 {quickSwitch}

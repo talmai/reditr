@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 
-import MediaParser from '../api/MediaParser';
+import MediaParser from '../utilities/MediaParser';
 import YoutubeView from './YoutubeView';
 import GalleryView from './GalleryView';
 import TweetView from './TweetView';
@@ -54,8 +54,8 @@ class MediaParserView extends React.Component {
         case "video":
             let sources = [];
             if (Array.isArray(this.state.media.parsedUrl)) {
-                this.state.media.parsedUrl.forEach((url, index) => {
-                    sources.push(<source key={index} type="video/webm" src={url} />);
+                this.state.media.parsedUrl.forEach((media, index) => {
+                    sources.push(<source key={index} type={media.mime} src={media.url} />);
                 });
             } else {
                 sources = <source type="video/webm" src={this.state.media.parsedUrl} />;
