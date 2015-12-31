@@ -8,6 +8,7 @@ import PostView from './views/PostView';
 import Keystrokes from './utilities/Keystrokes';
 import Observable from './utilities/Observable';
 import Device from './utilities/Device';
+import UserManager from './account/UserManager';
 import { Router, Route, IndexRoute, Link } from 'react-router';
 
 // Then we delete a bunch of code from App and
@@ -58,19 +59,21 @@ class App extends React.Component {
 // init parse
 Parse.initialize("KEY1", "KEY2");
 
-// Finally, we render a <Router> with some <Route>s.
-// It does all the fancy routing stuff for us.
-render((
-  <Router history={history}>
-    <Route path="/" component={App}>
-        <IndexRoute component={StreamView} />
-        <Route path="/r/:subreddit" component={StreamView} />
-        <Route path="/r/:subreddit/:sort" component={StreamView} />
-        <Route path="/r/:subreddit/comments/:id/" component={PostView} />
-        <Route path="/r/:subreddit/comments/:id/:title/" component={PostView} />
+Observable.global.on("UserManagerInitialized", (userManager) => {
+    // Finally, we render a <Router> with some <Route>s.
+    // It does all the fancy routing stuff for us.
+    render((
+      <Router history={history}>
+        <Route path="/" component={App}>
+            <IndexRoute component={StreamView} />
+            <Route path="/r/:subreddit" component={StreamView} />
+            <Route path="/r/:subreddit/:sort" component={StreamView} />
+            <Route path="/r/:subreddit/comments/:id/" component={PostView} />
+            <Route path="/r/:subreddit/comments/:id/:title/" component={PostView} />
 
-        <Route path="/u/:user" component={StreamView} />
-        <Route path="/user/:user" component={StreamView} />
-    </Route>
-  </Router>
-), document.getElementById('App'));
+            <Route path="/u/:user" component={StreamView} />
+            <Route path="/user/:user" component={StreamView} />
+        </Route>
+      </Router>
+    ), document.getElementById('App'));
+});
