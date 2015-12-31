@@ -87,6 +87,7 @@ class reddit {
         Request
             .post(this.baseOAuthUrl + "/api/vote")
             .set("Authorization", "bearer " + this.authUser.accessToken)
+            .set("Content-Type", "application/x-www-form-urlencoded")
             .send({
                 id: fullname,
                 dir: dir
