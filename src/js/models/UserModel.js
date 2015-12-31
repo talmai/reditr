@@ -25,6 +25,7 @@ class UserModel extends BaseModel {
         this.name = n;
         this.startCaching(this.name);
     }
+    
 }
 
 export default UserModel

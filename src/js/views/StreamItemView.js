@@ -12,7 +12,7 @@ class StreamItemView extends React.Component {
 
     constructor(props) {
         super(props);
-        
+
         // get the vote direction
         let voteDir = 0;
 
@@ -100,6 +100,9 @@ class StreamItemView extends React.Component {
                 break;
         }
 
+        // vote to reddit plz
+        reddit.vote(newVoteDir, this.props.post.get("name"));
+
         this.setState({
             voteCount: this.state.voteCount + voteDelta,
             voteDirection: newVoteDir
@@ -125,6 +128,9 @@ class StreamItemView extends React.Component {
                 voteDelta = -1;
                 break;
         }
+                
+        // vote to reddit plz
+        reddit.vote(newVoteDir, this.props.post.get("name"));
 
         this.setState({
             voteCount: this.state.voteCount + voteDelta,
