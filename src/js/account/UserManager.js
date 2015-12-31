@@ -16,7 +16,10 @@ class UserManager {
                 let user = new User(user);
                 this.users[user.username] = user;
             }
-            this.setCurrentUser(new User(results[1]));
+
+            if (results[1]) {
+                this.setCurrentUser(new User(results[1]));
+            }
 
             // notify that we are ready
             Observable.global.trigger("UserManagerInitialized", this);
