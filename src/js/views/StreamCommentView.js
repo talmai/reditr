@@ -1,6 +1,6 @@
 import React from 'react';
 import HtmlToReact from 'html-to-react';
-import { decodeEntities } from '../Utilities';
+import { decodeEntities } from '../utilities/Common';
 
 class StreamCommentView extends React.Component {
 

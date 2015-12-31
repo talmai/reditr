@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from 'react-dom';
 import Link from './Link';
 import Observable from '../utilities/Observable';
-import history from '../History';
+import history from '../utilities/History';
 import AccountHeader from './AccountHeader';
 
 class Logo extends React.Component {

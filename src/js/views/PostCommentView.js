@@ -1,6 +1,6 @@
 import React from 'react';
-import { decodeEntities } from '../Utilities.js';
-import CommentModel from '../models/CommentModel.js';
+import { decodeEntities } from '../utilities/Common';
+import CommentModel from '../models/CommentModel';
 
 class PostCommentView extends React.Component {
 

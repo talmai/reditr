@@ -1,11 +1,11 @@
 import React from 'react';
 import { render } from 'react-dom';
-import history from './History';
+import history from './utilities/History';
 import HeaderView from './views/HeaderView';
 import QuickSwitchView from './views/QuickSwitchView';
 import StreamView from './views/StreamView';
 import PostView from './views/PostView';
-import Keystrokes from './Keystrokes';
+import Keystrokes from './utilities/Keystrokes';
 import Observable from './utilities/Observable';
 import { Router, Route, IndexRoute, Link } from 'react-router';
 
@@ -29,6 +29,13 @@ class App extends React.Component {
         Keystrokes.listen("⎋", event => {
             if(this.state.quickSwitchVisible) this.setState({ quickSwitchVisible: false });
         });
+    }
+
+    classForAppView() {
+        var curClass = 'app-view';
+        if (window.navigator.userAgent.indexOf("MSIE ")) {
+            curClass += ' isie';
+        }
     }
 
     render() {

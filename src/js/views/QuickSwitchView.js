@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router, Link } from 'react-router';
-import history from '../History.js';
+import history from '../utilities/History.js';
 import Observable from '../utilities/Observable';
-import Keystrokes from '../Keystrokes';
+import Keystrokes from '../utilities/Keystrokes';
 import reddit from '../api/reddit';
 import StreamSpinnerView from './StreamSpinnerView';
-import { decodeEntities } from '../Utilities';
+import { decodeEntities } from '../utilities/Common';
 
 class QuickSwitchView extends React.Component {
 

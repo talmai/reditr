@@ -1,11 +1,11 @@
 import React from 'react';
 import { render } from 'react-dom';
 import MediaParserView from './MediaParserView';
-import reddit from '../api/reddit.js';
+import reddit from '../api/reddit';
 import CommentModel from '../models/CommentModel';
 import StreamCommentView from './StreamCommentView';
 import Link from './Link';
-import { prettyNumber } from '../Utilities';
+import { prettyNumber } from '../utilities/Common';
 import moment from 'moment';
 
 class StreamItemView extends React.Component {

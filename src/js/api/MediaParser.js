@@ -5,7 +5,7 @@
 */
 import Request from 'superagent';
 import jsonp from './superagentJSONP';
-import { decodeEntities } from '../Utilities.js';
+import { decodeEntities } from '../utilities/Common';
 
 class MediaParser {
 
