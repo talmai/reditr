@@ -297,8 +297,7 @@ body {
   background: rgba(0, 0, 0, 0.7);
 }
 .quick-switch-view .input-container {
-  background-color: rgba(255, 255, 255, 0.6);
-  height: 52px;
+  background-color: rgba(255, 255, 255, 0.9);
   border-radius: 11px;
   width: 500px;
   position: absolute;
@@ -316,9 +315,12 @@ body {
   padding-left: 16px;
   font-size: 20px;
 }
-.quick-switch-view .input-container input {
+.quick-switch-view .input-container .query-input,
+.quick-switch-view .input-container .query-suggested {
+  position: relative;
+  z-index: 1;
   width: calc(100% - 67px);
-  height: calc(100% - 12px);
+  height: 40px;
   color: #2a2a2a;
   margin: 0;
   padding: 0;
@@ -326,9 +328,77 @@ body {
   border: none;
   font-size: 20px;
 }
-.quick-switch-view .input-container input:focus,
-.quick-switch-view .input-container input:active {
+.quick-switch-view .input-container .query-input:focus,
+.quick-switch-view .input-container .query-suggested:focus,
+.quick-switch-view .input-container .query-input:active,
+.quick-switch-view .input-container .query-suggested:active {
   outline: none;
+}
+.quick-switch-view .input-container .query-suggested {
+  position: absolute;
+  left: 49px;
+  top: 4px;
+  color: #898989;
+  z-index: 0;
+}
+.quick-switch-view .input-container .subreddit-sidebar {
+  height: 100%;
+  float: right;
+  width: 55%;
+  position: relative;
+  box-sizing: border-box;
+  overflow: auto;
+  text-align: center;
+}
+.quick-switch-view .input-container .subreddit-sidebar .header {
+  margin: 0;
+  text-align: center;
+  padding: 5px;
+  box-sizing: border-box;
+  border-bottom: 1px solid #dedede;
+  font-size: 18px;
+}
+.quick-switch-view .input-container .subreddit-sidebar .header-image {
+  margin: 0 auto;
+  margin-top: 20px;
+  max-width: 100%;
+}
+.quick-switch-view .input-container .subreddit-sidebar .description {
+  font-size: 12px;
+  padding: 10px;
+  line-height: 12px;
+}
+.quick-switch-view .input-container .subreddit-sidebar .stream-spinner-view {
+  margin: 0 auto;
+  position: relative;
+  display: block;
+  top: calc(50% - 20px);
+}
+.quick-switch-view .input-container .more-info {
+  height: 300px;
+  width: 100%;
+  border-top: 1px solid #aaa;
+}
+.quick-switch-view .input-container .more-info .suggested-subreddits {
+  height: 100%;
+  overflow: auto;
+  float: left;
+  width: 45%;
+  border-right: 1px solid #aaa;
+  padding: 0;
+  box-sizing: border-box;
+  margin: 0;
+  font-size: 13px;
+  list-style: none;
+}
+.quick-switch-view .input-container .more-info .suggested-subreddits .suggestion {
+  line-height: 24px;
+  padding-left: 10px;
+  cursor: pointer;
+}
+.quick-switch-view .input-container .more-info .suggested-subreddits .suggestion.selected {
+  background-color: #089DE3;
+  color: white;
 }
 
 .stream-spinner-view {

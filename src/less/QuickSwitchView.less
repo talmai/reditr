@@ -7,8 +7,7 @@
     background: rgba(0, 0, 0, 0.7);
 
     .input-container {
-        background-color: rgba(255, 255, 255, 0.6);
-        height: 52px;
+        background-color: rgba(255, 255, 255, 0.9);
         border-radius: 11px;
         width: 500px;
         position: absolute;
@@ -26,9 +25,11 @@
             font-size: 20px;
         }
 
-        input {
+        .query-input, .query-suggested {
+            position: relative;
+            z-index: 1;
             width: ~"calc(100% - 67px)";
-            height: ~"calc(100% - 12px)";
+            height: 40px;
             color: #2a2a2a;
             margin: 0;
             padding: 0;
@@ -38,6 +39,83 @@
             &:focus, &:active {
                 outline: none;
             }
+        }
+
+        .query-suggested {
+            position: absolute;
+            left: 49px;
+            top: 4px;
+            color: #898989;
+            z-index: 0;
+        }
+
+        .subreddit-sidebar {
+            height: 100%;
+            float: right;
+            width: 55%;
+            position: relative;
+            box-sizing: border-box;
+            overflow: auto;
+            text-align: center;
+
+            .header {
+                margin: 0;
+                text-align: center;
+                padding: 5px;
+                box-sizing: border-box;
+                border-bottom: 1px solid #dedede;
+                font-size: 18px;
+            }
+
+            .header-image {
+                margin: 0 auto;
+                margin-top: 20px;
+                max-width: 100%;
+            }
+
+            .description {
+                font-size: 12px;
+                padding: 10px;
+                line-height: 12px;
+            }
+
+            .stream-spinner-view {
+                margin: 0 auto;
+                position: relative;
+                display: block;
+                top: ~"calc(50% - 20px)";
+            }
+        }
+
+        .more-info {
+            height: 300px;
+            width: 100%;
+            border-top: 1px solid #aaa;
+
+            .suggested-subreddits {
+                height: 100%;
+                overflow: auto;
+                float: left;
+                width: 45%;
+                border-right: 1px solid #aaa;
+                padding: 0;
+                box-sizing: border-box;
+                margin: 0;
+                font-size: 13px;
+                list-style: none;
+
+                .suggestion {
+                    line-height: 24px;
+                    padding-left: 10px;
+                    cursor: pointer;
+
+                    &.selected {
+                        background-color: #089DE3;
+                        color: white;
+                    }
+                }
+            }
+
         }
 
     }
