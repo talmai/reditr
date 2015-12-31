@@ -86,7 +86,6 @@ class reddit {
     vote(dir, fullname, callback) {
         Request
             .post(this.baseOAuthUrl + "/api/vote")
-            .query({ accesstoken: this.authUser.accessToken })
             .set("Authorization", "bearer " + this.authUser.accessToken)
             .send({
                 id: fullname,
