@@ -32,16 +32,16 @@ class HeaderView extends React.Component {
         var history = this.state.history;
         var future = this.state.future;
         // queue up nav tasks until component is mounted
-        if(!this.didComponentMount) {
+        if (!this.didComponentMount) {
             this.waitedForMount.push(['onPushNav', data]);
         // go forward
-        }else if(future.length > 0 && future[future.length-1].href == data.href) {
+        } else if (future.length > 0 && future[future.length-1].href == data.href) {
             history.push(future.pop());
         // go backward
-        }else if(history.length > 1 && history[history.length-2].href == data.href) {
+        } else if (history.length > 1 && history[history.length-2].href == data.href) {
             future.push(history.pop());
         // go to new page
-        }else{
+        } else if(history.length == 0 || history[history.length-1].href != data.href) {
             history.push(data);
             this.state.future = [];
         }
@@ -82,9 +82,10 @@ class HeaderView extends React.Component {
         //
         var center = history[history.length-1];
         var centerObj = false;
+        var subPicker = () => Observable.global.trigger('requestQuickSwitcher');
         if(center) {
             text = this.truncateTitle(center.text);
-            centerObj = <Link className="header-view-text" to={center.href}>{text}</Link>;
+            centerObj = <Link className="header-view-text" to={center.href} onClick={subPicker}>{text}</Link>;
         }
 
 //        var left = this.history[this.history.length-2] || false;

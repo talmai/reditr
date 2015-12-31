@@ -26,10 +26,15 @@ class App extends React.Component {
         this.setState({ quickSwitchVisible: false });
     }
 
+    showQuickSwitcher() {
+        this.setState({ quickSwitchVisible: !this.state.quickSwitchVisible });
+    }
+
     componentDidMount() {
-        Keystrokes.listen(['⌘e','⌃e'], event => this.setState({ quickSwitchVisible: !this.state.quickSwitchVisible }));
+        Observable.global.on(this, 'requestQuickSwitcher', this.showQuickSwitcher);
+        Keystrokes.listen(['⌘e','⌃e'], this.showQuickSwitcher.bind(this));
         Keystrokes.listen("⎋", event => {
-            if(this.state.quickSwitchVisible) this.setState({ quickSwitchVisible: false });
+            if(this.state.quickSwitchVisible) this.closeQuickSwitcher();
         });
     }
 
