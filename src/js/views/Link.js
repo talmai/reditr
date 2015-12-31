@@ -12,7 +12,11 @@ class Link extends React.Component {
         var text = this.props.text || href;
         e.preventDefault();
         e.stopPropagation();
-        Observable.global.trigger('pushNav', { href, text });
+        if (this.props.onClick) {
+            this.props.onClick();
+        } else {
+            Observable.global.trigger('pushNav', { href, text });
+        }
         return false;
     }
 
@@ -20,8 +24,10 @@ class Link extends React.Component {
         var href = this.props.to;
         var className = this.props.className || false;
         return (
-            <a className={className} href={href} onClick={this.handleClick.bind(this)}>
-                {this.props.children}
+                <a className={className} href={href} onClick={this.handleClick.bind(this)}>
+                <span>
+                    {this.props.children}
+                </span>
             </a>
         );
     }
