@@ -9,7 +9,20 @@ class TweetView extends React.Component {
     }
 
     clickName() {
-        window.open('http://twitter.com/' + this.props.tweet.username);
+        var tweet = this.props.tweet;
+        window.open('http://twitter.com/' + tweet.username + '/status/' + tweet.id);
+    }
+
+    clickReply() {
+        window.open('https://twitter.com/intent/tweet?in_reply_to=' + this.props.tweet.id);
+    }
+
+    clickHeart() {
+        window.open('https://twitter.com/intent/like?tweet_id=' + this.props.tweet.id);
+    }
+
+    clickRetweet() {
+        window.open('https://twitter.com/intent/retweet?tweet_id=' + this.props.tweet.id);
     }
 
     playVideo() {
@@ -48,6 +61,9 @@ class TweetView extends React.Component {
                     </div>;
         }
         var clickName = this.clickName.bind(this);
+        var clickReply = this.clickReply.bind(this);
+        var clickHeart = this.clickHeart.bind(this);
+        var clickRetweet = this.clickRetweet.bind(this);
         return (
                 <div className="tweet-view">
                 {image}
@@ -62,14 +78,14 @@ class TweetView extends React.Component {
                     <div className="text" dangerouslySetInnerHTML={{__html: tweet.text}} />
                     <div className="date" dangerouslySetInnerHTML={{__html: formattedTime}} />
                     <div className="controls">
-                    <div className="replyContainer container" onClick={clickName}>
+                    <div className="replyContainer container" onClick={clickReply}>
                         <div className="reply icon"/>
                     </div>
-                    <div className="retweetContainer container" onClick={clickName}>
+                    <div className="retweetContainer container" onClick={clickRetweet}>
                         <div className="retweet icon"/>
                         <span dangerouslySetInnerHTML={{__html: tweet.retweets}} />
                     </div>
-                    <div className="heartContainer container" onClick={clickName}>
+                    <div className="heartContainer container" onClick={clickHeart}>
                         <div className="heart icon"/>
                         <span dangerouslySetInnerHTML={{__html: tweet.hearts}} />
                     </div>

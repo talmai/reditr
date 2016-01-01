@@ -69,7 +69,7 @@ class MediaParser {
                 prevChar = '';
             }
         }
-        return text;
+        return text.replace(/\\"/g, '"').replace(/<a/g, '<a target="blank"');
     }
 
     handleTweet(url, callback) {
@@ -81,6 +81,7 @@ class MediaParser {
             .get(embeddedTweetUrl)
             .use(jsonp)
             .end((err, res) => {
+                var id = Object.keys(res.body)[0];
                 let str = JSON.stringify(res);
                 let avatarTail = str.match(/\/profile_images\/([^\/]+)\/(.*?)\.(jpg|jpeg|png)/);
                 let avatar = avatarTail.length > 0 ? 'https://pbs.twimg.com' + avatarTail[0] : undefined;
@@ -96,7 +97,7 @@ class MediaParser {
                 let videoThumb = videoThumbParts ? 'https://pbs.twimg.com/' + decodeURIComponent(videoThumbParts[0]) : undefined;
                 let videoParts = str.match(/video_url=(.*?)\.mp4/);
                 let video = videoParts ? decodeURIComponent(videoParts.pop()) + '.mp4' : undefined;
-                let tweet = {avatar, text, name, username, datetime, retweets, hearts, image, videoThumb, video};
+                let tweet = { avatar, text, name, username, datetime, retweets, hearts, image, videoThumb, video, id };
                 callback({
                     url,
                     tweet,
