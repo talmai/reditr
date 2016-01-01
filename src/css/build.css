@@ -601,6 +601,13 @@ body {
 .stream-item-view .stream-item-top .stream-item-content .media.text p {
   margin: 0;
 }
+@media screen and (max-width: 565px) {
+  .stream-item-view .stream-item-top .stream-item-content .tweet-view {
+    width: auto;
+    margin-left: 12px;
+    margin-right: 12px;
+  }
+}
 .stream-item-view .stream-item-comments {
   position: relative;
   background-color: #eee;
@@ -678,11 +685,39 @@ body {
 }
 .tweet-view .image {
   height: 280px;
+  background-color: black;
   background-size: auto 100%;
   background-position: center center;
-  background-color: black;
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
+  background-repeat: no-repeat;
+}
+.tweet-view .image .play-button {
+  width: 100%;
+  height: 100%;
+  background-image: url(../images/play-button.png);
+  background-repeat: no-repeat;
+  background-size: 50px auto;
+  background-position: center;
+  opacity: 0.75;
+}
+.tweet-view .image .play-button:hover {
+  opacity: 1;
+  cursor: pointer;
+}
+.tweet-view .videoContainer {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background-color: black;
+  text-align: center;
+}
+.tweet-view .videoContainer .video {
+  width: 100%;
+  height: 100%;
 }
 .tweet-view .tweet-container {
   padding: 15px;

@@ -41,7 +41,7 @@ class QuickSwitchView extends React.Component {
 
                 if (!err) {
                     // no error then we gucci
-                    let suggestedQuery = res.body.names[this.state.selectedSuggestionIndex].substr(query.length)
+                    let suggestedQuery = res.body.names[this.state.selectedSuggestionIndex].substr(query.length);
                     this.setState({
                         suggestedQuery: query + suggestedQuery,
                         suggestedSubreddits: res.body.names
@@ -71,7 +71,7 @@ class QuickSwitchView extends React.Component {
         let direction = {
             up: -1,
             down: 1
-        }
+        };
 
         switch (key) {
             case 38: // up arrow
@@ -149,7 +149,7 @@ class QuickSwitchView extends React.Component {
         // more info section
         let moreInfo = false;
         // reset suggestions
-        this.suggestedSubredditsViews = []
+        this.suggestedSubredditsViews = [];
         if (this.state.suggestedSubreddits.length > 0) {
             this.state.suggestedSubreddits.forEach((name, index) => {
                 let selectedClass = index == this.state.selectedSuggestionIndex ? "suggestion selected" : "suggestion";

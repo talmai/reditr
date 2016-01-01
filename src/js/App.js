@@ -61,10 +61,7 @@ class App extends React.Component {
     }
 }
 
-// init parse
-Parse.initialize("KEY1", "KEY2");
-
-Observable.global.on("UserManagerInitialized", (userManager) => {
+Observable.global.always("UserManagerInitialized", userManager => {
     // Finally, we render a <Router> with some <Route>s.
     // It does all the fancy routing stuff for us.
     render((

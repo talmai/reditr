@@ -5,10 +5,24 @@ class TweetView extends React.Component {
 
     constructor(props) {
         super(props);
+        this.state = {};
     }
 
     clickName() {
         window.open('http://twitter.com/' + this.props.tweet.username);
+    }
+
+    playVideo() {
+        this.setState({ playVideo: true });
+    }
+
+    componentDidUpdate() {
+        if (this.state.playVideo) {
+            var video = this.refs["video"];
+            video.onended = video.onpause = e => {
+                this.setState({ playVideo: false });
+            };
+        }
     }
 
     render() {
@@ -16,13 +30,28 @@ class TweetView extends React.Component {
         var profileImageStyle = { backgroundImage: 'url(' + tweet.avatar + ')' };
         var formattedTime = moment(tweet.datetime).format('h:mm A - D MMM YYYY');
         var image = false;
-        if(tweet.image) {
+        if (tweet.image) {
             image = <div className="image" style={{backgroundImage: 'url(' + tweet.image + ')'}} />;
+        }
+        if (tweet.videoThumb && tweet.video) {
+            image = <div className="image" style={{backgroundImage: 'url(' + tweet.videoThumb + ')'}}>
+                        <div className="play-button" onClick={this.playVideo.bind(this)}/>
+                    </div>;
+        }
+
+        var video = false;
+        if (this.state.playVideo) {
+            video = <div className="videoContainer">
+                        <video ref="video" className="video" autoPlay loop controls>
+                            <source type="video/mp4" src={tweet.video} />
+                        </video>
+                    </div>;
         }
         var clickName = this.clickName.bind(this);
         return (
                 <div className="tweet-view">
                 {image}
+                {video}
                 <div className="tweet-container">
                     <div className="user-info">
                         <div className="profile-image" style={profileImageStyle} />

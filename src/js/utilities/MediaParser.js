@@ -90,9 +90,13 @@ class MediaParser {
                 let datetime = str.match(/data-datetime=\\"([^\\]+)\\/).pop();
                 let retweets = (str.match(/element:retweet_count[^>]+>([^<]+)</)||[0]).pop();
                 let hearts = (str.match(/element:heart_count[^>]+>([^<]+)</)||[0]).pop();
-                var imgParts = str.match(/NaturalImage\-image.*data-srcset=\\"([^ ]+)/);
+                let imgParts = str.match(/NaturalImage\-image.*data-srcset=\\"([^ ]+)/);
                 let image = imgParts ? decodeURIComponent(imgParts.pop()) : undefined;
-                let tweet = { avatar, text, name, username, datetime, retweets, hearts, image };
+                let videoThumbParts = str.match(/ext_tw_video_thumb(.*?)\.(jpg|jpeg|png)/);
+                let videoThumb = videoThumbParts ? 'https://pbs.twimg.com/' + decodeURIComponent(videoThumbParts[0]) : undefined;
+                let videoParts = str.match(/video_url=(.*?)\.mp4/);
+                let video = videoParts ? decodeURIComponent(videoParts.pop()) + '.mp4' : undefined;
+                let tweet = {avatar, text, name, username, datetime, retweets, hearts, image, videoThumb, video};
                 callback({
                     url,
                     tweet,
