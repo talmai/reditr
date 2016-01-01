@@ -83,6 +83,18 @@ class reddit {
             .end(callback);
     }
 
+    vote(dir, fullname, callback) {
+        Request
+            .post(this.baseOAuthUrl + "/api/vote")
+            .set("Authorization", "bearer " + this.authUser.accessToken)
+            .set("Content-Type", "application/x-www-form-urlencoded")
+            .send({
+                id: fullname,
+                dir: dir
+            })
+            .end(callback);
+    }
+
 }
 
 export default new reddit;

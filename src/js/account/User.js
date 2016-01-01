@@ -27,6 +27,7 @@ class User {
 
             let me = response.body;
             this.username = me.name;
+            this.modhash = me.modhash;
 
             // get/create userSettings
             this.userSettings = new UserSettings(this);
