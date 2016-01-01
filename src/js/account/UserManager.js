@@ -60,24 +60,36 @@ class UserManager {
             this.currentUser = user;
         }
 
-        OAuth.getAccessToken(user, accessToken => {
-            user.accessToken = accessToken;
+        // if user is null, stop here so we do not get the refresh token
+        if (user) {
+            OAuth.getAccessToken(user, accessToken => {
+                user.accessToken = accessToken;
 
+                // make sure we set reddit auth for requests to work
+                reddit.setAuth(user);
+
+                // save
+                this.dataStore.set("currentUser", user);
+
+                // notify that we have a new user to update UI
+                Observable.global.trigger('updateCurrentUser', { user: user });
+
+                if (!this.isInitialized) {
+                    // notify that we are ready
+                    this.isInitialized = true;
+                    Observable.global.trigger("UserManagerInitialized", this);
+                }
+            });
+        } else {
             // make sure we set reddit auth for requests to work
             reddit.setAuth(user);
 
             // save
             this.dataStore.set("currentUser", user);
-
-            // notify that we have a new user to update UI
+            
+            // notify that we have no user
             Observable.global.trigger('updateCurrentUser', { user: user });
-
-            if (!this.isInitialized) {                
-                // notify that we are ready
-                this.isInitialized = true;
-                Observable.global.trigger("UserManagerInitialized", this);
-            }
-        });
+        }
 
     }
 
