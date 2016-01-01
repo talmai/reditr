@@ -69,7 +69,7 @@ class MediaParser {
                 prevChar = '';
             }
         }
-        return text.replace(/\\"/g, '"').replace(/<a/g, '<a target="blank"');
+        return text.replace(/\\n/g, "<br/>").replace(/\\"/g, '"').replace(/<a/g, '<a target="blank"');
     }
 
     handleTweet(url, callback) {
