@@ -11,6 +11,9 @@ class UserManager {
 
         this.users = {};
         this.currentUser = null;
+
+        this.isInitialized = false;
+
         this.dataStore.get(["users", "currentUser"], (results) => {
             for (user in this.users) {
                 let user = new User(user);
@@ -19,10 +22,11 @@ class UserManager {
 
             if (results[1]) {
                 this.setCurrentUser(new User(results[1]));
+            } else {
+                // notify that we are ready
+                this.isInitialized = true;
+                Observable.global.trigger("UserManagerInitialized", this);
             }
-
-            // notify that we are ready
-            Observable.global.trigger("UserManagerInitialized", this);
         });
     }
 
@@ -56,14 +60,25 @@ class UserManager {
             this.currentUser = user;
         }
 
-        // make sure we set reddit auth for requests to work
-        reddit.setAuth(user);
+        OAuth.getAccessToken(user, accessToken => {
+            user.accessToken = accessToken;
 
-        // save
-        this.dataStore.set("currentUser", user);
+            // make sure we set reddit auth for requests to work
+            reddit.setAuth(user);
 
-        // notify that we have a new user to update UI
-        Observable.global.trigger('updateCurrentUser', { user: user });
+            // save
+            this.dataStore.set("currentUser", user);
+
+            // notify that we have a new user to update UI
+            Observable.global.trigger('updateCurrentUser', { user: user });
+
+            if (!this.isInitialized) {                
+                // notify that we are ready
+                this.isInitialized = true;
+                Observable.global.trigger("UserManagerInitialized", this);
+            }
+        });
+
     }
 
     logout() {
