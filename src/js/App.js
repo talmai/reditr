@@ -32,6 +32,7 @@ class App extends React.Component {
 
     componentDidMount() {
         Observable.global.on(this, 'requestQuickSwitcher', this.showQuickSwitcher);
+        Observable.global.on(this, 'requestExitQuickSwitcher', this.closeQuickSwitcher);
         Keystrokes.listen(['⌘e','⌃e'], this.showQuickSwitcher.bind(this));
         Keystrokes.listen("⎋", event => {
             if(this.state.quickSwitchVisible) this.closeQuickSwitcher();

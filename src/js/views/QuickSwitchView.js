@@ -144,6 +144,12 @@ class QuickSwitchView extends React.Component {
         if(this.props.onSubredditChanged) this.props.onSubredditChanged();
     }
 
+    backgroundClicked(e) {
+        if(e.target.classList.contains('quick-switch-view')) {
+            Observable.global.trigger('requestExitQuickSwitcher');
+        }
+    }
+
     render() {
 
         // more info section
@@ -195,7 +201,7 @@ class QuickSwitchView extends React.Component {
         }
 
         return (
-            <div className="quick-switch-view">
+            <div className="quick-switch-view" onClick={this.backgroundClicked.bind(this)}>
                 <div className="input-container">
                     <div className="type">
                         /r/
