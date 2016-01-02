@@ -189,6 +189,43 @@ class StreamItemView extends React.Component {
             return false;
         }
 
+        // WARN: temporary solution for text postIds
+        MediaParser.parse(post.get("url"), media => {
+            let exemptions = ["tweet", "text", "article", "gallery", "youtube"];
+
+            if (exemptions.indexOf(media.type) > -1) {
+                this.setState({
+                    forceHide: true
+                });
+            }
+        });
+
+        let title = <a target="_blank" href={post.get("url")}>{post.get("title") + " (" + post.get("domain") + ")"}</a>;
+
+        let subtitle = (
+            <span>
+                <Link to={"/u/" + post.get("author")}>{post.get("author")}</Link>
+                &nbsp;in&nbsp;
+                 <Link to={"/r/" + post.get("subreddit")}>{"/r/" + post.get("subreddit")}</Link>
+                 &nbsp;{moment.unix(post.get("created_utc")).fromNow()}
+            </span>
+        );
+
+        let postMedia = false;
+        let moreOptions = false;
+        if (post.get("over_18") && !this.state.showNSFW) {
+            postMedia = <div></div>;
+            moreOptions = (
+                <CardActions style={{ float: "left", padding: 14 }}>
+                    <FlatButton onTouchTap={this.enableNSFW.bind(this)} style={{ color: Colors.red500 }} label="Show NSFW" />
+                </CardActions>
+            );
+        } else if(this.state.hidden) {
+            postMedia = false;
+        } else {
+            postMedia = <MediaParserView url={post.get("url")} post={post}/>;
+        }
+
         let upvoteIconColor = Colors.darkBlack;
         let downvoteIconColor = Colors.darkBlack;
         switch (this.state.voteDirection) {
@@ -198,33 +235,6 @@ class StreamItemView extends React.Component {
             case -1:
                 downvoteIconColor = Theme.palette.downvoteColor;
                 break;
-        }
-
-        let style = this.state.height ? { minHeight: this.state.height } : {};
-        if(this.state.hidden) {
-            return (
-                <Card style={style} key={this.props.key} className="stream-item-view" data-postid={post.get("id")}>
-                    <CardMedia className="stream-item-media"
-                        overlay={<CardTitle className="stream-title" title={post.get("title")} subtitle={post.get("author")}/>}>
-                    </CardMedia>
-                    <div className="stream-item-controls">
-                        <CardActions style={{ float: "left", padding: 14 }}>
-                            <FlatButton>
-                                MORE
-                            </FlatButton>
-                        </CardActions>
-                        <CardActions style={{ float: "right" }} className="vote-container">
-                            <IconButton onTouchTap={this.didUpvote.bind(this)}>
-                                <FontIcon color={upvoteIconColor} className="material-icons">keyboard_arrow_up</FontIcon>
-                            </IconButton>
-                            <IconButton onTouchTap={this.didDownvote.bind(this)}>
-                                <FontIcon color={downvoteIconColor} className="material-icons">keyboard_arrow_down</FontIcon>
-                            </IconButton>
-                        </CardActions>
-                        <div style={{clear: "both"}} />
-                    </div>
-                </Card>
-            );
         }
 
         let topComments = this.state.topComments;
@@ -252,44 +262,32 @@ class StreamItemView extends React.Component {
             //                   </Link>);
         }
 
-
-        // WARN: temporary solution for text postIds
-        MediaParser.parse(post.get("url"), media => {
-            let exemptions = ["tweet", "text", "article", "gallery", "youtube"];
-
-            if (exemptions.indexOf(media.type) > -1) {
-                this.setState({
-                    forceHide: true
-                });
-            }
-        });
-
-        let postMedia = false;
-        let moreOptions = false;
-        if (post.get("over_18") && !this.state.showNSFW) {
-            postMedia = <div></div>;
-            moreOptions = (
-                <CardActions style={{ float: "left", padding: 14 }}>
-                    <FlatButton onTouchTap={this.enableNSFW.bind(this)} style={{ color: Colors.red500 }} label="Show NSFW" />
-                </CardActions>
+        let style = this.state.height ? { minHeight: this.state.height } : {};
+        if(this.state.hidden) {
+            return (
+                <Card style={style} key={this.props.key} className="stream-item-view" data-postid={post.get("id")}>
+                    <CardMedia className="stream-item-media"
+                        overlay={<CardTitle className="stream-title" title={title} subtitle={subtitle}/>}>
+                    </CardMedia>
+                    <div className="stream-item-controls">
+                        {moreOptions}
+                        <CardActions style={{ float: "right" }} className="vote-container">
+                            <IconButton onTouchTap={this.didUpvote.bind(this)}>
+                                <FontIcon color={upvoteIconColor} className="material-icons">keyboard_arrow_up</FontIcon>
+                            </IconButton>
+                            <IconButton onTouchTap={this.didDownvote.bind(this)}>
+                                <FontIcon color={downvoteIconColor} className="material-icons">keyboard_arrow_down</FontIcon>
+                            </IconButton>
+                        </CardActions>
+                        <div style={{clear: "both"}} />
+                    </div>
+                    <Divider style={{ width: "100%" }} />
+                    <div className="top-comments">
+                        { this.state.isLoading ? <ListItem primaryText="Loading..." /> : commentsView }
+                    </div>
+                </Card>
             );
-        } else if(this.state.hidden) {
-            postMedia = false;
-        } else {
-            postMedia = <MediaParserView url={post.get("url")} post={post}/>;
         }
-
-
-        let title = <a target="_blank" href={post.get("url")}>{post.get("title") + " (" + post.get("domain") + ")"}</a>;
-
-        let subtitle = (
-            <span>
-                <Link to={"/u/" + post.get("author")}>{post.get("author")}</Link>
-                &nbsp;in&nbsp;
-                 <Link to={"/r/" + post.get("subreddit")}>{"/r/" + post.get("subreddit")}</Link>
-                 &nbsp;{moment.unix(post.get("created_utc")).fromNow()}
-            </span>
-        );
 
         return (
             <Card style={style} key={this.props.key} className="stream-item-view" data-postid={post.get("id")}>
