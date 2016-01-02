@@ -11,6 +11,14 @@ import Device from './utilities/Device';
 import UserManager from './account/UserManager';
 import { Router, Route, IndexRoute, Link } from 'react-router';
 
+// theming
+import Theme from './Theme';
+import ThemeManager from 'material-ui/lib/styles/theme-manager';
+
+// remove when material ui 1.0 comes out
+import injectTapEventPlugin from 'react-tap-event-plugin';
+injectTapEventPlugin();
+
 // Then we delete a bunch of code from App and
 // add some <Link> elements...
 class App extends React.Component {
@@ -18,6 +26,13 @@ class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = { quickSwitchVisible: false };
+    }
+
+    //the key passed through context must be called "muiTheme"
+    getChildContext() {
+      return {
+        muiTheme: ThemeManager.getMuiTheme(Theme)
+      };
     }
 
     // this method is invoked when the user hits enter within the quickSwitcher, and
@@ -61,6 +76,10 @@ class App extends React.Component {
         );
     }
 }
+
+App.childContextTypes = {
+    muiTheme: React.PropTypes.object
+};
 
 Observable.global.always("UserManagerInitialized", userManager => {
     // Finally, we render a <Router> with some <Route>s.

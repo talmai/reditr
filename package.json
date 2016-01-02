@@ -21,10 +21,12 @@
     "html-to-react": "^0.1.1",
     "load-grunt-tasks": "^3.4.0",
     "localforage": "^1.3.1",
+    "material-ui": "^0.14.0",
     "moment": "^2.10.6",
     "react": "^0.14.5",
     "react-dom": "^0.14.1",
     "react-router": "^1.0.3",
+    "react-tap-event-plugin": "^0.2.1",
     "superagent": "^1.6.1",
     "superagent-jsonp": "git+https://github.com/dimitryvin/superagent-jsonp.git",
     "superagent-retry": "^0.5.1"

@@ -5,6 +5,9 @@ import Observable from '../utilities/Observable';
 import history from '../utilities/History';
 import AccountHeader from './AccountHeader';
 
+// material
+import AppBar from 'material-ui/lib/app-bar';
+
 class Logo extends React.Component {
     render() {
         return <img className="logo" src="images/logo.png" />;
@@ -94,6 +97,10 @@ class HeaderView extends React.Component {
         //     text = '« ' + this.truncateTitle(left.text || left.href);
         //     leftObj = <Link className="header-view-text" to={left.href}>{text}</Link>;
         // }
+
+        return (
+             <AppBar id="HeaderView" iconElementLeft={<Logo />} />
+        )
 
         return (
             <div id="HeaderView">

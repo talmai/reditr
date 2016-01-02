@@ -7,6 +7,19 @@ import StreamCommentView from './StreamCommentView';
 import Link from './Link';
 import { prettyNumber } from '../utilities/Common';
 import moment from 'moment';
+import MediaParser from '../utilities/MediaParser';
+
+// material ui
+import Card from 'material-ui/lib/card/card';
+import CardMedia from 'material-ui/lib/card/card-media';
+import CardTitle from 'material-ui/lib/card/card-title';
+import List from 'material-ui/lib/lists/list';
+import Divider from 'material-ui/lib/divider';
+import ListItem from 'material-ui/lib/lists/list-item';
+import RaisedButton from 'material-ui/lib/raised-button';
+import FlatButton from 'material-ui/lib/flat-button';
+import CardActions from 'material-ui/lib/card/card-actions';
+
 
 class StreamItemView extends React.Component {
 
@@ -34,7 +47,8 @@ class StreamItemView extends React.Component {
             topComments: [],
             isLoading: true,
             showNSFW: false,
-            voteDirection: voteDir
+            voteDirection: voteDir,
+            forceHide: false
         };
 
         if(this.props.postIds) {
@@ -128,7 +142,7 @@ class StreamItemView extends React.Component {
                 voteDelta = -1;
                 break;
         }
-                
+
         // vote to reddit plz
         reddit.vote(newVoteDir, this.props.post.get("name"));
 
@@ -155,6 +169,10 @@ class StreamItemView extends React.Component {
 
     render() {
 
+        if (this.state.forceHide) {
+            return false;
+        }
+
         let post = this.props.post;
 
         // WARN: if it is a comment, ignore for now
@@ -167,15 +185,15 @@ class StreamItemView extends React.Component {
             return <div style={style}
                         key={this.props.key}
                         className="stream-item-view hidden"
-            data-postid={post.get("id")}>
-                <div className="stream-item-top">
-                    <div className="stream-item-sidebar">
-                        <span className="stream-item-vote-count">{post.get("score")}</span>
-                    </div>
-                    <div className="stream-item-content">
-                <a href={post.get("url")} target="_blank" className="stream-item-title">{post.get("title")}</a>
-                </div>
-                </div>
+                        data-postid={post.get("id")}>
+                            <div className="stream-item-top">
+                                <div className="stream-item-sidebar">
+                                    <span className="stream-item-vote-count">{post.get("score")}</span>
+                                </div>
+                                <div className="stream-item-content">
+                                    <a href={post.get("url")} target="_blank" className="stream-item-title">{post.get("title")}</a>
+                                </div>
+                            </div>
                    </div>;
         }
 
@@ -184,19 +202,35 @@ class StreamItemView extends React.Component {
 
         // if no comments, say no comments
         if (topComments.length == 0) {
-            commentsView = <span className="no-comments">No comments!</span>;
+            commentsView = <ListItem primaryText="No comments!" />;
         } else {
             var commentCount = post.get("num_comments");
-            topComments.forEach(comment => {
+            topComments.forEach((comment, index) => {
                 commentCount--;
                 let commentObj = new CommentModel(comment);
                 commentsView.push(<StreamCommentView key={commentObj.get("id")} comment={commentObj} />);
+                commentsView.push(<Divider key={index} />);
             });
             commentCount = commentCount <= 0 ? '' : prettyNumber(commentCount);
-            commentsView.push(<Link key="more" text={post.get("title")} to={post.get("permalink")} className="view-more-comments">
-                                  <div className='icon'>{commentCount} More Comments</div>
-                              </Link>);
+            commentsView.push(
+                <ListItem key={-1} primaryText={commentCount + " More Comments"} />
+            )
+            // commentsView.push(<Link key="more" text={post.get("title")} to={post.get("permalink")} className="view-more-comments">
+            //                       <div className='icon'></div>
+            //                   </Link>);
         }
+
+
+        // WARN: temporary solution for text postIds
+        MediaParser.parse(post.get("url"), media => {
+            let exemptions = ["tweet", "text", "article", "gallery", "youtube"];
+
+            if (exemptions.indexOf(media.type) > -1) {
+                this.setState({
+                    forceHide: true
+                });
+            }
+        });
 
         let postMedia = false;
         if (post.get("over_18") && !this.state.showNSFW) {
@@ -219,29 +253,23 @@ class StreamItemView extends React.Component {
         }
 
         return (
-            <div style={style} key={this.props.key} className="stream-item-view" data-postid={post.get("id")}>
-                <div className="stream-item-top">
-                    <div className="stream-item-sidebar">
-                        <div className={upvoteClass} onClick={this.didUpvote.bind(this)}></div>
-                        <span className="stream-item-vote-count">{this.state.voteCount}</span>
-                        <div className={downvoteClass} onClick={this.didDownvote.bind(this)}></div>
-                    </div>
-                    <div className="stream-item-content">
-                        <a href={post.get("url")} target="_blank" className="stream-item-title">{post.get("title")}</a>
-                <span className="stream-item-domain">({post.get("domain")})</span>
-                {postMedia}
-                        <div className="mini-details">
-                            <Link to={"/user/" + post.get("author")} className="stream-item-author">{post.get("author")}</Link>
-                            <span> posted in </span>
-                            <Link to={"/r/" + post.get("subreddit")} className="stream-item-subreddit">{"/r/" + post.get('subreddit')}</Link>
-                            <span> {moment.unix(post.get("created_utc")).fromNow()}</span>
-                        </div>
-                    </div>
-                </div>
-                <div className="stream-item-comments">
-                    { this.state.isLoading ? <div className="loading">Loading...</div> : commentsView }
-                </div>
-            </div>
+            <Card style={style} key={this.props.key} className="stream-item-view" data-postid={post.get("id")}>
+                <CardMedia className="stream-item-media"
+                    overlay={<CardTitle className="stream-title" title={post.get("title")} subtitle={post.get("author")}/>}>
+                    {postMedia}
+                </CardMedia>
+                <CardActions className="vote-container">
+                    <FlatButton onClick={this.didUpvote.bind(this)}>
+                        <div className={upvoteClass}></div>
+                    </FlatButton>
+                    <FlatButton onClick={this.didDownvote.bind(this)}>
+                        <div className={downvoteClass}></div>
+                    </FlatButton>
+                </CardActions>
+                <List>
+                    { this.state.isLoading ? <ListItem primaryText="Loading..." /> : commentsView }
+                </List>
+            </Card>
         );
 
     }
