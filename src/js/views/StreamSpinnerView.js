@@ -12,7 +12,7 @@ class StreamSpinnerView extends React.Component {
 
     render() {
         return (
-            <CircularProgress mode="indeterminate" />
+            <center><CircularProgress className="stream-spinner-view" mode="indeterminate" /></center>
         );
     }
 
