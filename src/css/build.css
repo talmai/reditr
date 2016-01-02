@@ -303,6 +303,8 @@ body {
   left: 0;
   right: 0;
   background: rgba(0, 0, 0, 0.7);
+  background-clip: content-box;
+  overflow: hidden;
 }
 .quick-switch-view .input-container {
   background-color: rgba(255, 255, 255, 0.9);
@@ -315,6 +317,7 @@ body {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   -webkit-backdrop-filter: blur(20px);
   /* only safari currenly supports */
+  overflow: hidden;
 }
 .quick-switch-view .input-container .type {
   display: inline-block;
@@ -323,8 +326,7 @@ body {
   padding-left: 16px;
   font-size: 20px;
 }
-.quick-switch-view .input-container .query-input,
-.quick-switch-view .input-container .query-suggested {
+.quick-switch-view .input-container .query-input {
   position: relative;
   z-index: 1;
   width: calc(100% - 67px);
@@ -337,17 +339,8 @@ body {
   font-size: 20px;
 }
 .quick-switch-view .input-container .query-input:focus,
-.quick-switch-view .input-container .query-suggested:focus,
-.quick-switch-view .input-container .query-input:active,
-.quick-switch-view .input-container .query-suggested:active {
+.quick-switch-view .input-container .query-input:active {
   outline: none;
-}
-.quick-switch-view .input-container .query-suggested {
-  position: absolute;
-  left: 49px;
-  top: 4px;
-  color: #898989;
-  z-index: 0;
 }
 .quick-switch-view .input-container .subreddit-sidebar {
   height: 100%;

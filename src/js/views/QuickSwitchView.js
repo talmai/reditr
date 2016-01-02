@@ -16,11 +16,8 @@ class QuickSwitchView extends React.Component {
         this.suggestedSubredditsViews = [];
 
         this.state = {
-            suggestedQuery: "",
             suggestedSubreddits: [],
-            selectedSuggestionIndex: 0,
-            hasSubredditBio: false,
-            subredditBioData: {}
+            selectedSuggestionIndex: 0
         };
     }
 
@@ -33,36 +30,21 @@ class QuickSwitchView extends React.Component {
 
         let query = this.refs["query-input"].value;
         this.setState({
-            suggestedQuery: "",
             selectedSuggestionIndex: 0,
             suggestedSubreddits: []
         }, () => {
             reddit.searchForSubredditsWithQuery(query, (err, res) => {
-
                 if (!err) {
-                    // no error then we gucci
-                    let suggestedQuery = res.body.names[this.state.selectedSuggestionIndex].substr(query.length);
                     this.setState({
-                        suggestedQuery: query + suggestedQuery,
-                        suggestedSubreddits: res.body.names
-                    }, this.loadSelectedSubredditInfo);
+                        suggestedSubreddits: res.body.data.children
+                    });
                 } else {
                     // error, reset state
                     this.setState({
-                        suggestedQuery: "",
                         suggestedSubreddits: []
                     });
                 }
 
-            });
-        });
-    }
-
-    loadSelectedSubredditInfo() {
-        reddit.getSubredditBio(this.state.suggestedSubreddits[this.state.selectedSuggestionIndex], (err, res) => {
-            this.setState({
-                hasSubredditBio: true,
-                subredditBioData: res.body.data
             });
         });
     }
@@ -80,10 +62,7 @@ class QuickSwitchView extends React.Component {
             case 39: // right arrow
                 // fill the input bar
                 if (this.state.suggestedSubreddits.length > 0) {
-                    this.refs["query-input"].value = this.state.suggestedSubreddits[this.state.selectedSuggestionIndex];
-                    this.setState({
-                        suggestedQuery: this.refs["query-input"].value
-                    });
+                    this.refs["query-input"].value = this.state.suggestedSubreddits[this.state.selectedSuggestionIndex].data.display_name;
                 }
                 break;
             case 40: // down arrow
@@ -100,12 +79,23 @@ class QuickSwitchView extends React.Component {
             return;
         } else {
             let query = this.refs["query-input"].value;
-            let suggestedQuery = this.state.suggestedSubreddits[selectedSuggestionIndex].substr(query.length);
 
             this.setState({
-                selectedSuggestionIndex: selectedSuggestionIndex,
-                suggestedQuery: query + suggestedQuery
-            }, this.loadSelectedSubredditInfo);
+                selectedSuggestionIndex: selectedSuggestionIndex
+            }, () => {
+                let container = ReactDOM.findDOMNode(this.refs["subreddit-list"]);
+                let selectedRow = ReactDOM.findDOMNode(this.refs["selected-row"]);
+
+                // scroll down if we selected something below the scroll container
+                if ((container.scrollTop + container.offsetHeight) < (selectedRow.offsetTop + selectedRow.offsetHeight)) {
+                    container.scrollTop = (selectedRow.offsetTop + selectedRow.offsetHeight) - (container.offsetHeight);
+                }
+
+                // scroll up if we selected something above the scroll container
+                if ((container.scrollTop + selectedRow.offsetHeight + 10) >= selectedRow.offsetTop) {
+                    container.scrollTop = selectedRow.offsetTop - 2 * selectedRow.offsetHeight;
+                }
+            });
         }
     }
 
@@ -157,42 +147,34 @@ class QuickSwitchView extends React.Component {
         // reset suggestions
         this.suggestedSubredditsViews = [];
         if (this.state.suggestedSubreddits.length > 0) {
-            this.state.suggestedSubreddits.forEach((name, index) => {
+            this.state.suggestedSubreddits.forEach((subreddit, index) => {
                 let selectedClass = index == this.state.selectedSuggestionIndex ? "suggestion selected" : "suggestion";
+                let ref = index == this.state.selectedSuggestionIndex ? "selected-row" : "";
                 this.suggestedSubredditsViews.push((
-                    <li ref={"suggestion-" + index} key={index} data-index={index} onClick={this.onClickSuggestion.bind(this)} className={selectedClass}>{name}</li>
+                    <li ref={ref} key={index} data-index={index} onClick={this.onClickSuggestion.bind(this)} className={selectedClass}>{subreddit.data.display_name}</li>
                 ));
             });
 
+            let selectedSubreddit = this.state.suggestedSubreddits[this.state.selectedSuggestionIndex].data;
+            let body_html = decodeEntities(selectedSubreddit.public_description_html);
+
+            let parsedHtml = "";
+            if (body_html) {
+                // forces all links to open in new tab (faster than regex in newer versions of V8) http://jsperf.com/replace-all-vs-split-join
+                parsedHtml = body_html.split("<a ").join("<a target=\"_blank\" ");
+            }
+
             let subredditInfo = (
                 <div className="subreddit-sidebar">
-                    <h3 className="header">{this.state.suggestedSubreddits[this.state.selectedSuggestionIndex]}</h3>
-                    <StreamSpinnerView />
+                    <h3 className="header">{selectedSubreddit.display_name}</h3>
+                    <img src={selectedSubreddit.header_img} className="header-image" />
+                    <div className="description" dangerouslySetInnerHTML={{__html: parsedHtml}} />
                 </div>
             );
 
-            if (this.state.hasSubredditBio) {
-                let subredditData = this.state.subredditBioData;
-                let body_html = decodeEntities(subredditData.public_description_html);
-
-                let parsedHtml = "";
-                if (body_html) {
-                    // forces all links to open in new tab (faster than regex in newer versions of V8) http://jsperf.com/replace-all-vs-split-join
-                    parsedHtml = body_html.split("<a ").join("<a target=\"_blank\" ");
-                }
-
-                subredditInfo = (
-                    <div className="subreddit-sidebar">
-                        <h3 className="header">{this.state.suggestedSubreddits[this.state.selectedSuggestionIndex]}</h3>
-                        <img src={subredditData.header_img} className="header-image" />
-                        <div className="description" dangerouslySetInnerHTML={{__html: parsedHtml}} />
-                    </div>
-                );
-            }
-
             moreInfo = (
                 <div className="more-info">
-                    <ul className="suggested-subreddits">
+                    <ul ref="subreddit-list" className="suggested-subreddits">
                         {this.suggestedSubredditsViews}
                     </ul>
                     {subredditInfo}
@@ -207,7 +189,6 @@ class QuickSwitchView extends React.Component {
                         /r/
                     </div>
                     <input className="query-input" ref="query-input" onKeyDown={this.queryChanged.bind(this)}/>
-                    <input readOnly className="query-suggested" ref="query-suggested" value={this.state.suggestedQuery} />
                     {moreInfo}
                 </div>
             </div>

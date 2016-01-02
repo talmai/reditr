@@ -5,6 +5,8 @@
     left: 0;
     right: 0;
     background: rgba(0, 0, 0, 0.7);
+    background-clip: content-box;
+    overflow: hidden;
 
     .input-container {
         background-color: rgba(255, 255, 255, 0.9);
@@ -16,6 +18,7 @@
         margin-left: -250px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
         -webkit-backdrop-filter: blur(20px); /* only safari currenly supports */
+        overflow: hidden;
 
         .type {
             display: inline-block;
@@ -25,7 +28,7 @@
             font-size: 20px;
         }
 
-        .query-input, .query-suggested {
+        .query-input {
             position: relative;
             z-index: 1;
             width: ~"calc(100% - 67px)";
@@ -39,14 +42,6 @@
             &:focus, &:active {
                 outline: none;
             }
-        }
-
-        .query-suggested {
-            position: absolute;
-            left: 49px;
-            top: 4px;
-            color: #898989;
-            z-index: 0;
         }
 
         .subreddit-sidebar {

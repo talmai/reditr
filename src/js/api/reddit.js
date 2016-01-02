@@ -71,9 +71,8 @@ class reddit {
 
     searchForSubredditsWithQuery(query, callback) {
         Request
-            .post(this.proxy + "?forward=" + this.unsecureBaseUrl + "/api/search_reddit_names" + this.extension)
-            .send({ query: query })
-            .set("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
+            .get(this.baseUrl + "/subreddits/search" + this.extension)
+            .query({ q: query })
             .end(callback);
     }
 
