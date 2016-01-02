@@ -503,6 +503,13 @@ body {
   background-color: black;
   overflow: hidden;
 }
+.stream-item-view .stream-item-media a {
+  color: rgba(255, 255, 255, 0.87);
+  text-decoration: none;
+}
+.stream-item-view .stream-item-media a:hover {
+  text-decoration: underline;
+}
 .stream-item-view .stream-item-media .media {
   text-align: center;
   width: 100%;

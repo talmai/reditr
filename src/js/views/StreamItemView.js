@@ -8,6 +8,7 @@ import Link from './Link';
 import { prettyNumber } from '../utilities/Common';
 import moment from 'moment';
 import MediaParser from '../utilities/MediaParser';
+import Observable from '../utilities/Observable';
 
 // material ui
 import Card from 'material-ui/lib/card/card';
@@ -171,6 +172,10 @@ class StreamItemView extends React.Component {
         this.setState({ hidden: false });
     }
 
+    openPostView() {
+        Observable.global.trigger('pushNav', { href: this.props.post.get("permalink") });
+    }
+
     render() {
 
         if (this.state.forceHide) {
@@ -238,7 +243,7 @@ class StreamItemView extends React.Component {
             });
             commentCount = commentCount <= 0 ? '' : prettyNumber(commentCount);
             commentsView.push(
-                <FlatButton labelPosition="after" style={{ width: "100%" }} key="more" label={commentCount + " More Comments"}>
+                <FlatButton onTouchTap={this.openPostView.bind(this)} labelPosition="after" style={{ width: "100%" }} key="more" label={commentCount + " More Comments"}>
                     <FontIcon style={{ top: 5, left: 8, fontSize: 20, color: Colors.grey800 }} className="material-icons">comment</FontIcon>
                 </FlatButton>
             )
@@ -260,8 +265,14 @@ class StreamItemView extends React.Component {
         });
 
         let postMedia = false;
+        let moreOptions = false;
         if (post.get("over_18") && !this.state.showNSFW) {
-            postMedia = <div onTouchTap={this.enableNSFW.bind(this)} className="nsfw-btn">Show NSFW Content</div>;
+            postMedia = <div></div>;
+            moreOptions = (
+                <CardActions style={{ float: "left", padding: 14 }}>
+                    <FlatButton onTouchTap={this.enableNSFW.bind(this)} style={{ color: Colors.red500 }} label="Show NSFW" />
+                </CardActions>
+            );
         } else if(this.state.hidden) {
             postMedia = false;
         } else {
@@ -269,27 +280,25 @@ class StreamItemView extends React.Component {
         }
 
 
+        let title = <a target="_blank" href={post.get("url")}>{post.get("title") + " (" + post.get("domain") + ")"}</a>;
+
         let subtitle = (
             <span>
                 <Link to={"/u/" + post.get("author")}>{post.get("author")}</Link>
-                 in
+                &nbsp;in&nbsp;
                  <Link to={"/r/" + post.get("subreddit")}>{"/r/" + post.get("subreddit")}</Link>
-                  {moment.unix(post.get("created_utc")).fromNow()}
+                 &nbsp;{moment.unix(post.get("created_utc")).fromNow()}
             </span>
         );
 
         return (
             <Card style={style} key={this.props.key} className="stream-item-view" data-postid={post.get("id")}>
                 <CardMedia className="stream-item-media"
-                    overlay={<CardTitle className="stream-title" title={post.get("title")} subtitle={subtitle}/>}>
+                    overlay={<CardTitle className="stream-title" title={title} subtitle={subtitle}/>}>
                     {postMedia}
                 </CardMedia>
                 <div className="stream-item-controls">
-                    <CardActions style={{ float: "left", padding: 14 }}>
-                        <FlatButton>
-                            MORE
-                        </FlatButton>
-                    </CardActions>
+                    {moreOptions}
                     <CardActions style={{ float: "right" }} className="vote-container">
                         <IconButton onTouchTap={this.didUpvote.bind(this)}>
                             <FontIcon color={upvoteIconColor} className="material-icons">keyboard_arrow_up</FontIcon>
