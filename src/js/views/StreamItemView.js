@@ -18,8 +18,12 @@ import Divider from 'material-ui/lib/divider';
 import ListItem from 'material-ui/lib/lists/list-item';
 import RaisedButton from 'material-ui/lib/raised-button';
 import FlatButton from 'material-ui/lib/flat-button';
+import IconButton from 'material-ui/lib/icon-button';
 import CardActions from 'material-ui/lib/card/card-actions';
+import FontIcon from 'material-ui/lib/font-icon';
+import Colors from 'material-ui/lib/styles/colors';
 
+import Theme from '../Theme.js';
 
 class StreamItemView extends React.Component {
 
@@ -180,21 +184,42 @@ class StreamItemView extends React.Component {
             return false;
         }
 
+        let upvoteIconColor = Colors.darkBlack;
+        let downvoteIconColor = Colors.darkBlack;
+        switch (this.state.voteDirection) {
+            case 1:
+                upvoteIconColor = Theme.palette.upvoteColor;
+                break;
+            case -1:
+                downvoteIconColor = Theme.palette.downvoteColor;
+                break;
+        }
+
         let style = this.state.height ? { minHeight: this.state.height } : {};
         if(this.state.hidden) {
-            return <div style={style}
-                        key={this.props.key}
-                        className="stream-item-view hidden"
-                        data-postid={post.get("id")}>
-                            <div className="stream-item-top">
-                                <div className="stream-item-sidebar">
-                                    <span className="stream-item-vote-count">{post.get("score")}</span>
-                                </div>
-                                <div className="stream-item-content">
-                                    <a href={post.get("url")} target="_blank" className="stream-item-title">{post.get("title")}</a>
-                                </div>
-                            </div>
-                   </div>;
+            return (
+                <Card style={style} key={this.props.key} className="stream-item-view" data-postid={post.get("id")}>
+                    <CardMedia className="stream-item-media"
+                        overlay={<CardTitle className="stream-title" title={post.get("title")} subtitle={post.get("author")}/>}>
+                    </CardMedia>
+                    <div className="stream-item-controls">
+                        <CardActions style={{ float: "left", padding: 14 }}>
+                            <FlatButton>
+                                MORE
+                            </FlatButton>
+                        </CardActions>
+                        <CardActions style={{ float: "right" }} className="vote-container">
+                            <IconButton onTouchTap={this.didUpvote.bind(this)}>
+                                <FontIcon color={upvoteIconColor} className="material-icons">keyboard_arrow_up</FontIcon>
+                            </IconButton>
+                            <IconButton onTouchTap={this.didDownvote.bind(this)}>
+                                <FontIcon color={downvoteIconColor} className="material-icons">keyboard_arrow_down</FontIcon>
+                            </IconButton>
+                        </CardActions>
+                        <div style={{clear: "both"}} />
+                    </div>
+                </Card>
+            );
         }
 
         let topComments = this.state.topComments;
@@ -213,7 +238,9 @@ class StreamItemView extends React.Component {
             });
             commentCount = commentCount <= 0 ? '' : prettyNumber(commentCount);
             commentsView.push(
-                <ListItem key={-1} primaryText={commentCount + " More Comments"} />
+                <FlatButton labelPosition="after" style={{ width: "100%" }} key="more" label={commentCount + " More Comments"}>
+                    <FontIcon style={{ top: 5, left: 8, fontSize: 20, color: Colors.grey800 }} className="material-icons">comment</FontIcon>
+                </FlatButton>
             )
             // commentsView.push(<Link key="more" text={post.get("title")} to={post.get("permalink")} className="view-more-comments">
             //                       <div className='icon'></div>
@@ -234,41 +261,49 @@ class StreamItemView extends React.Component {
 
         let postMedia = false;
         if (post.get("over_18") && !this.state.showNSFW) {
-            postMedia = <div onClick={this.enableNSFW.bind(this)} className="nsfw-btn">Show NSFW Content</div>;
+            postMedia = <div onTouchTap={this.enableNSFW.bind(this)} className="nsfw-btn">Show NSFW Content</div>;
         } else if(this.state.hidden) {
             postMedia = false;
-        }else {
+        } else {
             postMedia = <MediaParserView url={post.get("url")} post={post}/>;
         }
 
-        let upvoteClass = "up vote";
-        let downvoteClass = "down vote";
-        switch (this.state.voteDirection) {
-            case 1:
-                upvoteClass += " selected";
-                break;
-            case -1:
-                downvoteClass += " selected";
-                break;
-        }
+
+        let subtitle = (
+            <span>
+                <Link to={"/u/" + post.get("author")}>{post.get("author")}</Link>
+                 in
+                 <Link to={"/r/" + post.get("subreddit")}>{"/r/" + post.get("subreddit")}</Link>
+                  {moment.unix(post.get("created_utc")).fromNow()}
+            </span>
+        );
 
         return (
             <Card style={style} key={this.props.key} className="stream-item-view" data-postid={post.get("id")}>
                 <CardMedia className="stream-item-media"
-                    overlay={<CardTitle className="stream-title" title={post.get("title")} subtitle={post.get("author")}/>}>
+                    overlay={<CardTitle className="stream-title" title={post.get("title")} subtitle={subtitle}/>}>
                     {postMedia}
                 </CardMedia>
-                <CardActions className="vote-container">
-                    <FlatButton onClick={this.didUpvote.bind(this)}>
-                        <div className={upvoteClass}></div>
-                    </FlatButton>
-                    <FlatButton onClick={this.didDownvote.bind(this)}>
-                        <div className={downvoteClass}></div>
-                    </FlatButton>
-                </CardActions>
-                <List>
+                <div className="stream-item-controls">
+                    <CardActions style={{ float: "left", padding: 14 }}>
+                        <FlatButton>
+                            MORE
+                        </FlatButton>
+                    </CardActions>
+                    <CardActions style={{ float: "right" }} className="vote-container">
+                        <IconButton onTouchTap={this.didUpvote.bind(this)}>
+                            <FontIcon color={upvoteIconColor} className="material-icons">keyboard_arrow_up</FontIcon>
+                        </IconButton>
+                        <IconButton onTouchTap={this.didDownvote.bind(this)}>
+                            <FontIcon color={downvoteIconColor} className="material-icons">keyboard_arrow_down</FontIcon>
+                        </IconButton>
+                    </CardActions>
+                    <div style={{clear: "both"}} />
+                </div>
+                <Divider style={{ width: "100%" }} />
+                <div className="top-comments">
                     { this.state.isLoading ? <ListItem primaryText="Loading..." /> : commentsView }
-                </List>
+                </div>
             </Card>
         );
 

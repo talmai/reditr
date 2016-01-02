@@ -2,9 +2,6 @@ import React from 'react';
 import HtmlToReact from 'html-to-react';
 import { decodeEntities } from '../utilities/Common';
 
-// material
-import ListItem from 'material-ui/lib/lists/list-item';
-
 class StreamCommentView extends React.Component {
 
     constructor(props) {
@@ -25,13 +22,11 @@ class StreamCommentView extends React.Component {
         let parsedHtml = body_html.split("<a ").join("<a target=\"_blank\" ");
 
         return (
-            <ListItem
-                key={this.props.key}
-                primaryText={comment.get("author")}
-                secondaryText={
-                  <div dangerouslySetInnerHTML={{__html: parsedHtml}} />
-                }
-                secondaryTextLines={2} />
+            <div key={this.props.key} className="stream-item-comment">
+                <div className="author">{comment.get("author")}</div>
+                <div className="comment-body" dangerouslySetInnerHTML={{__html: parsedHtml}}></div>
+                <span className="comment-score">{comment.get("score")}</span>
+            </div>
         );
     }
 

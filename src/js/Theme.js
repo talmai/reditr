@@ -20,5 +20,7 @@ export default {
     borderColor: Colors.grey300,
     disabledColor: ColorManipulator.fade(Colors.darkBlack, 0.3),
     pickerHeaderColor: Colors.cyan500,
+    upvoteColor: "#f3723f",
+    downvoteColor: "#3f96f3"
   }
 };
