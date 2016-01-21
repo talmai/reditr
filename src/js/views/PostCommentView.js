@@ -21,7 +21,11 @@ class PostCommentView extends React.Component {
         let parsedHtml = body_html.split("<a ").join("<a target=\"_blank\" ");
 
         try {
-            let replies = comment.get('replies').data.children;
+            let replyData = comment.get('replies');
+            let replies = [];
+            if (replyData) {
+                replies = replyData.data.children;
+            }
             let replyViews = [];
             replies.forEach(comment => {
                 if (comment.kind != "more") {
