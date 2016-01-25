@@ -116,7 +116,7 @@ class QuickSwitchView extends React.Component {
         if (e.keyCode == 13) {
             let query = "/r/" + this.refs["query-input"].value;
             if (this.state.suggestedSubreddits.length > 0) {
-                query = "/r/" + this.state.suggestedSubreddits[this.state.selectedSuggestionIndex];
+                query = "/r/" + this.state.suggestedSubreddits[this.state.selectedSuggestionIndex].data.display_name;
             }
             Observable.global.trigger("pushNav", { text: query, href: query });
             //history.pushState(null, '/r/' + query);
