@@ -55,14 +55,14 @@ class StreamItemView extends React.Component {
                 let comments = data.body[1].data.children;
                 let maxComments = Math.min(comments.length, 5);
                 var first, second;
-                for(var i = 0; i < maxComments; i++) {
+                for (var i = 0; i < maxComments; i++) {
                     var checking = comments[i];
-                    if(checking.data.body == '[removed]') continue;
-                    if(!first) {
+                    if (checking.data.body == '[removed]') continue;
+                    if (!first) {
                         first = checking;
-                    }else if(!second) {
+                    } else if (!second) {
                         second = checking;
-                    }else{
+                    } else {
                         var newFirst = first.data.body.length < second.data.body.length ? first : second;
                         var rejected = newFirst == first ? second : first;
                         first = newFirst;
@@ -70,9 +70,9 @@ class StreamItemView extends React.Component {
                     }
                 }
                 var topComments = [];
-                if(first) topComments.push(first);
-                if(second) topComments.push(second);
-                this.setState({ isLoading: false, topComments: topComments });
+                if (first) topComments.push(first);
+                if (second) topComments.push(second);
+                this.setState({ isLoading: false, topComments: topComments, comments: comments });
             });
         } else {
             this.setState({ isLoading: false, topComments: [] });
@@ -163,7 +163,7 @@ class StreamItemView extends React.Component {
         }
 
         let style = this.state.height ? { minHeight: this.state.height } : {};
-        if(this.state.hidden) {
+        if (this.state.hidden) {
             return <div style={style}
                         key={this.props.key}
                         className="stream-item-view hidden"
@@ -192,10 +192,12 @@ class StreamItemView extends React.Component {
                 let commentObj = new CommentModel(comment);
                 commentsView.push(<StreamCommentView key={commentObj.get("id")} comment={commentObj} />);
             });
-            commentCount = commentCount <= 0 ? '' : prettyNumber(commentCount);
-            commentsView.push(<Link key="more" text={post.get("title")} to={post.get("permalink")} className="view-more-comments">
+            if (this.state.comments.length > 2) {
+                commentCount = commentCount <= 0 ? '' : prettyNumber(commentCount);
+                commentsView.push(<Link key="more" text={post.get("title")} to={post.get("permalink")} className="view-more-comments">
                                   <div className='icon'>{commentCount} More Comments</div>
                               </Link>);
+            }
         }
 
         let postMedia = false;
