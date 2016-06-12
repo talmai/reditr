@@ -62,10 +62,10 @@
             color: #c9c9c9;
         }
 
-        .account-header {
+        .button {
+            display: inline-block;
             line-height: @header-height - 20px;
             color: white;
-            float: right;
             font-size: 12px;
             cursor: pointer;
             box-sizing: border-box;
@@ -78,6 +78,18 @@
 
             &:active {
                 background-color: #111;
+            }
+
+            &.disabled {
+                cursor: default;
+
+                &:hover {
+                    background-color: transparent;
+                }
+                
+                &:active {
+                    background-color: transparent;
+                }
             }
         }
     }
