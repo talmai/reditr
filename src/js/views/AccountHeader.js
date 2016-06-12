@@ -10,7 +10,8 @@ class AccountHeader extends React.Component {
 
         this.state = {
             user: UserManager.currentUser,
-            isLoggingIn: false
+            isLoggingIn: false,
+            expanded: false
         }
     }
 
@@ -23,11 +24,12 @@ class AccountHeader extends React.Component {
             if (status == "success") {
                 this.setState({
                     user: user,
-                    isLoggingIn: false
+                    isLoggingIn: false,
+                    expanded: false,
                 });
             } else {
                 this.setState({
-                    isLoggingIn: false
+                    isLoggingIn: false,
                 });
             }
         });
@@ -48,16 +50,32 @@ class AccountHeader extends React.Component {
         UserManager.logout();
     }
 
+    toggleExpanded() {
+        this.setState({
+            expanded: this.state.expanded
+        })
+    }
+
     render() {
         // handle buttons states
-        let button = <div className="account-header" onClick={this.startLogin.bind(this)}>Login</div>;
+        let button = <div className="button account-header" onClick={this.startLogin.bind(this)}>Login</div>;
         if (this.state.user) {
-            button = <div className="account-header" onClick={this.logout.bind(this)}>{this.state.user.username}</div>;
+            button = <div className="button account-header disabled" >{this.state.user.username}</div>;
         } else if (this.state.isLoggingIn) {
-            button = <div className="account-header">Waiting...</div>;
+            button = <div className="button account-header disabled">Waiting to Login...</div>;
         }
 
-        return button;
+        let logout = null
+        if (this.state.user != null) {
+            logout = <div className="button logout" onClick={this.logout.bind(this)}>Logout</div>
+        }
+
+        return (
+            <div className="account-options">
+                { button }
+                { logout }
+            </div>
+        );
     }
 
 }
