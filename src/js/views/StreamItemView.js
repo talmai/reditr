@@ -7,6 +7,7 @@ import StreamCommentView from './StreamCommentView';
 import Link from './Link';
 import { prettyNumber } from '../utilities/Common';
 import moment from 'moment';
+import { AllHtmlEntities as Entities } from 'html-entities'
 
 class StreamItemView extends React.Component {
 
@@ -173,7 +174,7 @@ class StreamItemView extends React.Component {
                         <span className="stream-item-vote-count">{post.get("score")}</span>
                     </div>
                     <div className="stream-item-content">
-                <a href={post.get("url")} target="_blank" className="stream-item-title">{post.get("title")}</a>
+                <a href={post.get("url")} target="_blank" className="stream-item-title">{Entities.decode(post.get('title'))}</a>
                 </div>
                 </div>
                    </div>;
@@ -194,7 +195,7 @@ class StreamItemView extends React.Component {
             });
             if (this.state.comments.length > 2) {
                 commentCount = commentCount <= 0 ? '' : prettyNumber(commentCount);
-                commentsView.push(<Link key="more" text={post.get("title")} to={post.get("permalink")} className="view-more-comments">
+                commentsView.push(<Link key="more" text={Entities.decode(post.get('title'))} to={post.get("permalink")} className="view-more-comments">
                                   <div className='icon'>{commentCount} More Comments</div>
                               </Link>);
             }
@@ -229,9 +230,9 @@ class StreamItemView extends React.Component {
                         <div className={downvoteClass} onClick={this.didDownvote.bind(this)}></div>
                     </div>
                     <div className="stream-item-content">
-                        <a href={post.get("url")} target="_blank" className="stream-item-title">{post.get("title")}</a>
-                <span className="stream-item-domain">({post.get("domain")})</span>
-                {postMedia}
+                        <a href={post.get("url")} target="_blank" className="stream-item-title">{Entities.decode(post.get('title'))}</a>
+                        <span className="stream-item-domain">({post.get("domain")})</span>
+                        {postMedia}
                         <div className="mini-details">
                             <Link to={"/user/" + post.get("author")} className="stream-item-author">{post.get("author")}</Link>
                             <span> posted in </span>

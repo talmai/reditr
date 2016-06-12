@@ -19,6 +19,7 @@
   "dependencies": {
     "font-awesome": "^4.5.0",
     "history": "^1.17.0",
+    "html-entities": "^1.2.0",
     "html-to-react": "^0.1.1",
     "load-grunt-tasks": "^3.4.0",
     "localforage": "^1.3.1",
