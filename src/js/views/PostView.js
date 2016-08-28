@@ -7,6 +7,7 @@ import PostCommentView from './PostCommentView';
 import CommentModel from '../models/CommentModel';
 import Observable from '../utilities/Observable';
 import StreamSpinnerView from './StreamSpinnerView';
+import VoteView from './VoteView';
 
 class PostView extends React.Component {
 
@@ -63,7 +64,9 @@ class PostView extends React.Component {
         return (
             <div className="post-view">
                 <div className="post-content">
-                    <span className="post-vote-count">{post.get("score")}</span>
+                    <div className="post-vote">
+                        <VoteView key="vote" item={post} />
+                    </div>
                     <a href={post.get("url")} target="_blank" className="post-title">{post.get("title")}</a>
                     <span className="post-author">{post.get("author")}</span>
                     <MediaParserView url={post.get("url")} post={post} />
