@@ -1,13 +1,13 @@
 /*!
- *  Font Awesome 4.5.0 by @davegandy - http://fontawesome.io - @fontawesome
+ *  Font Awesome 4.6.3 by @davegandy - http://fontawesome.io - @fontawesome
  *  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
  */
 /* FONT PATH
  * -------------------------- */
 @font-face {
   font-family: 'FontAwesome';
-  src: url('../fonts/fontawesome-webfont.eot?v=4.5.0');
-  src: url('../fonts/fontawesome-webfont.eot?#iefix&v=4.5.0') format('embedded-opentype'), url('../fonts/fontawesome-webfont.woff2?v=4.5.0') format('woff2'), url('../fonts/fontawesome-webfont.woff?v=4.5.0') format('woff'), url('../fonts/fontawesome-webfont.ttf?v=4.5.0') format('truetype'), url('../fonts/fontawesome-webfont.svg?v=4.5.0#fontawesomeregular') format('svg');
+  src: url('../fonts/fontawesome-webfont.eot?v=4.6.3');
+  src: url('../fonts/fontawesome-webfont.eot?#iefix&v=4.6.3') format('embedded-opentype'), url('../fonts/fontawesome-webfont.woff2?v=4.6.3') format('woff2'), url('../fonts/fontawesome-webfont.woff?v=4.6.3') format('woff'), url('../fonts/fontawesome-webfont.ttf?v=4.6.3') format('truetype'), url('../fonts/fontawesome-webfont.svg?v=4.6.3#fontawesomeregular') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -118,31 +118,31 @@
   }
 }
 .fa-rotate-90 {
-  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1);
+  -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=1)";
   -webkit-transform: rotate(90deg);
   -ms-transform: rotate(90deg);
   transform: rotate(90deg);
 }
 .fa-rotate-180 {
-  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=2);
+  -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=2)";
   -webkit-transform: rotate(180deg);
   -ms-transform: rotate(180deg);
   transform: rotate(180deg);
 }
 .fa-rotate-270 {
-  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+  -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=3)";
   -webkit-transform: rotate(270deg);
   -ms-transform: rotate(270deg);
   transform: rotate(270deg);
 }
 .fa-flip-horizontal {
-  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=0, mirror=1);
+  -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=0, mirror=1)";
   -webkit-transform: scale(-1, 1);
   -ms-transform: scale(-1, 1);
   transform: scale(-1, 1);
 }
 .fa-flip-vertical {
-  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=2, mirror=1);
+  -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=2, mirror=1)";
   -webkit-transform: scale(1, -1);
   -ms-transform: scale(1, -1);
   transform: scale(1, -1);
@@ -1383,7 +1383,7 @@
 .fa-digg:before {
   content: "\f1a6";
 }
-.fa-pied-piper:before {
+.fa-pied-piper-pp:before {
   content: "\f1a7";
 }
 .fa-pied-piper-alt:before {
@@ -1509,6 +1509,7 @@
   content: "\f1ce";
 }
 .fa-ra:before,
+.fa-resistance:before,
 .fa-rebel:before {
   content: "\f1d0";
 }
@@ -2084,6 +2085,118 @@
 .fa-percent:before {
   content: "\f295";
 }
+.fa-gitlab:before {
+  content: "\f296";
+}
+.fa-wpbeginner:before {
+  content: "\f297";
+}
+.fa-wpforms:before {
+  content: "\f298";
+}
+.fa-envira:before {
+  content: "\f299";
+}
+.fa-universal-access:before {
+  content: "\f29a";
+}
+.fa-wheelchair-alt:before {
+  content: "\f29b";
+}
+.fa-question-circle-o:before {
+  content: "\f29c";
+}
+.fa-blind:before {
+  content: "\f29d";
+}
+.fa-audio-description:before {
+  content: "\f29e";
+}
+.fa-volume-control-phone:before {
+  content: "\f2a0";
+}
+.fa-braille:before {
+  content: "\f2a1";
+}
+.fa-assistive-listening-systems:before {
+  content: "\f2a2";
+}
+.fa-asl-interpreting:before,
+.fa-american-sign-language-interpreting:before {
+  content: "\f2a3";
+}
+.fa-deafness:before,
+.fa-hard-of-hearing:before,
+.fa-deaf:before {
+  content: "\f2a4";
+}
+.fa-glide:before {
+  content: "\f2a5";
+}
+.fa-glide-g:before {
+  content: "\f2a6";
+}
+.fa-signing:before,
+.fa-sign-language:before {
+  content: "\f2a7";
+}
+.fa-low-vision:before {
+  content: "\f2a8";
+}
+.fa-viadeo:before {
+  content: "\f2a9";
+}
+.fa-viadeo-square:before {
+  content: "\f2aa";
+}
+.fa-snapchat:before {
+  content: "\f2ab";
+}
+.fa-snapchat-ghost:before {
+  content: "\f2ac";
+}
+.fa-snapchat-square:before {
+  content: "\f2ad";
+}
+.fa-pied-piper:before {
+  content: "\f2ae";
+}
+.fa-first-order:before {
+  content: "\f2b0";
+}
+.fa-yoast:before {
+  content: "\f2b1";
+}
+.fa-themeisle:before {
+  content: "\f2b2";
+}
+.fa-google-plus-circle:before,
+.fa-google-plus-official:before {
+  content: "\f2b3";
+}
+.fa-fa:before,
+.fa-font-awesome:before {
+  content: "\f2b4";
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+.sr-only-focusable:active,
+.sr-only-focusable:focus {
+  position: static;
+  width: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  clip: auto;
+}
 a {
   color: #595959;
 }
@@ -2349,6 +2462,10 @@ body {
   max-width: 90%;
   margin: 10px auto 20px auto;
 }
+.post-view .post-content .post-vote {
+  float: left;
+  height: 100px;
+}
 .post-view .post-separator {
   height: 32px;
   background-color: #eee;
@@ -2389,6 +2506,10 @@ body {
   margin-left: 0;
   padding-left: 40px;
   font-style: italic;
+}
+.post-view .post-comments .post-comment .post-comment-vote {
+  width: 25px;
+  text-align: center;
 }
 
 .quick-switch-view {
@@ -2580,38 +2701,6 @@ body {
 }
 .stream-item-view .stream-item-top .stream-item-sidebar .stream-item-vote-count {
   font-size: 13px;
-}
-.stream-item-view .stream-item-top .stream-item-sidebar .vote {
-  cursor: pointer;
-  background: url(images/vote.png) center center no-repeat;
-  background-size: 20%;
-  width: 100%;
-  height: 40px;
-}
-.stream-item-view .stream-item-top .stream-item-sidebar .vote:hover {
-  background-color: rgba(200, 200, 200, 0.2);
-}
-.stream-item-view .stream-item-top .stream-item-sidebar .vote:active {
-  background-color: rgba(200, 200, 200, 0.3);
-}
-.stream-item-view .stream-item-top .stream-item-sidebar .vote.up.selected {
-  background-image: url(images/upvote.png);
-}
-.stream-item-view .stream-item-top .stream-item-sidebar .vote.up:active {
-  background-image: url(images/upvote.png);
-}
-.stream-item-view .stream-item-top .stream-item-sidebar .vote.down {
-  -ms-transform: rotate(180deg);
-  /* IE 9 */
-  -webkit-transform: rotate(180deg);
-  /* Chrome, Safari, Opera */
-  transform: rotate(180deg);
-}
-.stream-item-view .stream-item-top .stream-item-sidebar .vote.down:active {
-  background-image: url(images/downvote.png);
-}
-.stream-item-view .stream-item-top .stream-item-sidebar .vote.down.selected {
-  background-image: url(images/downvote.png);
 }
 @media screen and (max-width: 500px) {
   .stream-item-view .stream-item-top .stream-item-sidebar {
@@ -2887,6 +2976,39 @@ body {
   background-image: url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2054%2072%22%3E%3Cpath%20class%3D%22icon%22%20fill%3D%22%23E81C4F%22%20d%3D%22M38.723%2012c-7.187%200-11.16%207.306-11.723%208.13-.563-.824-4.496-8.13-11.723-8.13C8.79%2012%203.533%2018.163%203.533%2024.647%203.533%2039.964%2021.89%2055.907%2027%2056c5.11-.093%2023.467-16.036%2023.467-31.353C50.467%2018.163%2045.21%2012%2038.723%2012z%22%2F%3E%3C%2Fsvg%3E');
 }
 
+
+.vote {
+  cursor: pointer;
+  background: url(images/vote.png) center center no-repeat;
+  background-size: 20%;
+  width: 100%;
+  height: 40px;
+}
+.vote:hover {
+  background-color: rgba(200, 200, 200, 0.2);
+}
+.vote:active {
+  background-color: rgba(200, 200, 200, 0.3);
+}
+.vote.up.selected {
+  background-image: url(images/upvote.png);
+}
+.vote.up:active {
+  background-image: url(images/upvote.png);
+}
+.vote.down {
+  -ms-transform: rotate(180deg);
+  /* IE 9 */
+  -webkit-transform: rotate(180deg);
+  /* Chrome, Safari, Opera */
+  transform: rotate(180deg);
+}
+.vote.down:active {
+  background-image: url(images/downvote.png);
+}
+.vote.down.selected {
+  background-image: url(images/downvote.png);
+}
 
 .youtube-view,
 .youtube-view-play-container {
