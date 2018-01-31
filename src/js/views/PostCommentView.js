@@ -1,6 +1,7 @@
 import React from 'react';
 import { decodeEntities } from '../utilities/Common';
 import CommentModel from '../models/CommentModel';
+import VoteView from './VoteView';
 
 class PostCommentView extends React.Component {
 
@@ -36,7 +37,9 @@ class PostCommentView extends React.Component {
 
             return (
                 <div key={this.props.key} className="post-comment">
-                    <span className="post-comment-score">{comment.get("score")}</span>
+                    <div className="post-comment-vote">
+                        <VoteView key="vote" item={comment} />
+                    </div>
                     {
                         /*
                         WARNING: Last resort using dangerouslySetInnerHTML, decoding html entities with every solution that could be found online did not help

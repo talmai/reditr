@@ -4,6 +4,7 @@ import MediaParserView from './MediaParserView';
 import reddit from '../api/reddit';
 import CommentModel from '../models/CommentModel';
 import StreamCommentView from './StreamCommentView';
+import VoteView from './VoteView';
 import Link from './Link';
 import { prettyNumber } from '../utilities/Common';
 import moment from 'moment';
@@ -31,11 +32,9 @@ class StreamItemView extends React.Component {
 
         // set default
         this.state = {
-            voteCount: this.props.post.get("score"),
             topComments: [],
             isLoading: true,
             showNSFW: false,
-            voteDirection: voteDir
         };
 
         if(this.props.postIds) {
@@ -79,64 +78,6 @@ class StreamItemView extends React.Component {
             this.setState({ isLoading: false, topComments: [] });
         }
 
-    }
-
-    didUpvote() {
-        // default to upvote
-        let newVoteDir = this.state.voteDirection == -1 ? 0 : -1;
-        let voteDelta = 1;
-
-        switch (this.state.voteDirection) {
-            case 1:
-                newVoteDir = 0;
-                voteDelta = -1;
-                break;
-            case -1:
-                newVoteDir = 1;
-                voteDelta = 2;
-                break;
-            case 0:
-                newVoteDir = 1;
-                voteDelta = 1;
-                break;
-        }
-
-        // vote to reddit plz
-        reddit.vote(newVoteDir, this.props.post.get("name"));
-
-        this.setState({
-            voteCount: this.state.voteCount + voteDelta,
-            voteDirection: newVoteDir
-        });
-    }
-
-    didDownvote() {
-        // default to down
-        let newVoteDir = this.state.voteDirection == -1 ? 0 : -1;
-        let voteDelta = 1;
-
-        switch (this.state.voteDirection) {
-            case 1:
-                newVoteDir = -1;
-                voteDelta = -2;
-                break;
-            case -1:
-                newVoteDir = 0;
-                voteDelta = 1;
-                break;
-            case 0:
-                newVoteDir = -1;
-                voteDelta = -1;
-                break;
-        }
-                
-        // vote to reddit plz
-        reddit.vote(newVoteDir, this.props.post.get("name"));
-
-        this.setState({
-            voteCount: this.state.voteCount + voteDelta,
-            voteDirection: newVoteDir
-        });
     }
 
     enableNSFW() {
@@ -210,24 +151,11 @@ class StreamItemView extends React.Component {
             postMedia = <MediaParserView url={post.get("url")} post={post}/>;
         }
 
-        let upvoteClass = "up vote";
-        let downvoteClass = "down vote";
-        switch (this.state.voteDirection) {
-            case 1:
-                upvoteClass += " selected";
-                break;
-            case -1:
-                downvoteClass += " selected";
-                break;
-        }
-
         return (
             <div style={style} key={this.props.key} className="stream-item-view" data-postid={post.get("id")}>
                 <div className="stream-item-top">
                     <div className="stream-item-sidebar">
-                        <div className={upvoteClass} onClick={this.didUpvote.bind(this)}></div>
-                        <span className="stream-item-vote-count">{this.state.voteCount}</span>
-                        <div className={downvoteClass} onClick={this.didDownvote.bind(this)}></div>
+                        <VoteView key="vote" item={this.props.post} />
                     </div>
                     <div className="stream-item-content">
                         <a href={post.get("url")} target="_blank" className="stream-item-title">{Entities.decode(post.get('title'))}</a>
