@@ -14,7 +14,6 @@ class StreamItemView extends React.Component {
 
   constructor(props) {
     super(props);
-console.log('a');
     // get the vote direction
     let voteDir = 0;
 
@@ -43,7 +42,6 @@ console.log('a');
   }
 
   componentDidMount() {
-    console.log('b');
     this.loadComments();
   }
 
@@ -92,12 +90,10 @@ console.log('a');
   }
 
   didAppear() {
-    //console.log('back', this.props.post.get('title'));
     this.setState({ hidden: false });
   }
 
   render() {
-console.log('c');
     let post = this.props.post;
 
     // WARN: if it is a comment, ignore for now

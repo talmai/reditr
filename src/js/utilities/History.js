@@ -9,7 +9,7 @@ var history = createHistory({
 // it occurs
 
 Observable.global.on('pushNav', data => {
-    if(!data.silent) history.pushState(null, data.href);
+  if(!data.silent) history.pushState(null, data.href);
 });
 
 // detect when the browser moves forward and backward, and send off a pushNav
@@ -17,9 +17,9 @@ Observable.global.on('pushNav', data => {
 // in this case we're responding to a change and not creating one
 
 history.listen(data => {
-    if(data.action == 'POP') {
-        Observable.global.trigger('pushNav', { href: data.pathname, silent: true });
-    }
+  if(data.action == 'POP') {
+    Observable.global.trigger('pushNav', { href: data.pathname, silent: true });
+  }
 });
 
 export default history;

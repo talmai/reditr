@@ -2,11 +2,11 @@ import DataStore from '../utilities/DataStore';
 
 class UserSettings {
 
-    constructor(userObj) {
+  constructor(userObj) {
 
-        this.storage = DataStore.createInstance(userObj.username);
+    this.storage = DataStore.createInstance(userObj.username);
 
-    }
+  }
 
 }
 
