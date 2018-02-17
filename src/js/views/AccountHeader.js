@@ -5,79 +5,78 @@ import UserManager from '../account/UserManager';
 
 class AccountHeader extends React.Component {
 
-    constructor(props) {
-        super(props);
+  constructor(props) {
+  super(props);
+  this.state = {
+    user: UserManager.currentUser,
+    isLoggingIn: false,
+    expanded: false
+  };
+  }
 
-        this.state = {
-            user: UserManager.currentUser,
-            isLoggingIn: false,
-            expanded: false
-        }
+  startLogin() {
+  this.setState({
+    isLoggingIn: true
+  });
+
+  UserManager.startLogin((status, user) => {
+    if (status == "success") {
+    this.setState({
+      user: user,
+      isLoggingIn: false,
+      expanded: false,
+    });
+    } else {
+    this.setState({
+      isLoggingIn: false,
+    });
     }
+  });
+  }
 
-    startLogin() {
-        this.setState({
-            isLoggingIn: true
-        });
+  componentDidMount() {
+  Observable.global.on(this, 'updateCurrentUser', this.onUpdateCurrentUser);
+  }
 
-        UserManager.startLogin((status, user) => {
-            if (status == "success") {
-                this.setState({
-                    user: user,
-                    isLoggingIn: false,
-                    expanded: false,
-                });
-            } else {
-                this.setState({
-                    isLoggingIn: false,
-                });
-            }
-        });
-    }
+  onUpdateCurrentUser(data) {
+  this.setState({
+    user: data.user,
+    isLoggingIn: false
+  });
+  }
 
-    componentDidMount() {
-        Observable.global.on(this, 'updateCurrentUser', this.onUpdateCurrentUser);
-    }
+  logout() {
+  UserManager.logout();
+  }
 
-    onUpdateCurrentUser(data) {
-        this.setState({
-            user: data.user,
-            isLoggingIn: false
-        });
-    }
+  toggleExpanded() {
+  this.setState({
+    expanded: this.state.expanded
+  });
+  }
 
-    logout() {
-        UserManager.logout();
-    }
+  render() {
+  // handle buttons states
+  let button = <div className="button account-header" onClick={this.startLogin.bind(this)}>Login</div>;
+  if (this.state.user) {
+    button = <div className="button account-header disabled" >{this.state.user.username}</div>;
+  } else if (this.state.isLoggingIn) {
+    button = <div className="button account-header disabled">Waiting to Login...</div>;
+  }
 
-    toggleExpanded() {
-        this.setState({
-            expanded: this.state.expanded
-        })
-    }
+  let logout = null;
+  if (this.state.user != null) {
+    logout = <div className="button logout" onClick={this.logout.bind(this)}>Logout</div>;
+  }
 
-    render() {
-        // handle buttons states
-        let button = <div className="button account-header" onClick={this.startLogin.bind(this)}>Login</div>;
-        if (this.state.user) {
-            button = <div className="button account-header disabled" >{this.state.user.username}</div>;
-        } else if (this.state.isLoggingIn) {
-            button = <div className="button account-header disabled">Waiting to Login...</div>;
-        }
-
-        let logout = null
-        if (this.state.user != null) {
-            logout = <div className="button logout" onClick={this.logout.bind(this)}>Logout</div>
-        }
-
-        return (
-            <div className="account-options">
-                { button }
-                { logout }
-            </div>
-        );
-    }
+  return (
+    <div className="account-options">
+    { button }
+    { logout }
+    </div>
+  );
+  }
 
 }
 
-export default AccountHeader
+export default AccountHeader;

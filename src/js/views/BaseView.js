@@ -3,12 +3,12 @@ import DataStore from '../utilities/DataStore';
 
 class BaseView extends React.Component {
 
-    constructor(props) {
-        super(props);
+  constructor(props) {
+    super(props);
 
-        this.enableCache = false;
-        this.cacheName = "base_view";
-    }
+    this.enableCache = false;
+    this.cacheName = "base_view";
+  }
 
 }
 
