@@ -13,6 +13,7 @@
     "load-grunt-tasks": "^3.3.0"
   },
   "dependencies": {
+    "enhanced-promises": "^1.0.5",
     "font-awesome": "^4.5.0",
     "history": "^1.17.0",
     "html-entities": "^1.2.0",

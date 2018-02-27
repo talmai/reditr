@@ -7,14 +7,14 @@ import Observable from '../utilities/Observable';
 class UserManager {
 
   constructor() {
-    this.dataStore = DataStore.createInstance("UserManager");
+    this.dataStore = DataStore.createInstance('UserManager');
 
     this.users = {};
     this.currentUser = null;
 
     this.isInitialized = false;
 
-    this.dataStore.get(["users", "currentUser"], (results) => {
+    this.dataStore.get(['users', 'currentUser'], (results) => {
       for (user in this.users) {
         let user = new User(user);
         this.users[user.username] = user;
@@ -25,7 +25,7 @@ class UserManager {
       } else {
         // notify that we are ready
         this.isInitialized = true;
-        Observable.global.trigger("UserManagerInitialized", this);
+        Observable.global.trigger('UserManagerInitialized', this);
       }
     });
   }
@@ -36,7 +36,7 @@ class UserManager {
     OAuth.start(data => {
       let status = data.status;
 
-      if (status == "success") {
+      if (status == 'success') {
         let user = new User(data.refreshkey);
 
         OAuth.getAccessToken(user, accessToken => {
@@ -45,10 +45,10 @@ class UserManager {
           // we have an access token, so we can finally add the user
           this.addAccount(user);
         });
-      } else if (status == "waiting") {
-        this.finalCallback("error");
+      } else if (status == 'waiting') {
+        this.finalCallback('error');
       } else {
-        this.finalCallback("error");
+        this.finalCallback('error');
       }
     });
   }
@@ -69,7 +69,7 @@ class UserManager {
         reddit.setAuth(user);
 
         // save
-        this.dataStore.set("currentUser", user);
+        this.dataStore.set('currentUser', user);
 
         // notify that we have a new user to update UI
         Observable.global.trigger('updateCurrentUser', { user: user });
@@ -77,7 +77,7 @@ class UserManager {
         if (!this.isInitialized) {
           // notify that we are ready
           this.isInitialized = true;
-          Observable.global.trigger("UserManagerInitialized", this);
+          Observable.global.trigger('UserManagerInitialized', this);
         }
       });
     } else {
@@ -85,8 +85,8 @@ class UserManager {
       reddit.setAuth(user);
 
       // save
-      this.dataStore.set("currentUser", user);
-      
+      this.dataStore.set('currentUser', user);
+
       // notify that we have no user
       Observable.global.trigger('updateCurrentUser', { user: user });
     }
@@ -105,13 +105,13 @@ class UserManager {
     user.me(() => {
       // add and save
       this.users[user.username] = user;
-      this.dataStore.set("users", this.users);
+      this.dataStore.set('users', this.users);
 
       // assume the account you added will be the current user
       this.setCurrentUser(user);
 
       // done so callback
-      this.finalCallback("success", user);
+      this.finalCallback('success', user);
       this.finalCallback = null;
     });
   }

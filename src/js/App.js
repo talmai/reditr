@@ -5,6 +5,7 @@ import HeaderView from './views/HeaderView';
 import QuickSwitchView from './views/QuickSwitchView';
 import StreamView from './views/StreamView';
 import PostView from './views/PostView';
+import LeftSidebarView from './views/LeftSidebarView';
 import Keystrokes from './utilities/Keystrokes';
 import Observable from './utilities/Observable';
 import Device from './utilities/Device';
@@ -55,6 +56,7 @@ class App extends React.Component {
     return (
       <div className={curClass}>
         <HeaderView/>
+        <LeftSidebarView/>
           <Router>
             <Switch>
               <Route exact path="/" component={StreamView} />
