@@ -39,11 +39,11 @@ class reddit {
   }
 
   getCurrentAccountInfo(callback) {
-    Request
-      .get(this.baseOAuthUrl + '/api/v1/me' + this.extension)
-      .set('Authorization', 'bearer ' + this.authUser.accessToken)
-      .end(callback);
-
+    return fetch(this.baseOAuthUrl + '/api/v1/me' + this.extension, {
+      headers: new Headers({
+        'Authorization': 'bearer ' + this.authUser.accessToken
+      })
+    })
   }
 
   getSubscribedSubreddits(callback) {

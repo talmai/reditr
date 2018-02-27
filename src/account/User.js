@@ -9,12 +9,14 @@ class User {
     if (typeof refreshKey == "object") {
       // we have an user object, not a refreshkey
       let user = refreshKey;
+      
+      Object.keys(user).forEach(key => {
+        this[key] = user[key]
+      })
 
-      this.model = new UserModel(user.model);
       this.userSettings = new UserSettings(user);
     } else {
       // we got a refresh key, build some scaffolding
-      this.model = new UserModel();
       this.username = "";
       this.refreshKey = refreshKey;
       this.accessToken = "";
@@ -22,41 +24,20 @@ class User {
     }
   }
 
-  me(callback) {
-    reddit.getCurrentAccountInfo((err, response) => {
-      let me = response.body;
-      this.username = me.name;
-      this.modhash = me.modhash;
-      // get/create userSettings
-      this.userSettings = new UserSettings(this);
-      // done
-      callback();
-    });
+  me() {
+    // TODO: model objects should not have service requests, move to user manager
+    return new Promise((resolve, reject) => {
+      reddit.getCurrentAccountInfo().then(response => {
+        console.log(response)
+        const me = response.body;
+        this.username = me.name;
+        this.modhash = me.modhash;
+        // get/create userSettings
+        this.userSettings = new UserSettings(this);
 
-  }
-
-  get username() {
-    return this.model.username;
-  }
-
-  set username(n) {
-    this.model.username = n;
-  }
-
-  get accessToken() {
-    return this.model.accessToken;
-  }
-
-  set accessToken(n) {
-    this.model.accessToken = n;
-  }
-
-  get refreshKey() {
-    return this.model.refreshKey;
-  }
-
-  set refreshKey(n) {
-    this.model.refreshKey = n;
+        resolve()
+      }).catch(reject)
+    })
   }
 }
 

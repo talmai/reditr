@@ -102,7 +102,7 @@ class UserManager {
     reddit.setAuth(user);
 
     // get user info
-    user.me(() => {
+    user.me().then(() => {
       // add and save
       this.users[user.username] = user;
       this.dataStore.set('users', this.users);
