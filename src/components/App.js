@@ -1,15 +1,15 @@
 import React from 'react';
 import { render } from 'react-dom';
-import history from './utilities/History';
-import HeaderView from './views/HeaderView';
-import QuickSwitchView from './views/QuickSwitchView';
-import StreamView from './views/StreamView';
-import PostView from './views/PostView';
-import LeftSidebarView from './views/LeftSidebarView';
-import Keystrokes from './utilities/Keystrokes';
-import Observable from './utilities/Observable';
-import Device from './utilities/Device';
-import UserManager from './account/UserManager';
+import history from '../utilities/History';
+import HeaderView from './HeaderView';
+import QuickSwitchView from './QuickSwitchView';
+import StreamView from './StreamView';
+import PostView from './PostView';
+import LeftSidebarView from './LeftSidebarView';
+import Keystrokes from '../utilities/Keystrokes';
+import Observable from '../utilities/Observable';
+import Device from '../utilities/Device';
+import UserManager from '../account/UserManager';
 import { BrowserRouter as Router, Route, Switch, Link, withRouter } from 'react-router-dom';
 
 // Then we delete a bunch of code from App and

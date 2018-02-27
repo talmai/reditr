@@ -49,13 +49,14 @@ class reddit {
   getSubscribedSubreddits(callback) {
     const defer = Promise.defer();
     const path = this.authUser ? '/subreddits/mine/subscriber' : '/subreddits/default';
-    const base = this.authUser ? this.baseOauthUrl : this.baseUrl;
+    const base = this.authUser ? this.baseOAuthUrl : this.baseUrl;
     let request = Request
       .get(base + path + this.extension);
     if (this.authUser) {
       request = request.set('Authorization', 'bearer ' + this.authUser.accessToken);
     }
     request.end(promiseAndCallback(defer, callback, data => {
+      console.log(data)
       return data.body.data.children.map(child => child.data);
     }));
     return defer.promise;

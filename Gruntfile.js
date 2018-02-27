@@ -19,6 +19,7 @@ module.exports = function(grunt) {
         browserify: {
             dist: {
                 options: {
+                    exclude: ['<%= dirs.base %>dist/**'],
                     browserifyOptions:{ debug: true },
                     transform: [
                         ["babelify", {
@@ -27,11 +28,12 @@ module.exports = function(grunt) {
                     ]
                 },
                 files: {
-                    "<%= dirs.base %>dist/bundle.js": ["<%= dirs.base %>js/**.js"]
+                    "<%= dirs.base %>dist/bundle.js": ["<%= dirs.base %>**/**.js"]
                 }
             },
             watch: {
                 options: {
+                    exclude: ['<%= dirs.base %>dist/**'],
                     watch: true,
                     keepAlive: true,
                     browserifyOptions:{ debug: true },
@@ -42,7 +44,7 @@ module.exports = function(grunt) {
                     ]
                 },
                 files: {
-                    "<%= dirs.base %>dist/bundle.js": ["<%= dirs.base %>js/**.js"]
+                    "<%= dirs.base %>dist/bundle.js": ["<%= dirs.base %>**/**.js"]
                 }
             }
         },
