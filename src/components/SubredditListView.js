@@ -5,7 +5,6 @@ const ListItemView = (props) => {
   const style = {
     backgroundImage: `url(${props.subreddit.icon_img})`
   };
-  console.log(style);
   return (
     <div className='list-item' style={style}>
       {displayName}

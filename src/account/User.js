@@ -1,5 +1,4 @@
 import OAuth from '../api/OAuth';
-import UserModel from '../models/UserModel';
 import reddit from '../api/reddit';
 import UserSettings from './UserSettings';
 
@@ -28,8 +27,7 @@ class User {
     // TODO: model objects should not have service requests, move to user manager
     return new Promise((resolve, reject) => {
       reddit.getCurrentAccountInfo().then(response => {
-        console.log(response)
-        const me = response.body;
+        const me = response
         this.username = me.name;
         this.modhash = me.modhash;
         // get/create userSettings

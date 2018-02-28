@@ -44,7 +44,6 @@ class OAuth {
       .query({ oauth: user.refreshKey })
       .end((err, response) => {
         let data = response.body;
-        console.log(response.body)
         // make sure json
   			data = typeof data == 'string' ? JSON.parse(data) : data;
 

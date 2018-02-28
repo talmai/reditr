@@ -43,7 +43,7 @@ class reddit {
       headers: new Headers({
         'Authorization': 'bearer ' + this.authUser.accessToken
       })
-    })
+    }).then(r => r.json())
   }
 
   getSubscribedSubreddits(callback) {
@@ -56,7 +56,6 @@ class reddit {
       request = request.set('Authorization', 'bearer ' + this.authUser.accessToken);
     }
     request.end(promiseAndCallback(defer, callback, data => {
-      console.log(data)
       return data.body.data.children.map(child => child.data);
     }));
     return defer.promise;

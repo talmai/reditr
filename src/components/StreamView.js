@@ -249,8 +249,15 @@ class StreamView extends React.Component {
     var loading = this.state.isLoading ? <StreamSpinnerView/> : false;
     var notFound = this.state.notFound ? <div>Subreddit {this.state.subreddit} does not exist.</div> : false;
 
+    const styles = {
+      container: {
+        left: '285px',
+        width: 'calc(100% - 285px)'
+      }
+    }
+
     return (
-      <div className="stream-view">
+      <div style={styles.container} className="stream-view">
         {this.state.postViews}
         {loading}
         {notFound}
