@@ -1,5 +1,6 @@
 import React from 'react'
 import { render } from 'react-dom'
+import PropTypes from 'prop-types'
 
 import MediaParser from '../../utilities/MediaParser'
 import YoutubeView from '../YoutubeView'
@@ -7,6 +8,15 @@ import GalleryView from '../GalleryView'
 import TweetView from '../TweetView'
 
 class MediaParserView extends React.Component {
+
+  static propTypes = {
+    onClick: PropTypes.func
+  }
+
+  static defaultProps = {
+    onClick() {}
+  }
+
   constructor(props) {
     super(props)
 
@@ -42,9 +52,15 @@ class MediaParserView extends React.Component {
   }
 
   render() {
+    const styles = {
+      image: {
+        cursor: 'zoom-in'
+      }
+    }
+
     switch (this.state.media.type) {
       case 'image': // simply return image tag
-        return <img src={this.state.media.parsedUrl} className="media" />
+        return <img onClick={() => this.props.onClick(this.state.media.parsedUrl)} style={styles.image} src={this.state.media.parsedUrl} className="media" />
         break
       case 'youtube':
         return <YoutubeView videoId={this.state.media.videoId} />

@@ -194,7 +194,7 @@ class StreamView extends React.Component {
   componentWillReceiveProps(props) {
     if (this.props.match.params.user) {
       this.loadUser(props.match.params.user, { reset: true })
-    } else {
+    } else if (!props.match.isExact) {
       this.load(props.match.params.subreddit, { reset: true }) // loads new prop info
     }
   }
