@@ -48,6 +48,7 @@ function triggerCallbacks(modifiers, keys, event) {
 }
 
 window.onload = function() {
+  return
   document.addEventListener('keydown', function(event) {
     var modifier = modifierCode(event);
     if (modifier !== 0) {

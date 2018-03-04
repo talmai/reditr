@@ -17,6 +17,7 @@
     "react-router-dom": "^4.1.1",
     "react-scripts": "1.1.1",
     "react-viewer": "^2.3.4",
+    "style-it": "^2.0.0",
     "superagent": "^1.6.1",
     "superagent-jsonp": "git+https://github.com/dimitryvin/superagent-jsonp.git",
     "superagent-retry": "^0.5.1"

@@ -55,6 +55,17 @@ class MediaParserView extends React.Component {
     const styles = {
       image: {
         cursor: 'zoom-in'
+      },
+      article: {
+        display: 'flex',
+        alignItems: 'left'
+      },
+      articleImage: {
+        maxWidth: '250px'
+      },
+      articleText: {
+        padding: '10px',
+        boxSizing: 'border-box'
       }
     }
 
@@ -92,14 +103,17 @@ class MediaParserView extends React.Component {
       case 'article':
         if (this.state.media.parsedText.length == 0) return false
         return (
-          <div
-            className="media text"
-            dangerouslySetInnerHTML={{ __html: this.state.media.parsedText }}
-          />
+          <div style={styles.article} className="media text">
+            <img style={styles.articleImage} src={this.state.media.parsedImage} />
+            <p style={styles.articleText}>{this.state.media.parsedText}</p>
+          </div>
         )
         break
       case 'tweet':
         return <TweetView tweet={this.state.media.tweet} />
+        break
+      case 'oembed':
+        return <div className="media" dangerouslySetInnerHTML={{__html: this.state.media.html}} />
         break
       default:
         return false
