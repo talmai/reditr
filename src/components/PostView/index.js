@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 import PostModel from '../../models/PostModel'
 import MediaParserView from '../MediaParserView'
@@ -10,6 +11,11 @@ import StreamSpinnerView from '../StreamSpinnerView'
 import VoteView from '../VoteView'
 
 class PostView extends React.Component {
+
+  static contextTypes = {
+    setViewerState: PropTypes.func
+  }
+
   constructor(props) {
     super(props)
 
@@ -72,7 +78,7 @@ class PostView extends React.Component {
             {post.get('title')}
           </a>
           <span className="post-author">{post.get('author')}</span>
-          <MediaParserView url={post.get('url')} post={post} />
+          <MediaParserView onClick={url => this.context.setViewerState(url)} url={post.get('url')} post={post} />
         </div>
         <div className="post-separator" />
         <div className="post-comments">{commentViews}</div>
