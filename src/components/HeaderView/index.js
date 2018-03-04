@@ -8,7 +8,7 @@ import logo from '../../images/logo.png'
 
 class Logo extends React.Component {
   render() {
-    return <a href="/"><img className="logo" src={logo} /></a>
+    return <Link to="/"><img className="logo" src={logo} /></Link>
   }
 }
 

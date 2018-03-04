@@ -33,7 +33,7 @@ class LeftSidebarView extends React.Component {
 
   render() {
     return (
-      <div className="left-sidebar">
+      <div style={{height: 'calc(100% - 46px)'}} className="left-sidebar">
         <SubredditListView subreddits={this.state.subreddits} />
       </div>
     )

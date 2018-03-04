@@ -75,7 +75,7 @@ class PostView extends React.Component {
         left: '285px',
         width: 'calc(100% - 285px)',
         boxSizing: 'border-box',
-        height: '100%'
+        height: 'calc(100% -46px)'
       },
       post: {
         position: 'relative',

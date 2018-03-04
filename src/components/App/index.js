@@ -2,12 +2,7 @@ import React from 'react'
 import { render } from 'react-dom'
 import Viewer from 'react-viewer'
 import PropTypes from 'prop-types'
-import {
-  BrowserRouter as Router,
-  Route,
-  Switch,
-  Link
-} from 'react-router-dom'
+import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom'
 
 import history from '../../utilities/History'
 import HeaderView from '../HeaderView'
@@ -90,10 +85,10 @@ export default class App extends React.Component {
     )
     var curClass = this.classForAppView()
     return (
-      <div className={curClass}>
-        <HeaderView />
-        <LeftSidebarView />
-        <Router>
+      <Router>
+        <div className={curClass}>
+          <HeaderView />
+          <LeftSidebarView />
           <Switch>
             <Route exact path="/" component={StreamView} />
             <Route exact path="/r/:subreddit" component={StreamView} />
@@ -111,16 +106,16 @@ export default class App extends React.Component {
             <Route exact path="/u/:user" component={StreamView} />
             <Route exact path="/user/:user" component={StreamView} />
           </Switch>
-        </Router>
-        {quickSwitch}
-        <Viewer
-          visible={this.state.viewerVisible}
-          onClose={() => {
-            this.setState({ viewerVisible: false })
-          }}
-          images={[{ src: this.state.url, alt: '' }]}
-        />
-      </div>
+          {quickSwitch}
+          <Viewer
+            visible={this.state.viewerVisible}
+            onClose={() => {
+              this.setState({ viewerVisible: false })
+            }}
+            images={[{ src: this.state.url, alt: '' }]}
+          />
+        </div>
+      </Router>
     )
   }
 }
