@@ -2579,19 +2579,6 @@ body {
   color: #333;
 }
 
-.post-view {
-  position: relative;
-  width: 100%;
-  height: calc(100% - 46px);
-  overflow-y: scroll;
-  /* has to be scroll, not auto */
-  -webkit-overflow-scrolling: touch;
-  box-sizing: border-box;
-  overflow-x: hidden;
-  background-color: white;
-  display: block;
-  border-bottom: 1px solid #ccc;
-}
 .post-view .stream-spinner-view {
   display: block;
   margin: 0 auto;
@@ -2635,6 +2622,9 @@ body {
   padding: 10px;
   border: 1px solid #dedede;
   position: relative;
+}
+.post-view .post-comments > .post-comment {
+  border: none;
 }
 .post-view .post-comments .post-comment:even {
   background-color: #efefef;
