@@ -1,6 +1,6 @@
 import React from 'react'
 import { render } from 'react-dom'
-import Link from '../Link'
+import { Link } from 'react-router-dom'
 import Observable from '../../utilities/Observable'
 import history from '../../utilities/History'
 import AccountHeader from '../AccountHeader'
@@ -8,7 +8,7 @@ import logo from '../../images/logo.png'
 
 class Logo extends React.Component {
   render() {
-    return <img className="logo" src={logo} />
+    return <a href="/"><img className="logo" src={logo} /></a>
   }
 }
 
