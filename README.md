@@ -10,8 +10,8 @@ Our Website & Current App: http://reditr.com
 # Dev Instructions
 1. Get NPM
 2. cd to directory
-3. Run ``npm install``
-4. Run ``grunt`` and keep this running as you develop (To manually build, run ``grunt build``)
+3. Run ``yarn install``
+4. Run ``yarn start`` and keep this running as you develop
 7. The app is now running in dev mode and you can open http://localhost:3000 in your browser
 5. You are ready to dev!
 

@@ -21,10 +21,10 @@ import {
 
 // Then we delete a bunch of code from App and
 // add some <Link> elements...
-class App extends React.Component {
+export default class App extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { quickSwitchVisible: false }
+    this.state = { quickSwitchVisible: false, viewerVisible: false }
   }
 
   // this method is invoked when the user hits enter within the quickSwitcher, and
@@ -49,7 +49,7 @@ class App extends React.Component {
       if (this.state.quickSwitchVisible) this.closeQuickSwitcher()
     })
 
-    require('react-viewer/dist/index.css')
+    require("react-viewer/dist/index.css")
   }
 
   classForAppView() {
@@ -96,17 +96,13 @@ class App extends React.Component {
         </Router>
         {quickSwitch}
         <Viewer
-        visible={true}
-        onClose={() => { this.setState({ visible: false }); } }
-        images={[{src: 'https://i.imgur.com/r7KmkTw.jpeg#oo', alt: ''}]}
+          visible={this.state.viewerVisible}
+          onClose={() => {
+            this.setState({ viewerVisible: false })
+          }}
+          images={[{ src: "https://i.imgur.com/r7KmkTw.jpeg#oo", alt: "" }]}
         />
       </div>
     )
   }
 }
-
-Observable.global.always("UserManagerInitialized", userManager => {
-  // Finally, we render a <Router> with some <Route>s.
-  // It does all the fancy routing stuff for us.
-  render(<App />, document.getElementById("App"))
-})
