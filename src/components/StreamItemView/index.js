@@ -2,6 +2,7 @@ import React from 'react'
 import { render } from 'react-dom'
 import moment from 'moment'
 import { AllHtmlEntities as Entities } from 'html-entities'
+import PropTypes from 'prop-types'
 
 import reddit from '../../api/reddit'
 import CommentModel from '../../models/CommentModel'
@@ -12,6 +13,11 @@ import { prettyNumber } from '../../utilities/Common'
 import MediaParserView from '../MediaParserView'
 
 class StreamItemView extends React.Component {
+
+  static contextTypes = {
+    setViewerState: PropTypes.func
+  }
+
   constructor(props) {
     super(props)
     // get the vote direction
@@ -179,7 +185,7 @@ class StreamItemView extends React.Component {
     } else if (this.state.hidden) {
       postMedia = false
     } else {
-      postMedia = <MediaParserView url={post.get('url')} post={post} />
+      postMedia = <MediaParserView onClick={url => this.context.setViewerState(url)} url={post.get('url')} post={post} />
     }
 
     return (
