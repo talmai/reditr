@@ -1,5 +1,6 @@
 import React from 'react'
 import { render } from 'react-dom'
+import { prettyNumber } from '../../utilities/Common'
 
 import reddit from '../../api/reddit'
 
@@ -102,7 +103,7 @@ class VoteView extends React.Component {
     return (
       <div key={this.props.key} style={{width: '100%'}} className="vote-view">
         <div className={upvoteClass} onClick={this.didUpvote.bind(this)} />
-        <span className="vote-count">{this.state.voteCount}</span>
+        <span className="vote-count">{prettyNumber(this.state.voteCount)}</span>
         <div className={downvoteClass} onClick={this.didDownvote.bind(this)} />
       </div>
     )
