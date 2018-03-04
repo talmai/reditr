@@ -24,6 +24,7 @@
     "react-dom": "^16.2.0",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.1.1",
+    "react-viewer": "^2.3.4",
     "superagent": "^1.6.1",
     "superagent-jsonp": "git+https://github.com/dimitryvin/superagent-jsonp.git",
     "superagent-retry": "^0.5.1"
