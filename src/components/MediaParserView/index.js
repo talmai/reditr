@@ -1,6 +1,7 @@
 import React from 'react'
 import { render } from 'react-dom'
 import PropTypes from 'prop-types'
+import ReactPlayer from 'react-player'
 
 import MediaParser from '../../utilities/MediaParser'
 import YoutubeView from '../YoutubeView'
@@ -73,10 +74,10 @@ class MediaParserView extends React.Component {
       case 'image': // simply return image tag
         return <img onClick={() => this.props.onClick(this.state.media.parsedUrl)} style={styles.image} src={this.state.media.parsedUrl} className="media" />
         break
-      case 'youtube':
-        return <YoutubeView videoId={this.state.media.videoId} />
+      case 'supported-video':
+        return <ReactPlayer className="media" url={this.state.media.url} />
         break
-      case 'video':
+      case 'custom-video':
         let sources = []
         if (Array.isArray(this.state.media.parsedUrl)) {
           this.state.media.parsedUrl.forEach((media, index) => {
@@ -100,6 +101,13 @@ class MediaParserView extends React.Component {
         return <GalleryView imageUrls={this.state.media.imageUrls} />
         break
       case 'text':
+        if (this.state.media.parsedText.length == 0) return false
+        return (
+          <div style={styles.article} className="media text">
+            <p style={styles.articleText} dangerouslySetInnerHTML={{__html: this.state.media.parsedText}} />
+          </div>
+        )
+        break
       case 'article':
         if (this.state.media.parsedText.length == 0) return false
         return (
@@ -111,9 +119,6 @@ class MediaParserView extends React.Component {
         break
       case 'tweet':
         return <TweetView tweet={this.state.media.tweet} />
-        break
-      case 'oembed':
-        return <div className="media" dangerouslySetInnerHTML={{__html: this.state.media.html}} />
         break
       default:
         return false

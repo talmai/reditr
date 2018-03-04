@@ -153,18 +153,14 @@ class MediaParser {
         { url: 'http://fat.gfycat.com/' + name + '.webm', mime },
         { url: 'http://zippy.gfycat.com/' + name + '.webm', mime }
       ],
-      type: 'video'
+      type: 'custom-video'
     })
   }
 
-  async handleStreamable(url, callback) {
-    const results = await fetch(
-      'https://api.streamable.com/oembed.json?url=' + url
-    ).then(r => r.json())
+  handleStreamable(url, callback) {
     callback({
       url,
-      html: results.html,
-      type: 'oembed'
+      type: 'supported-video'
     })
   }
 
@@ -174,8 +170,8 @@ class MediaParser {
       .split('?')[0]
       .split('#')[0]
     callback({
-      videoId,
-      type: 'youtube'
+      url,
+      type: 'supported-video'
     })
   }
 
@@ -183,8 +179,8 @@ class MediaParser {
     var urlParts = url.split('?v=')
     var videoId = url.length > 1 ? urlParts[1] : undefined
     callback({
-      videoId,
-      type: 'youtube'
+      url,
+      type: 'supported-video'
     })
   }
 
@@ -224,7 +220,7 @@ class MediaParser {
         { url: 'http://i.imgur.com/' + imgurId + '.webm', mime: 'video/webm' },
         { url: 'http://i.imgur.com/' + imgurId + '.mp4', mime: 'video/mp4' }
       ],
-      type: 'video'
+      type: 'custom-video'
     })
   }
 
