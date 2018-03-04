@@ -14,6 +14,7 @@ import Keystrokes from '../../utilities/Keystrokes'
 import Observable from '../../utilities/Observable'
 import Device from '../../utilities/Device'
 import UserManager from '../../account/UserManager'
+import MainContainer from '../MainContainer'
 
 // Then we delete a bunch of code from App and
 // add some <Link> elements...
@@ -89,23 +90,25 @@ export default class App extends React.Component {
         <div className={curClass}>
           <HeaderView />
           <LeftSidebarView />
-          <Switch>
-            <Route exact path="/" component={StreamView} />
-            <Route exact path="/r/:subreddit" component={StreamView} />
-            <Route exact path="/r/:subreddit/:sort" component={StreamView} />
-            <Route
-              exact
-              path="/r/:subreddit/comments/:id/"
-              component={PostView}
-            />
-            <Route
-              exact
-              path="/r/:subreddit/comments/:id/:title/"
-              component={PostView}
-            />
-            <Route exact path="/u/:user" component={StreamView} />
-            <Route exact path="/user/:user" component={StreamView} />
-          </Switch>
+          <MainContainer>
+            <Switch>
+              <Route exact path="/" component={StreamView} />
+              <Route exact path="/r/:subreddit" component={StreamView} />
+              <Route exact path="/r/:subreddit/:sort" component={StreamView} />
+              <Route
+                exact
+                path="/r/:subreddit/comments/:id/"
+                component={PostView}
+              />
+              <Route
+                exact
+                path="/r/:subreddit/comments/:id/:title/"
+                component={PostView}
+              />
+              <Route exact path="/u/:user" component={StreamView} />
+              <Route exact path="/user/:user" component={StreamView} />
+            </Switch>
+          </MainContainer>
           {quickSwitch}
           <Viewer
             visible={this.state.viewerVisible}

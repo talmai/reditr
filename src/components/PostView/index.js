@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { Link } from 'react-router-dom'
 
 import PostModel from '../../models/PostModel'
 import MediaParserView from '../MediaParserView'
@@ -68,45 +69,36 @@ class PostView extends React.Component {
     })
 
     const styles = {
-      container: {
-        position: 'relative',
-        padding: '40px 0',
-        overflowX: 'hidden',
-        left: '285px',
-        width: 'calc(100% - 285px)',
-        boxSizing: 'border-box',
-        height: 'calc(100% -46px)'
-      },
       post: {
         position: 'relative',
         backgroundColor: 'white',
         border: '1px solid #ddd',
         borderRadius: '5px',
         maxWidth: '900px',
-        margin: '0 auto'
+        margin: '20px auto'
       }
     }
 
     return (
-      <div style={styles.container}>
-        <div style={styles.post} className="post-view">
-          <div className="post-content">
-            <div className="post-vote">
-              <VoteView key="vote" item={post} />
-            </div>
-            <a href={post.get('url')} target="_blank" className="post-title">
-              {post.get('title')}
-            </a>
-            <span className="post-author">{post.get('author')}</span>
-            <MediaParserView
-              onClick={url => this.context.setViewerState(url)}
-              url={post.get('url')}
-              post={post}
-            />
+      <div style={styles.post} className="post-view">
+        <div className="post-content">
+          <div className="post-vote">
+            <VoteView key="vote" item={post} />
           </div>
-          <div className="post-separator" />
-          <div className="post-comments">{commentViews}</div>
+          <a href={post.get('url')} target="_blank" className="post-title">
+            {post.get('title')}
+          </a>
+          <Link className="post-author" to={`/u/${post.get('author')}`}>
+            {post.get('author')}
+          </Link>
+          <MediaParserView
+            onClick={url => this.context.setViewerState(url)}
+            url={post.get('url')}
+            post={post}
+          />
         </div>
+        <div className="post-separator" />
+        <div className="post-comments">{commentViews}</div>
       </div>
     )
   }

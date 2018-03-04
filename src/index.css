@@ -2616,21 +2616,20 @@ body {
 }
 .post-view .post-comments .post-comment {
   font-size: 12px;
-  padding: 10px;
   border: 1px solid #dedede;
   position: relative;
 }
 .post-view .post-comments > .post-comment {
   border: none;
+  margin-top: -10px !important;
 }
 .post-view .post-comments .post-comment:even {
   background-color: #efefef;
 }
 .post-view .post-comments .post-comment .post-comment-children {
-  margin-left: 25px;
-}
-.post-view .post-comments .post-comment .post-comment-children .post-comment {
-  margin-top: 10px;
+  margin-left: 60px;
+  margin-bottom: 10px;
+  margin-right: 10px;
 }
 .post-view .post-comments .post-comment .post-comment-author {
   position: absolute;
@@ -2984,11 +2983,10 @@ body {
 .stream-view {
   position: relative;
   width: 100%;
-  height: calc(100% - 46px);
+  height: 100%;
   overflow-y: scroll;
   /* has to be scroll, not auto */
   -webkit-overflow-scrolling: touch;
-  box-sizing: border-box;
   overflow-x: hidden;
   text-align: center;
 }

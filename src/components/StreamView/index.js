@@ -285,15 +285,8 @@ class StreamView extends React.Component {
       false
     )
 
-    const styles = {
-      container: {
-        left: '285px',
-        width: 'calc(100% - 285px)'
-      }
-    }
-
     return (
-      <div style={styles.container} className="stream-view">
+      <div className="stream-view">
         {this.state.postViews}
         {loading}
         {notFound}
