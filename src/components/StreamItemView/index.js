@@ -3,12 +3,12 @@ import { render } from 'react-dom'
 import moment from 'moment'
 import { AllHtmlEntities as Entities } from 'html-entities'
 import PropTypes from 'prop-types'
+import { Link } from 'react-router-dom'
 
 import reddit from '../../api/reddit'
 import CommentModel from '../../models/CommentModel'
 import StreamCommentView from '../StreamCommentView'
 import VoteView from '../VoteView'
-import Link from '../Link'
 import { prettyNumber } from '../../utilities/Common'
 import MediaParserView from '../MediaParserView'
 

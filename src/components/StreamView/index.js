@@ -138,7 +138,7 @@ class StreamView extends React.Component {
     })
   }
 
-  load(subreddit = this.state.subreddit, options = { reset: false }) {
+  load(subreddit = 'all', options = { reset: false }) {
     if (this.state.isLoading && !options.reset) return
 
     var state = {}
@@ -192,9 +192,7 @@ class StreamView extends React.Component {
   }
 
   componentWillReceiveProps(props) {
-    if (this.props.match.params.user) {
-      this.loadUser(props.match.params.user, { reset: true })
-    } else if (!props.match.isExact) {
+    if (this.state.subreddit !== props.match.params.subreddit) {
       this.load(props.match.params.subreddit, { reset: true }) // loads new prop info
     }
   }

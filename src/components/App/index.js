@@ -6,8 +6,7 @@ import {
   BrowserRouter as Router,
   Route,
   Switch,
-  Link,
-  withRouter
+  Link
 } from 'react-router-dom'
 
 import history from '../../utilities/History'
