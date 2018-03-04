@@ -100,7 +100,7 @@ class VoteView extends React.Component {
     }
 
     return (
-      <div key={this.props.key} className="vote-view">
+      <div key={this.props.key} style={{width: '100%'}} className="vote-view">
         <div className={upvoteClass} onClick={this.didUpvote.bind(this)} />
         <span className="vote-count">{this.state.voteCount}</span>
         <div className={downvoteClass} onClick={this.didDownvote.bind(this)} />
