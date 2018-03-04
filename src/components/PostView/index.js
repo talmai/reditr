@@ -70,7 +70,7 @@ class PostView extends React.Component {
     const styles = {
       container: {
         position: 'relative',
-        padding: '40px 100px',
+        padding: '40px 0',
         overflowX: 'hidden',
         left: '285px',
         width: 'calc(100% - 285px)',
@@ -82,7 +82,8 @@ class PostView extends React.Component {
         backgroundColor: 'white',
         border: '1px solid #ddd',
         borderRadius: '5px',
-        width: '100%'
+        maxWidth: '900px',
+        margin: '0 auto'
       }
     }
 
