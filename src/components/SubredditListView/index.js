@@ -5,7 +5,9 @@ import style from '../../utilities/Style'
 import { className } from '../../utilities/Common'
 
 const ListItemView = (props => {
-  const linkClassName = className(props.classes.link, props.animateIn && props.classes.linkAnimate)
+  const linkClassName = className(props.classes.link, {
+    [props.classes.linkAnimate]: props.animateIn
+  })
   const displayName = props.subreddit.url.replace(/^\/r|\//g, '')
   const src = props.subreddit.icon_img !== "" ? props.subreddit.icon_img : redditLogo
   return (
