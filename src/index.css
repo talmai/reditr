@@ -2512,11 +2512,6 @@ body {
   font-size: 13px;
   color: #373C3F;
 }
-.left-sidebar .subreddit-list .list-item {
-  background-size: 24px auto;
-  background-repeat: no-repeat;
-  background-position: 30px center;
-}
 
 .LoginView {
   font-size: 12px;
