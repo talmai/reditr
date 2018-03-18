@@ -168,12 +168,13 @@ class StreamView extends React.Component {
         t: this.state.period
       }
       reddit.getPostsFromSubreddit(subreddit, options, (err, posts) => {
+        if (err) { return }
+
         if (!posts || !posts.body) {
           // subreddit not found
           this.setState({ subreddit, notFound: true, isLoading: false })
           return
         }
-
         // build new models and views here (prefer views built in render, speed sacrifice)
         const newPosts = posts.body.data.children
         const postViews = this.createViewsFromRedditPosts(
