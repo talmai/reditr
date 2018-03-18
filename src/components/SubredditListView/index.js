@@ -5,7 +5,7 @@ import style from '../../utilities/Style'
 import { className } from '../../utilities/Common'
 
 const ListItemView = (props => {
-  const linkClassName = className(props.classes.link, props.animateIn && props.classes.linkAnimate);
+  const linkClassName = className(props.classes.link, props.animateIn && props.classes.linkAnimate)
   const displayName = props.subreddit.url.replace(/^\/r|\//g, '')
   const src = props.subreddit.icon_img !== "" ? props.subreddit.icon_img : redditLogo
   return (
@@ -47,7 +47,7 @@ const ListItemView = (props => {
   rSlash: {
     color: 'rgba(0, 0, 0, 0.4)'
   }
-});
+})
 
 const SubredditListView = style(class extends React.Component {
 
@@ -78,7 +78,7 @@ const SubredditListView = style(class extends React.Component {
   }
 
   animateSubreddits() {
-    clearInterval(this.interval);
+    clearInterval(this.interval)
     this.setState({
       subredditsAnimated: []
     })
