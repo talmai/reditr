@@ -3,6 +3,7 @@ import { render } from 'react-dom'
 import { prettyNumber } from '../../utilities/Common'
 
 import reddit from '../../api/reddit'
+import { prettyNumber } from '../../utilities/Common'
 
 class VoteView extends React.Component {
   constructor(props) {
