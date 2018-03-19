@@ -16,29 +16,38 @@ export default class StreamContainer extends React.Component {
 
   render() {
 
-    const isColumnMode = this.state.viewMode === 'column' && (!this.state.subreddit || this.state.subreddit === '')
+    const isColumn = this.state.viewMode === 'column' && (!this.state.subreddit || this.state.subreddit === '')
 
     let styles = {
       container: {
         display: 'flex',
-        height: isColumnMode ? '100%' : 'auto',
-        overflow: 'hidden'
+        height: isColumn ? '100%' : 'auto',
+        overflowY: 'hidden',
+        overflowX: 'scroll',
+        padding: isColumn ? '10px' : 0
       }
     }
 
-    if (isColumnMode) {
+    if (isColumn) {
       styles.stream = {
         minWidth: '310px',
-        maxHeight: '100%'
+        maxHeight: '100%',
+        marginTop: 0,
+        marginRight: '10px'
       }
     }
 
     return (
       <div style={styles.container}>
-        <StreamView style={styles.stream} subreddit={this.state.subreddit} />
-        <StreamView style={styles.stream} subreddit={this.state.subreddit} />
-        <StreamView style={styles.stream} subreddit={this.state.subreddit} />
-        <StreamView style={styles.stream} subreddit={this.state.subreddit} />
+        <StreamView style={styles.stream} isColumn={isColumn} subreddit={this.state.subreddit} />
+        <StreamView style={styles.stream} isColumn={isColumn} subreddit={this.state.subreddit} />
+        <StreamView style={styles.stream} isColumn={isColumn} subreddit={this.state.subreddit} />
+        <StreamView style={styles.stream} isColumn={isColumn} subreddit={this.state.subreddit} />
+        <StreamView style={styles.stream} isColumn={isColumn} subreddit={this.state.subreddit} />
+        <StreamView style={styles.stream} isColumn={isColumn} subreddit={this.state.subreddit} />
+        <StreamView style={styles.stream} isColumn={isColumn} subreddit={this.state.subreddit} />
+        <StreamView style={styles.stream} isColumn={isColumn} subreddit={this.state.subreddit} />
+        <StreamView style={styles.stream} isColumn={isColumn} subreddit={this.state.subreddit} />
       </div>
     )
   }

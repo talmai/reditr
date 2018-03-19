@@ -64,7 +64,7 @@ class StreamView extends React.Component {
       if (postIdsHash[post.data.id]) continue
       // insert post model/view into postViews - array of posts to render later
       let postObj = new PostModel(redditPosts[i])
-      appendToArray.push(<StreamItemView key={post.data.id} post={postObj} postIds={postIdsHash} />)
+      appendToArray.push(<StreamItemView inColumn={this.props.isColumn} key={post.data.id} post={postObj} postIds={postIdsHash} />)
     }
     return appendToArray
   }
