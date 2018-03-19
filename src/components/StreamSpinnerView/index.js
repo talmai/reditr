@@ -1,18 +1,16 @@
-import React from 'react';
-import { render } from 'react-dom';
+import React from 'react'
+import { render } from 'react-dom'
+
+import loading from '../../images/loading.gif'
 
 class StreamSpinnerView extends React.Component {
-
   constructor(props) {
-    super(props);
+    super(props)
   }
 
   render() {
-    return (
-      <img src="images/loading.gif" className="stream-spinner-view" />
-    );
+    return <img src={loading} className="stream-spinner-view" />
   }
-
 }
 
-export default StreamSpinnerView;
+export default StreamSpinnerView
