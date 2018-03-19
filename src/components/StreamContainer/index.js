@@ -21,14 +21,19 @@ export default class StreamContainer extends React.Component {
     let styles = {
       container: {
         display: 'flex',
-        height: isColumn ? '100%' : 'auto',
         overflowY: 'hidden',
-        overflowX: 'scroll',
-        padding: isColumn ? '10px' : 0
+        overflowX: 'scroll'
       }
     }
 
     if (isColumn) {
+      styles.container = {
+        ...styles.container,
+        height: '100%',
+        padding: '10px',
+        boxSizing: 'border-box'
+      }
+
       styles.stream = {
         minWidth: '310px',
         maxHeight: '100%',

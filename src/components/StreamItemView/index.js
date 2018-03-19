@@ -106,32 +106,30 @@ class StreamItemView extends React.Component {
     this.setState({ hidden: false })
   }
 
-  render() {
-    let post = this.props.post
+  renderMedia = () => {
+    const post = this.props.post
 
-    // WARN: if it is a comment, ignore for now
-    if (post.kind == 't1') {
-      return false
-    }
-    let style = this.state.height ? { minHeight: this.state.height } : {}
-    if (this.state.hidden) {
-      return (
-        <div style={style} key={this.props.key} className="stream-item-view hidden" data-postid={post.get('id')}>
-          <div className="stream-item-top">
-            <div className="stream-item-sidebar">
-              <span className="stream-item-vote-count">{post.get('score')}</span>
-            </div>
-            <div className="stream-item-content">
-              <a href={post.get('url')} target="_blank" className="stream-item-title">
-                {Entities.decode(post.get('title'))}
-              </a>
-            </div>
+    let postMedia = false
+    if (!this.props.inColumn) {
+      if (post.get('over_18') && !this.state.showNSFW) {
+        postMedia = (
+          <div onClick={this.enableNSFW.bind(this)} className="nsfw-btn">
+            Show NSFW Content
           </div>
-        </div>
-      )
+        )
+      } else if (this.state.hidden) {
+        postMedia = false
+      } else {
+        postMedia = <MediaParserView onClick={url => this.context.setViewerState(url)} url={post.get('url')} post={post} />
+      }
     }
 
-    let topComments = this.state.topComments
+    return postMedia
+  }
+
+  renderTopComments = () => {
+    const post = this.props.post
+    const topComments = this.state.topComments
     let commentsView = []
 
     // if no comments, say no comments
@@ -154,25 +152,59 @@ class StreamItemView extends React.Component {
       }
     }
 
-    let postMedia = false
-    if (!this.props.inColumn) {
-      if (post.get('over_18') && !this.state.showNSFW) {
-        postMedia = (
-          <div onClick={this.enableNSFW.bind(this)} className="nsfw-btn">
-            Show NSFW Content
-          </div>
-        )
-      } else if (this.state.hidden) {
-        postMedia = false
-      } else {
-        postMedia = <MediaParserView onClick={url => this.context.setViewerState(url)} url={post.get('url')} post={post} />
+    return commentsView
+  }
+
+  render() {
+    const post = this.props.post
+
+    // WARN: if it is a comment, ignore for now
+    if (post.kind == 't1') {
+      return false
+    }
+
+    let styles = {
+      container: {
+        minHeight: this.state.height || 'auto'
+      },
+      voteContainer: {
+        borderLeft: '1px solid #efefef'
       }
     }
 
+    if (this.props.inColumn) {
+      styles.container = {
+        ...styles.container,
+        margin: 0,
+        borderRadius: 0,
+        borderTop: 'none',
+        borderLeft: 'none',
+        borderRight: 'none',
+        borderBottom: '1px solid #efefef'
+      }
+    }
+
+    if (this.state.hidden) {
+      return (
+        <div style={styles.container} key={this.props.key} className="stream-item-view hidden" data-postid={post.get('id')}>
+          <div className="stream-item-top">
+            <div style={styles.voteContainer} className="stream-item-sidebar">
+              <span className="stream-item-vote-count">{post.get('score')}</span>
+            </div>
+            <div className="stream-item-content">
+              <a href={post.get('url')} target="_blank" className="stream-item-title">
+                {Entities.decode(post.get('title'))}
+              </a>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
     return (
-      <div style={style} key={this.props.key} className="stream-item-view" data-postid={post.get('id')}>
+      <div style={styles.container} key={this.props.key} className="stream-item-view" data-postid={post.get('id')}>
         <div className="stream-item-top">
-          <div className="stream-item-sidebar">
+          <div style={styles.voteContainer} className="stream-item-sidebar">
             <VoteView key="vote" item={this.props.post} />
           </div>
           <div className="stream-item-content">
@@ -180,7 +212,7 @@ class StreamItemView extends React.Component {
               {Entities.decode(post.get('title'))}
             </a>
             <span className="stream-item-domain">({post.get('domain')})</span>
-            {postMedia}
+            {this.renderMedia()}
             <div className="mini-details">
               <Link to={'/user/' + post.get('author')} className="stream-item-author">
                 {post.get('author')}
@@ -193,7 +225,9 @@ class StreamItemView extends React.Component {
             </div>
           </div>
         </div>
-        {this.props.inColumn ? null : <div className="stream-item-comments">{this.state.isLoading ? <div className="loading">Loading...</div> : commentsView}</div>}
+        {this.props.inColumn ? null : (
+          <div className="stream-item-comments">{this.state.isLoading ? <div className="loading">Loading...</div> : this.renderTopComments()}</div>
+        )}
       </div>
     )
   }

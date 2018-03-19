@@ -14,8 +14,8 @@ export default class MainContainer extends React.Component {
       container: {
         position: 'relative',
         height: 'calc(100% - 46px)',
-        width: 'calc(100% - 285px)',
-        left: '285px',
+        width: 'calc(100% - 231px)',
+        left: '231px',
         overflowX: 'hidden',
         boxSizing: 'border-box'
       }

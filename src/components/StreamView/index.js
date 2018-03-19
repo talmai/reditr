@@ -13,7 +13,8 @@ class StreamView extends React.Component {
     subreddit: PropTypes.string,
     sort: PropTypes.string,
     period: PropTypes.string,
-    style: PropTypes.object
+    style: PropTypes.object,
+    isColumn: PropTypes.bool
   }
 
   constructor(props) {
@@ -26,7 +27,7 @@ class StreamView extends React.Component {
       postIds: {},
       after: null,
       isLoading: false,
-      isColumn: true,
+      isColumn: this.props.isColumn,
       subreddit: this.props.subreddit
     }
 
@@ -250,6 +251,33 @@ class StreamView extends React.Component {
     node.removeEventListener('resize', this.scrollListener.bind(this))
   }
 
+  renderHeader = () => {
+    if (!this.props.isColumn) { return }
+
+    const styles = {
+      container: {
+        textAlign: 'left',
+        padding: '10px',
+        borderBottom: '1px solid #eee'
+      },
+      title: {
+        fontSize: '20px',
+        fontWeight: 600,
+        margin: 0
+      },
+      sort: {
+        fontSize: '12px'
+      }
+    }
+
+    return (
+      <header style={styles.container}>
+        <h3 style={styles.title}>r/{this.state.subreddit}</h3>
+        <span style={styles.sort}>{this.state.sort}</span>
+      </header>
+    )
+  }
+
   render() {
     const loading = this.state.isLoading ? <StreamSpinnerView /> : false
     const notFound = this.state.notFound ? <div>Subreddit {this.state.subreddit} does not exist.</div> : false
@@ -260,8 +288,18 @@ class StreamView extends React.Component {
       }
     }
 
+    if (this.props.isColumn) {
+      styles.container = {
+        ...styles.container,
+        backgroundColor: '#fff',
+        border: '1px solid #eee',
+        borderRadius: '4px'
+      }
+    }
+
     return (
       <div style={styles.container} className="stream-view">
+        {this.renderHeader()}
         {this.state.postViews}
         {loading}
         {notFound}
