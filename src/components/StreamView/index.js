@@ -30,26 +30,6 @@ class StreamView extends React.Component {
       isColumn: this.props.isColumn,
       subreddit: this.props.subreddit
     }
-
-    if (this.props.subreddit || !this.props.user) {
-      this.initForSubreddit(this.state.subreddit)
-    } else if (this.props.user) {
-      this.initForUser(this.props.user)
-    }
-  }
-
-  initForUser(user) {
-    var state = this.state
-    state.user = user
-    state.href = window.location.href.search(/\/(u|user)\//) >= 0 ? '/user/' + state.user : '/'
-    state.text = state.user // title of stream
-  }
-
-  initForSubreddit(subreddit) {
-    var state = this.state
-    state.subreddit = subreddit || 'all'
-    state.href = window.location.href.indexOf('/r/') >= 0 ? '/r/' + state.subreddit : '/'
-    state.text = state.subreddit == this.defaultSubreddit ? 'Frontpage' : '/r/' + state.subreddit
   }
 
   /* Creates StreamItemView views from array of post objects from reddit (redditPosts) and
@@ -57,7 +37,7 @@ class StreamView extends React.Component {
    * ids postIdsHash prevents duplicate views from being inserted
    */
 
-  createViewsFromRedditPosts(redditPosts, _appendToArray = [], postIdsHash = {}) {
+  createViewsFromRedditPosts = (redditPosts, _appendToArray = [], postIdsHash = {}) => {
     const appendToArray = _appendToArray.slice()
     for (var i in redditPosts) {
       let post = redditPosts[i]
@@ -117,7 +97,7 @@ class StreamView extends React.Component {
     })
   }
 
-  load(subreddit = 'all', options = { reset: false }) {
+  load(subreddit = this.state.subreddit, options = { reset: false }) {
     if (this.state.isLoading && !options.reset) return
 
     var state = {}
@@ -186,10 +166,8 @@ class StreamView extends React.Component {
       this.loadUser()
     } else {
       // load the posts
-      this.load()
+      this.load(this.state.subreddit)
     }
-
-    Observable.global.on(this, 'updateCurrentUser', this.onUpdateCurrentUser)
   }
 
   onUpdateCurrentUser(data) {
@@ -203,8 +181,8 @@ class StreamView extends React.Component {
 
   /* scroll management */
 
-  didStopScrolling() {
-    const node = ReactDOM.findDOMNode(this)
+  didStopScrolling = () => {
+    const node = ReactDOM.findDOMNode(this.streamContainer)
     if (node.scrollHeight - (node.scrollTop + node.offsetHeight) < 100) {
       // detect scrolling to the bottom and load more posts
       this.load()
@@ -233,32 +211,36 @@ class StreamView extends React.Component {
     }
   }
 
-  scrollListener() {
+  scrollListener = () => {
     clearTimeout(this.stopScrollingTimeout)
     this.stopScrollingTimeout = setTimeout(this.didStopScrolling, 200)
   }
 
-  attachScrollListener() {
-    this.didStopScrolling = this.didStopScrolling.bind(this)
-    let node = ReactDOM.findDOMNode(this)
-    node.addEventListener('scroll', this.scrollListener.bind(this))
-    node.addEventListener('resize', this.scrollListener.bind(this))
+  attachScrollListener = () => {
+    let node = ReactDOM.findDOMNode(this.streamContainer)
+    node.addEventListener('scroll', this.scrollListener)
+    node.addEventListener('resize', this.scrollListener)
   }
 
-  detachScrollListener() {
-    let node = ReactDOM.findDOMNode(this)
-    node.removeEventListener('scroll', this.scrollListener.bind(this))
-    node.removeEventListener('resize', this.scrollListener.bind(this))
+  detachScrollListener = () => {
+    let node = ReactDOM.findDOMNode(this.streamContainer)
+    node.removeEventListener('scroll', this.scrollListener)
+    node.removeEventListener('resize', this.scrollListener)
   }
 
   renderHeader = () => {
-    if (!this.props.isColumn) { return }
+    if (!this.props.isColumn) {
+      return
+    }
 
     const styles = {
       container: {
         textAlign: 'left',
         padding: '10px',
-        borderBottom: '1px solid #eee'
+        borderBottom: '1px solid #eee',
+        height: '64px',
+        boxSizing: 'border-box',
+        backgroundColor: '#fefefe'
       },
       title: {
         fontSize: '20px',
@@ -293,14 +275,22 @@ class StreamView extends React.Component {
         ...styles.container,
         backgroundColor: '#fff',
         border: '1px solid #eee',
-        borderRadius: '4px'
+        borderRadius: '4px',
+        overflow: 'hidden'
+      }
+
+      styles.stream = {
+        height: 'calc(100% - 64px)',
+        overflowY: 'scroll'
       }
     }
 
     return (
       <div style={styles.container} className="stream-view">
         {this.renderHeader()}
-        {this.state.postViews}
+        <div ref={s => (this.streamContainer = s)} style={styles.stream}>
+          {this.state.postViews}
+        </div>
         {loading}
         {notFound}
       </div>

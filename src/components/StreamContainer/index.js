@@ -1,5 +1,6 @@
 import React from 'react'
 
+import reddit from '../../api/reddit'
 import StreamView from '../StreamView'
 
 export default class StreamContainer extends React.Component {
@@ -10,12 +11,25 @@ export default class StreamContainer extends React.Component {
 
     this.state = {
       subreddit: params.subreddit,
-      viewMode: 'column'
+      viewMode: 'column',
+      subreddits: []
     }
   }
 
-  render() {
+  componentDidMount() {
+    this.getStreams()
+  }
 
+  getStreams = () => {
+    reddit.getSubscribedSubreddits().then(list => {
+      const subreddits = list.map(subreddit => ({
+        name: subreddit.url.replace('/r/', '').slice(0, subreddit.url.length - 4)
+      }))
+      this.setState({ subreddits })
+    })
+  }
+
+  render() {
     const isColumn = this.state.viewMode === 'column' && (!this.state.subreddit || this.state.subreddit === '')
 
     let styles = {
@@ -41,18 +55,14 @@ export default class StreamContainer extends React.Component {
         marginRight: '10px'
       }
     }
-
+    
     return (
       <div style={styles.container}>
-        <StreamView style={styles.stream} isColumn={isColumn} subreddit={this.state.subreddit} />
-        <StreamView style={styles.stream} isColumn={isColumn} subreddit={this.state.subreddit} />
-        <StreamView style={styles.stream} isColumn={isColumn} subreddit={this.state.subreddit} />
-        <StreamView style={styles.stream} isColumn={isColumn} subreddit={this.state.subreddit} />
-        <StreamView style={styles.stream} isColumn={isColumn} subreddit={this.state.subreddit} />
-        <StreamView style={styles.stream} isColumn={isColumn} subreddit={this.state.subreddit} />
-        <StreamView style={styles.stream} isColumn={isColumn} subreddit={this.state.subreddit} />
-        <StreamView style={styles.stream} isColumn={isColumn} subreddit={this.state.subreddit} />
-        <StreamView style={styles.stream} isColumn={isColumn} subreddit={this.state.subreddit} />
+        {isColumn ? (
+          this.state.subreddits.map(subreddit => <StreamView key={subreddit.name} style={styles.stream} isColumn={isColumn} subreddit={subreddit.name} />)
+        ) : (
+          <StreamView style={styles.stream} isColumn={isColumn} subreddit={this.state.subreddit} />
+        )}
       </div>
     )
   }

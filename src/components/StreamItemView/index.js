@@ -155,6 +155,67 @@ class StreamItemView extends React.Component {
     return commentsView
   }
 
+  renderDetails = () => {
+    const post = this.props.post
+
+    if (this.props.inColumn) {
+      const styles = {
+        container: {
+          clear: 'both',
+          fontSize: '12px',
+          display: 'flex',
+          justifyContent: 'space-between',
+          width: '100%',
+          marginTop: '5px'
+        }
+      }
+      return (
+        <div style={styles.container} className="mini-details">
+          <Link to={'/user/' + post.get('author')} className="stream-item-author">
+            {post.get('author')}
+          </Link>
+          <span>{moment.unix(post.get('created_utc')).fromNow().replace(' ago', '')}</span>
+        </div>
+      )
+    } else {
+      return (
+        <div className="mini-details">
+          <Link to={'/user/' + post.get('author')} className="stream-item-author">
+            {post.get('author')}
+          </Link>
+          <span> posted in </span>
+          <Link to={'/r/' + post.get('subreddit')} className="stream-item-subreddit">
+            {'/r/' + post.get('subreddit')}
+          </Link>
+          <span> {moment.unix(post.get('created_utc')).fromNow()}</span>
+        </div>
+      )
+    }
+  }
+
+  renderThumbnail = () => {
+    if (this.props.inColumn) {
+      const post = this.props.post
+
+      const styles = {
+        thumbnail: {
+          float: 'left',
+          width: '50px',
+          height: '50px',
+          borderRadius: '4px',
+          border: '1px solid #fefefe',
+          backgroundImage: `url(${post.get('thumbnail')})`,
+          backgroundSize: 'cover',
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: '50% 50%',
+          marginRight: '5px',
+          marginBottom: '5px'
+        }
+      }
+      return <div style={styles.thumbnail} />
+    }
+  }
+
   render() {
     const post = this.props.post
 
@@ -182,11 +243,26 @@ class StreamItemView extends React.Component {
         borderRight: 'none',
         borderBottom: '1px solid #efefef'
       }
+
+      styles.voteContainer = {
+        ...styles.voteContainer,
+        width: '50px',
+        fontSize: '12px'
+      }
+
+      styles.title = {
+        fontSize: '14px'
+      }
+
+      styles.content = {
+        width: 'calc(100% - 50px)',
+        boxSizing: 'border-box'
+      }
     }
 
     if (this.state.hidden) {
       return (
-        <div style={styles.container} key={this.props.key} className="stream-item-view hidden" data-postid={post.get('id')}>
+        <div style={styles.container} className="stream-item-view hidden" data-postid={post.get('id')}>
           <div className="stream-item-top">
             <div style={styles.voteContainer} className="stream-item-sidebar">
               <span className="stream-item-vote-count">{post.get('score')}</span>
@@ -202,27 +278,19 @@ class StreamItemView extends React.Component {
     }
 
     return (
-      <div style={styles.container} key={this.props.key} className="stream-item-view" data-postid={post.get('id')}>
+      <div style={styles.container} className="stream-item-view" data-postid={post.get('id')}>
         <div className="stream-item-top">
           <div style={styles.voteContainer} className="stream-item-sidebar">
-            <VoteView key="vote" item={this.props.post} />
+            <VoteView item={this.props.post} />
           </div>
-          <div className="stream-item-content">
-            <a href={post.get('url')} target="_blank" className="stream-item-title">
+          <div style={styles.content} className="stream-item-content">
+            {this.renderThumbnail()}
+            <a style={styles.title} href={post.get('url')} target="_blank" className="stream-item-title">
               {Entities.decode(post.get('title'))}
             </a>
             <span className="stream-item-domain">({post.get('domain')})</span>
             {this.renderMedia()}
-            <div className="mini-details">
-              <Link to={'/user/' + post.get('author')} className="stream-item-author">
-                {post.get('author')}
-              </Link>
-              <span> posted in </span>
-              <Link to={'/r/' + post.get('subreddit')} className="stream-item-subreddit">
-                {'/r/' + post.get('subreddit')}
-              </Link>
-              <span> {moment.unix(post.get('created_utc')).fromNow()}</span>
-            </div>
+            {this.renderDetails()}
           </div>
         </div>
         {this.props.inColumn ? null : (
