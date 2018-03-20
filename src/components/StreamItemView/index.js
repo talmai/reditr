@@ -14,7 +14,8 @@ import MediaParserView from '../MediaParserView'
 
 class StreamItemView extends React.Component {
   static contextTypes = {
-    setViewerState: PropTypes.func
+    setViewerState: PropTypes.func,
+    router: PropTypes.object
   }
 
   static propTypes = {
@@ -216,6 +217,12 @@ class StreamItemView extends React.Component {
     }
   }
 
+  openInPostView = () => {
+    if (this.props.inColumn) {
+      this.context.router.history.push(this.props.post.get('permalink'))
+    }
+  }
+
   render() {
     const post = this.props.post
 
@@ -236,6 +243,7 @@ class StreamItemView extends React.Component {
     if (this.props.inColumn) {
       styles.container = {
         ...styles.container,
+        cursor: 'pointer',
         margin: 0,
         borderRadius: 0,
         borderTop: 'none',
@@ -262,7 +270,7 @@ class StreamItemView extends React.Component {
 
     if (this.state.hidden) {
       return (
-        <div style={styles.container} className="stream-item-view hidden" data-postid={post.get('id')}>
+        <div style={styles.container} onClick={this.openInPostView} className="stream-item-view hidden" data-postid={post.get('id')}>
           <div className="stream-item-top">
             <div style={styles.voteContainer} className="stream-item-sidebar">
               <span className="stream-item-vote-count">{post.get('score')}</span>
@@ -278,7 +286,7 @@ class StreamItemView extends React.Component {
     }
 
     return (
-      <div style={styles.container} className="stream-item-view" data-postid={post.get('id')}>
+      <div style={styles.container} onClick={this.openInPostView} className="stream-item-view" data-postid={post.get('id')}>
         <div className="stream-item-top">
           <div style={styles.voteContainer} className="stream-item-sidebar">
             <VoteView item={this.props.post} />
