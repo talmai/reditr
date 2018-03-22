@@ -1,5 +1,6 @@
 import React from 'react'
 import { render } from 'react-dom'
+import { prettyNumber } from '../../utilities/Common'
 
 import reddit from '../../api/reddit'
 import { prettyNumber } from '../../utilities/Common'
