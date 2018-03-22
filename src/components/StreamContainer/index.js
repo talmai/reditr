@@ -1,5 +1,6 @@
 import React from 'react'
 
+import Store from '../../utilities/Store'
 import reddit from '../../api/reddit'
 import StreamView from '../StreamView'
 
@@ -10,19 +11,28 @@ export default class StreamContainer extends React.Component {
     let params = (this.props.match && this.props.match.params) || {}
 
     this.state = {
-      subreddit: params.subreddit,
+      subreddit: params.subreddit || 'all',
       viewMode: 'column',
       subreddits: []
     }
   }
 
   componentDidMount() {
-    this.getStreams()
+    const state = Store.get('stream-container')
+    if (state) {
+      this.setState(state)
+    } else {
+      this.getStreams()
+    }
+  }
+
+  componentWillUnmount() {
+    Store.save('stream-container', this.state)
   }
 
   getStreams = () => {
     reddit.getSubscribedSubreddits().then(list => {
-      const subreddits = list.map(subreddit => ({
+      const subreddits = list.slice(0, 5).map(subreddit => ({
         name: subreddit.url.replace('/r/', '').slice(0, subreddit.url.length - 4)
       }))
       this.setState({ subreddits })
@@ -55,7 +65,7 @@ export default class StreamContainer extends React.Component {
         marginRight: '10px'
       }
     }
-    
+
     return (
       <div style={styles.container}>
         {isColumn ? (

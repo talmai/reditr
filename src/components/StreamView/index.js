@@ -7,6 +7,7 @@ import StreamItemView from '../StreamItemView'
 import StreamSpinnerView from '../StreamSpinnerView'
 import PostModel from '../../models/PostModel'
 import Observable from '../../utilities/Observable'
+import Store from '../../utilities/Store'
 
 class StreamView extends React.Component {
   static propTypes = {
@@ -31,6 +32,27 @@ class StreamView extends React.Component {
       subreddit: this.props.subreddit
     }
   }
+
+  componentWillUnmount() {
+    this.detachScrollListener()
+
+    Store.save(`stream-${this.props.subreddit}`, this.state)
+  }
+
+  componentDidMount() {
+    this.attachScrollListener()
+
+    const state = Store.get(`stream-${this.props.subreddit}`)
+    if (state) {
+      this.setState(state)
+    } else if (this.props.user) {
+      this.loadUser()
+    } else {
+      // load the posts
+      this.load(this.state.subreddit)
+    }
+  }
+
 
   /* Creates StreamItemView views from array of post objects from reddit (redditPosts) and
    * appends them to the (optional) array appendToArray. (optional) array of post
@@ -152,21 +174,6 @@ class StreamView extends React.Component {
   componentWillReceiveProps(props) {
     if (this.state.subreddit !== props.subreddit) {
       this.load(props.subreddit, { reset: true }) // loads new prop info
-    }
-  }
-
-  componentWillUnmount() {
-    this.detachScrollListener()
-  }
-
-  componentDidMount() {
-    this.attachScrollListener()
-
-    if (this.props.user) {
-      this.loadUser()
-    } else {
-      // load the posts
-      this.load(this.state.subreddit)
     }
   }
 
