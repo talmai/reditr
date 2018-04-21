@@ -1,6 +1,5 @@
 import React from 'react'
 
-import Store from '../../utilities/Store'
 import reddit from '../../api/reddit'
 import StreamView from '../StreamView'
 
@@ -11,37 +10,28 @@ export default class StreamContainer extends React.Component {
     let params = (this.props.match && this.props.match.params) || {}
 
     this.state = {
-      subreddit: params.subreddit || 'all',
+      subreddit: params.subreddit,
       viewMode: 'column',
       subreddits: []
     }
   }
 
   componentDidMount() {
-    const state = Store.get('stream-container')
-    if (state) {
-      this.setState(state)
-    } else {
-      this.getStreams()
-    }
-  }
-
-  componentWillUnmount() {
-    Store.save('stream-container', this.state)
+    this.getStreams()
   }
 
   getStreams = () => {
     reddit.getSubscribedSubreddits().then(list => {
-      const subreddits = list.slice(0, 5).map(subreddit => ({
+      const subreddits = list.map(subreddit => ({
         name: subreddit.url.replace('/r/', '').slice(0, subreddit.url.length - 4)
       }))
-      this.setState({ subreddits })
+      this.setState({ subreddits, subreddit: null })
     })
   }
 
   render() {
     const isColumn = this.state.viewMode === 'column' && (!this.state.subreddit || this.state.subreddit === '')
-
+    console.log(this.state.subreddit)
     let styles = {
       container: {
         display: 'flex',
@@ -54,7 +44,6 @@ export default class StreamContainer extends React.Component {
       styles.container = {
         ...styles.container,
         height: '100%',
-        padding: '10px',
         boxSizing: 'border-box'
       }
 
@@ -62,7 +51,7 @@ export default class StreamContainer extends React.Component {
         minWidth: '310px',
         maxHeight: '100%',
         marginTop: 0,
-        marginRight: '10px'
+        marginRight: '5px'
       }
     }
 
