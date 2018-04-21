@@ -271,7 +271,6 @@ class StreamView extends React.Component {
         ...styles.container,
         backgroundColor: '#fff',
         border: '1px solid #eee',
-        borderRadius: '4px',
         overflow: 'hidden'
       }
 
