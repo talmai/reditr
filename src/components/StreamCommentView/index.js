@@ -16,7 +16,7 @@ class StreamCommentView extends React.Component {
   render() {
     let comment = this.state.comment
     let body_html = decodeEntities(comment.get('body_html'))
-    if (!body_html) console.log(comment)
+    //if (!body_html) console.log(comment)
     // forces all links to open in new tab (faster than regex in newer versions of V8) http://jsperf.com/replace-all-vs-split-join
     let parsedHtml = body_html
       .split('<a ')

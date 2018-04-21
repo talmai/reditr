@@ -31,7 +31,7 @@ export default class StreamContainer extends React.Component {
 
   render() {
     const isColumn = this.state.viewMode === 'column' && (!this.state.subreddit || this.state.subreddit === '')
-    console.log(this.state.subreddit)
+   
     let styles = {
       container: {
         display: 'flex',

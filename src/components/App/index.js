@@ -47,14 +47,14 @@ export default class App extends React.Component {
     this.setState({ quickSwitchVisible: false })
   }
 
-  showQuickSwitcher() {
+  showQuickSwitcher = () => {
     this.setState({ quickSwitchVisible: !this.state.quickSwitchVisible })
   }
 
   componentDidMount() {
     Observable.global.on(this, 'requestQuickSwitcher', this.showQuickSwitcher)
     Observable.global.on(this, 'requestExitQuickSwitcher', this.closeQuickSwitcher)
-    Keystrokes.listen(['⌘e', '⌃e'], this.showQuickSwitcher.bind(this))
+    Keystrokes.listen(['⌘e', '⌃e'], this.showQuickSwitcher)
     Keystrokes.listen('⎋', event => {
       if (this.state.quickSwitchVisible) this.closeQuickSwitcher()
     })
@@ -73,8 +73,9 @@ export default class App extends React.Component {
   }
 
   render() {
-    var quickSwitch = this.state.quickSwitchVisible ? <QuickSwitchView onSubredditChanged={this.closeQuickSwitcher.bind(this)} /> : false
-    var curClass = this.classForAppView()
+    const quickSwitch = this.state.quickSwitchVisible ? <QuickSwitchView onSubredditChanged={this.closeQuickSwitcher.bind(this)} /> : false
+    console.log(quickSwitch)
+    const curClass = this.classForAppView()
     return (
       <Router>
         <div className={curClass}>

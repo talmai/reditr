@@ -22,13 +22,13 @@ class QuickSwitchView extends React.Component {
   }
 
   componentDidMount() {
-    this.refs['query-input'].focus()
+    this.queryInput.focus()
   }
 
   showSuggestedSubreddits() {
-    if (this.refs['query-input'].value == '') return
+    if (this.queryInput && this.queryInput.value == '') return
 
-    let query = this.refs['query-input'].value
+    let query = this.queryInput.value
     this.setState(
       {
         selectedSuggestionIndex: 0,
@@ -64,7 +64,7 @@ class QuickSwitchView extends React.Component {
       case 39: // right arrow
         // fill the input bar
         if (this.state.suggestedSubreddits.length > 0) {
-          this.refs['query-input'].value = this.state.suggestedSubreddits[
+          this.queryInput.value = this.state.suggestedSubreddits[
             this.state.selectedSuggestionIndex
           ].data.display_name
         }
@@ -85,7 +85,7 @@ class QuickSwitchView extends React.Component {
       // prevent out of bounds
       return
     } else {
-      let query = this.refs['query-input'].value
+      let query = this.queryInput.value
 
       this.setState(
         {
@@ -133,7 +133,7 @@ class QuickSwitchView extends React.Component {
     }, 500)
 
     if (e.keyCode == 13) {
-      let query = '/r/' + this.refs['query-input'].value
+      let query = '/r/' + this.queryInput.value
       if (this.state.suggestedSubreddits.length > 0) {
         query =
           '/r/' +
@@ -227,7 +227,7 @@ class QuickSwitchView extends React.Component {
           <div className="type">/r/</div>
           <input
             className="query-input"
-            ref="query-input"
+            ref={i => this.queryInput = i}
             onKeyDown={this.queryChanged.bind(this)}
           />
           {moreInfo}
