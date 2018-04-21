@@ -13,9 +13,14 @@ import { prettyNumber } from '../../utilities/Common'
 import MediaParserView from '../MediaParserView'
 
 class StreamItemView extends React.Component {
-
   static contextTypes = {
-    setViewerState: PropTypes.func
+    setViewerState: PropTypes.func,
+    router: PropTypes.object
+  }
+
+  static propTypes = {
+    post: PropTypes.object,
+    inColumn: PropTypes.bool
   }
 
   constructor(props) {
@@ -56,43 +61,33 @@ class StreamItemView extends React.Component {
 
     if (permalink) {
       // if permalink exists, proceed
-      reddit.getPostFromPermalink(
-        this.props.post.get('permalink'),
-        null,
-        (err, data) => {
-          let comments = data.body[1].data.children
-          let maxComments = Math.min(comments.length, 5)
-          var first, second
-          for (var i = 0; i < maxComments; i++) {
-            var checking = comments[i]
-            if (checking.data.body == '[removed]') continue
-            if (!first) {
-              first = checking
-            } else if (!second) {
-              second = checking
-            } else {
-              var newFirst =
-                first.data.body.length < second.data.body.length
-                  ? first
-                  : second
-              var rejected = newFirst == first ? second : first
-              first = newFirst
-              second =
-                rejected.data.body.length < checking.data.body.length
-                  ? rejected
-                  : checking
-            }
+      reddit.getPostFromPermalink(this.props.post.get('permalink'), null, (err, data) => {
+        let comments = data.body[1].data.children
+        let maxComments = Math.min(comments.length, 5)
+        var first, second
+        for (var i = 0; i < maxComments; i++) {
+          var checking = comments[i]
+          if (checking.data.body == '[removed]') continue
+          if (!first) {
+            first = checking
+          } else if (!second) {
+            second = checking
+          } else {
+            var newFirst = first.data.body.length < second.data.body.length ? first : second
+            var rejected = newFirst == first ? second : first
+            first = newFirst
+            second = rejected.data.body.length < checking.data.body.length ? rejected : checking
           }
-          var topComments = []
-          if (first) topComments.push(first)
-          if (second) topComments.push(second)
-          this.setState({
-            isLoading: false,
-            topComments: topComments,
-            comments: comments
-          })
         }
-      )
+        var topComments = []
+        if (first) topComments.push(first)
+        if (second) topComments.push(second)
+        this.setState({
+          isLoading: false,
+          topComments: topComments,
+          comments: comments
+        })
+      })
     } else {
       this.setState({ isLoading: false, topComments: [] })
     }
@@ -112,41 +107,30 @@ class StreamItemView extends React.Component {
     this.setState({ hidden: false })
   }
 
-  render() {
-    let post = this.props.post
+  renderMedia = () => {
+    const post = this.props.post
 
-    // WARN: if it is a comment, ignore for now
-    if (post.kind == 't1') {
-      return false
-    }
-    let style = this.state.height ? { minHeight: this.state.height } : {}
-    if (this.state.hidden) {
-      return (
-        <div
-          style={style}
-          key={this.props.key}
-          className="stream-item-view hidden"
-          data-postid={post.get('id')}>
-          <div className="stream-item-top">
-            <div className="stream-item-sidebar">
-              <span className="stream-item-vote-count">
-                {post.get('score')}
-              </span>
-            </div>
-            <div className="stream-item-content">
-              <a
-                href={post.get('url')}
-                target="_blank"
-                className="stream-item-title">
-                {Entities.decode(post.get('title'))}
-              </a>
-            </div>
+    let postMedia = false
+    if (!this.props.inColumn) {
+      if (post.get('over_18') && !this.state.showNSFW) {
+        postMedia = (
+          <div onClick={this.enableNSFW.bind(this)} className="nsfw-btn">
+            Show NSFW Content
           </div>
-        </div>
-      )
+        )
+      } else if (this.state.hidden) {
+        postMedia = false
+      } else {
+        postMedia = <MediaParserView onClick={url => this.context.setViewerState(url)} url={post.get('url')} post={post} />
+      }
     }
 
-    let topComments = this.state.topComments
+    return postMedia
+  }
+
+  renderTopComments = () => {
+    const post = this.props.post
+    const topComments = this.state.topComments
     let commentsView = []
 
     // if no comments, say no comments
@@ -157,79 +141,169 @@ class StreamItemView extends React.Component {
       topComments.forEach(comment => {
         commentCount--
         let commentObj = new CommentModel(comment)
-        commentsView.push(
-          <StreamCommentView key={commentObj.get('id')} comment={commentObj} />
-        )
+        commentsView.push(<StreamCommentView key={commentObj.get('id')} comment={commentObj} />)
       })
       if (this.state.comments.length > 2) {
         commentCount = commentCount <= 0 ? '' : prettyNumber(commentCount)
         commentsView.push(
-          <Link
-            key="more"
-            text={Entities.decode(post.get('title'))}
-            to={post.get('permalink')}
-            className="view-more-comments">
+          <Link key="more" text={Entities.decode(post.get('title'))} to={post.get('permalink')} className="view-more-comments">
             <div className="icon">{commentCount} More Comments</div>
           </Link>
         )
       }
     }
 
-    let postMedia = false
-    if (post.get('over_18') && !this.state.showNSFW) {
-      postMedia = (
-        <div onClick={this.enableNSFW.bind(this)} className="nsfw-btn">
-          Show NSFW Content
+    return commentsView
+  }
+
+  renderDetails = () => {
+    const post = this.props.post
+
+    if (this.props.inColumn) {
+      const styles = {
+        container: {
+          clear: 'both',
+          fontSize: '12px',
+          display: 'flex',
+          justifyContent: 'space-between',
+          width: '100%',
+          marginTop: '5px'
+        }
+      }
+      return (
+        <div style={styles.container} className="mini-details">
+          <Link to={'/user/' + post.get('author')} className="stream-item-author">
+            {post.get('author')}
+          </Link>
+          <span>{moment.unix(post.get('created_utc')).fromNow().replace(' ago', '')}</span>
         </div>
       )
-    } else if (this.state.hidden) {
-      postMedia = false
     } else {
-      postMedia = <MediaParserView onClick={url => this.context.setViewerState(url)} url={post.get('url')} post={post} />
+      return (
+        <div className="mini-details">
+          <Link to={'/user/' + post.get('author')} className="stream-item-author">
+            {post.get('author')}
+          </Link>
+          <span> posted in </span>
+          <Link to={'/r/' + post.get('subreddit')} className="stream-item-subreddit">
+            {'/r/' + post.get('subreddit')}
+          </Link>
+          <span> {moment.unix(post.get('created_utc')).fromNow()}</span>
+        </div>
+      )
+    }
+  }
+
+  renderThumbnail = () => {
+    if (this.props.inColumn) {
+      const post = this.props.post
+
+      const styles = {
+        thumbnail: {
+          float: 'left',
+          width: '50px',
+          height: '50px',
+          borderRadius: '4px',
+          border: '1px solid #fefefe',
+          backgroundImage: `url(${post.get('thumbnail')})`,
+          backgroundSize: 'cover',
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: '50% 50%',
+          marginRight: '5px',
+          marginBottom: '5px'
+        }
+      }
+      return <div style={styles.thumbnail} />
+    }
+  }
+
+  openInPostView = () => {
+    if (this.props.inColumn) {
+      this.context.router.history.push(this.props.post.get('permalink'))
+    }
+  }
+
+  render() {
+    const post = this.props.post
+
+    // WARN: if it is a comment, ignore for now
+    if (post.kind == 't1') {
+      return false
     }
 
-    return (
-      <div
-        style={style}
-        key={this.props.key}
-        className="stream-item-view"
-        data-postid={post.get('id')}>
-        <div className="stream-item-top">
-          <div className="stream-item-sidebar">
-            <VoteView key="vote" item={this.props.post} />
-          </div>
-          <div className="stream-item-content">
-            <a
-              href={post.get('url')}
-              target="_blank"
-              className="stream-item-title">
-              {Entities.decode(post.get('title'))}
-            </a>
-            <span className="stream-item-domain">({post.get('domain')})</span>
-            {postMedia}
-            <div className="mini-details">
-              <Link
-                to={'/user/' + post.get('author')}
-                className="stream-item-author">
-                {post.get('author')}
-              </Link>
-              <span> posted in </span>
-              <Link
-                to={'/r/' + post.get('subreddit')}
-                className="stream-item-subreddit">
-                {'/r/' + post.get('subreddit')}
-              </Link>
-              <span> {moment.unix(post.get('created_utc')).fromNow()}</span>
+    let styles = {
+      container: {
+        minHeight: this.state.height || 'auto'
+      },
+      voteContainer: {
+        borderLeft: '1px solid #efefef'
+      }
+    }
+
+    if (this.props.inColumn) {
+      styles.container = {
+        ...styles.container,
+        cursor: 'pointer',
+        margin: 0,
+        borderRadius: 0,
+        borderTop: 'none',
+        borderLeft: 'none',
+        borderRight: 'none',
+        borderBottom: '1px solid #efefef'
+      }
+
+      styles.voteContainer = {
+        ...styles.voteContainer,
+        width: '50px',
+        fontSize: '12px'
+      }
+
+      styles.title = {
+        fontSize: '14px'
+      }
+
+      styles.content = {
+        width: 'calc(100% - 50px)',
+        boxSizing: 'border-box'
+      }
+    }
+
+    if (this.state.hidden) {
+      return (
+        <div style={styles.container} onClick={this.openInPostView} className="stream-item-view hidden" data-postid={post.get('id')}>
+          <div className="stream-item-top">
+            <div style={styles.voteContainer} className="stream-item-sidebar">
+              <span className="stream-item-vote-count">{post.get('score')}</span>
+            </div>
+            <div className="stream-item-content">
+              <a href={post.get('url')} target="_blank" className="stream-item-title">
+                {Entities.decode(post.get('title'))}
+              </a>
             </div>
           </div>
         </div>
-        <div className="stream-item-comments">
-          {this.state.isLoading ? (
-            <div className="loading">Loading...</div>
-          ) : (
-            commentsView
-          )}
+      )
+    }
+
+    return (
+      <div style={styles.container} onClick={this.openInPostView} className="stream-item-view" data-postid={post.get('id')}>
+        <div className="stream-item-top">
+          <div style={styles.voteContainer} className="stream-item-sidebar">
+            <VoteView item={this.props.post} />
+          </div>
+          <div style={styles.content} className="stream-item-content">
+            {this.renderThumbnail()}
+            <a style={styles.title} href={post.get('url')} target="_blank" className="stream-item-title">
+              {Entities.decode(post.get('title'))}
+            </a>
+            <span className="stream-item-domain">({post.get('domain')})</span>
+            {this.renderMedia()}
+            {this.renderDetails()}
+          </div>
         </div>
+        {this.props.inColumn ? null : (
+          <div className="stream-item-comments">{this.state.isLoading ? <div className="loading">Loading...</div> : this.renderTopComments()}</div>
+        )}
       </div>
     )
   }

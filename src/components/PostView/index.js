@@ -75,7 +75,7 @@ class PostView extends React.Component {
         border: '1px solid #ddd',
         borderRadius: '5px',
         maxWidth: '900px',
-        margin: '20px auto'
+        margin: '10px',
       }
     }
 

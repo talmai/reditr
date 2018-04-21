@@ -7,7 +7,7 @@ import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom'
 import history from '../../utilities/History'
 import HeaderView from '../HeaderView'
 import QuickSwitchView from '../QuickSwitchView'
-import StreamView from '../StreamView'
+import StreamContainer from '../StreamContainer'
 import PostView from '../PostView'
 import LeftSidebarView from '../LeftSidebarView'
 import Keystrokes from '../../utilities/Keystrokes'
@@ -25,7 +25,7 @@ export default class App extends React.Component {
 
   constructor(props) {
     super(props)
-    this.state = { quickSwitchVisible: false, viewerVisible: false, url: null }
+    this.state = { quickSwitchVisible: false, viewerVisible: false, url: null, viewMode: 'column' }
   }
 
   getChildContext() {
@@ -53,11 +53,7 @@ export default class App extends React.Component {
 
   componentDidMount() {
     Observable.global.on(this, 'requestQuickSwitcher', this.showQuickSwitcher)
-    Observable.global.on(
-      this,
-      'requestExitQuickSwitcher',
-      this.closeQuickSwitcher
-    )
+    Observable.global.on(this, 'requestExitQuickSwitcher', this.closeQuickSwitcher)
     Keystrokes.listen(['⌘e', '⌃e'], this.showQuickSwitcher.bind(this))
     Keystrokes.listen('⎋', event => {
       if (this.state.quickSwitchVisible) this.closeQuickSwitcher()
@@ -77,13 +73,7 @@ export default class App extends React.Component {
   }
 
   render() {
-    var quickSwitch = this.state.quickSwitchVisible ? (
-      <QuickSwitchView
-        onSubredditChanged={this.closeQuickSwitcher.bind(this)}
-      />
-    ) : (
-      false
-    )
+    var quickSwitch = this.state.quickSwitchVisible ? <QuickSwitchView onSubredditChanged={this.closeQuickSwitcher.bind(this)} /> : false
     var curClass = this.classForAppView()
     return (
       <Router>
@@ -92,21 +82,13 @@ export default class App extends React.Component {
           <LeftSidebarView />
           <MainContainer>
             <Switch>
-              <Route exact path="/" component={StreamView} />
-              <Route exact path="/r/:subreddit" component={StreamView} />
-              <Route exact path="/r/:subreddit/:sort" component={StreamView} />
-              <Route
-                exact
-                path="/r/:subreddit/comments/:id/"
-                component={PostView}
-              />
-              <Route
-                exact
-                path="/r/:subreddit/comments/:id/:title/"
-                component={PostView}
-              />
-              <Route exact path="/u/:user" component={StreamView} />
-              <Route exact path="/user/:user" component={StreamView} />
+              <Route exact path="/" component={StreamContainer} />
+              <Route exact path="/r/:subreddit" component={StreamContainer} />
+              <Route exact path="/r/:subreddit/:sort" component={StreamContainer} />
+              <Route exact path="/r/:subreddit/comments/:id/" component={PostView} />
+              <Route exact path="/r/:subreddit/comments/:id/:title/" component={PostView} />
+              <Route exact path="/u/:user" component={StreamContainer} />
+              <Route exact path="/user/:user" component={StreamContainer} />
             </Switch>
           </MainContainer>
           {quickSwitch}
