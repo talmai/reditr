@@ -2462,7 +2462,6 @@ body {
   cursor: pointer;
   box-sizing: border-box;
   padding: 10px;
-  border-left: 1px solid #242424;
 }
 #HeaderView .header-view-right .button:hover {
   background-color: #545454;
