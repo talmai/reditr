@@ -7,7 +7,6 @@ import CommentModel from '../../models/CommentModel'
 import VoteView from '../VoteView'
 
 class PostCommentView extends React.Component {
-
   static style() {
     return {
       postAuthor: {
@@ -44,9 +43,7 @@ class PostCommentView extends React.Component {
       replies.forEach(comment => {
         if (comment.kind != 'more') {
           let commentObj = new CommentModel(comment)
-          replyViews.push(
-            <PostCommentView key={commentObj.get('id')} comment={commentObj} />
-          )
+          replyViews.push(<PostCommentView key={commentObj.get('id')} comment={commentObj} />)
         }
       })
 
@@ -78,9 +75,15 @@ class PostCommentView extends React.Component {
           padding: '30px 0',
           fontSize: '14px',
           boxSizing: 'border-box'
+        },
+        postAuthor: {
+          position: 'absolute',
+          top: '10px',
+          left: '60px',
+          color: '#aeaeae'
         }
       }
-
+      console.log(this.props.classes)
       return (
         <div style={styles.container} key={this.props.key} className="post-comment">
           <div style={styles.voteBackground} />
@@ -91,17 +94,16 @@ class PostCommentView extends React.Component {
             {/*
             WARNING: Last resort using dangerouslySetInnerHTML, decoding html entities with every solution that could be found online did not help
             */}
-            <div
-              style={styles.commentBody}
-              className="post-comment-body"
-              dangerouslySetInnerHTML={{ __html: parsedHtml }}
-            />
+            <div style={styles.commentBody} className="post-comment-body" dangerouslySetInnerHTML={{ __html: parsedHtml }} />
           </div>
-          <Link className={this.props.classes.postAuthor} to={`/u/${comment.get('author')}`}>{comment.get('author')}</Link>
+          <Link style={styles.postAuthor} to={`/u/${comment.get('author')}`}>
+            {comment.get('author')}
+          </Link>
           <div className="post-comment-children">{replyViews}</div>
         </div>
       )
     } catch (e) {
+      console.log(e)
       return false
     }
   }
