@@ -39,6 +39,9 @@ const LeftSidebarView = style(class extends React.Component {
     Observable.global.removeAll(this)
   }
 
+  componentWillReceiveProps(newProps) {
+  }
+
   userDidChange() {
     reddit.getSubscribedSubreddits().then(list => {
       const subreddits = list.map(subreddit => ({
@@ -51,12 +54,14 @@ const LeftSidebarView = style(class extends React.Component {
   }
 
   render() {
+    if (this.props.hidden) return null
     return (
       <div className={this.props.classes.root}>
         <SubredditListView subreddits={this.state.subreddits} />
       </div>
     )
   }
+
 })
 
 export default LeftSidebarView

@@ -5,6 +5,7 @@ import Observable from '../../utilities/Observable'
 import history from '../../utilities/History'
 import AccountHeader from '../AccountHeader'
 import logo from '../../images/logo.png'
+import style from '../../utilities/Style'
 
 class Logo extends React.Component {
   render() {
@@ -12,7 +13,8 @@ class Logo extends React.Component {
   }
 }
 
-export default class HeaderView extends React.Component {
+const HeaderView = style(class extends React.Component {
+
   constructor(props) {
     super(props)
     this.state = { history: [], future: [] }
@@ -109,10 +111,37 @@ export default class HeaderView extends React.Component {
 
     return (
       <div id="HeaderView">
-        <div className="header-view-left">{leftObj}</div>
+        <div className="header-view-left">
+          <div className={this.props.classes.menu} onClick={this.props.menuPressed} />
+          {leftObj}
+        </div>
         <div className="header-view-center">{centerObj}</div>
         <div className="header-view-right">{rightObj}</div>
       </div>
     )
   }
-}
+
+
+  static style() {
+    return {
+      menu: {
+        width: '50px',
+        height: '100%',
+        backgroundImage: 'url(hamburger.png)',
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center',
+        backgroundSize: '45% auto',
+        display: 'inline-block',
+        float: 'left',
+        marginRight: '5px',
+        '&:hover': {
+          cursor: 'pointer',
+          backgroundColor: 'rgba(0, 0, 0, 0.1)',
+        },
+      }
+    }
+  }
+
+})
+
+export default HeaderView
