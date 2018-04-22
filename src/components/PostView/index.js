@@ -10,6 +10,7 @@ import CommentModel from '../../models/CommentModel'
 import Observable from '../../utilities/Observable'
 import StreamSpinnerView from '../StreamSpinnerView'
 import VoteView from '../VoteView'
+import StreamView from '../StreamView'
 
 class PostView extends React.Component {
   static contextTypes = {
@@ -18,8 +19,8 @@ class PostView extends React.Component {
 
   constructor(props) {
     super(props)
-
     this.state = {
+      subreddit: props.match.params.subreddit,
       post: null,
       comments: [],
       isLoading: true
@@ -62,43 +63,51 @@ class PostView extends React.Component {
     comments.forEach(comment => {
       if (comment.kind != 'more') {
         let commentObj = new CommentModel(comment)
-        commentViews.push(
-          <PostCommentView key={commentObj.get('id')} comment={commentObj} />
-        )
+        commentViews.push(<PostCommentView key={commentObj.get('id')} comment={commentObj} />)
       }
     })
 
     const styles = {
+      container: {
+        display: 'flex',
+        height: '100%',
+        width: '100%',
+        overflow: 'hidden'
+      },
       post: {
         position: 'relative',
         backgroundColor: 'white',
-        border: '1px solid #ddd',
-        borderRadius: '5px',
-        maxWidth: '900px',
-        margin: '10px',
+        border: '1px solid #eee',
+        height: '100%',
+        overflowX: 'hidden',
+        overflowY: 'scroll'
+      },
+      stream: {
+        width: '280px',
+        flexShrink: 0,
+        height: '100%'
       }
     }
 
     return (
-      <div style={styles.post} className="post-view">
-        <div className="post-content">
-          <div className="post-vote">
-            <VoteView key="vote" item={post} />
+      <div style={styles.container}>
+        <StreamView style={styles.stream} isColumn={true} subreddit={this.state.subreddit} />
+        <div style={styles.post} className="post-view">
+          <div className="post-content">
+            <div className="post-vote">
+              <VoteView key="vote" item={post} />
+            </div>
+            <a href={post.get('url')} target="_blank" className="post-title">
+              {post.get('title')}
+            </a>
+            <Link className="post-author" to={`/u/${post.get('author')}`}>
+              {post.get('author')}
+            </Link>
+            <MediaParserView onClick={url => this.context.setViewerState(url)} url={post.get('url')} post={post} />
           </div>
-          <a href={post.get('url')} target="_blank" className="post-title">
-            {post.get('title')}
-          </a>
-          <Link className="post-author" to={`/u/${post.get('author')}`}>
-            {post.get('author')}
-          </Link>
-          <MediaParserView
-            onClick={url => this.context.setViewerState(url)}
-            url={post.get('url')}
-            post={post}
-          />
+          <div className="post-separator" />
+          <div className="post-comments">{commentViews}</div>
         </div>
-        <div className="post-separator" />
-        <div className="post-comments">{commentViews}</div>
       </div>
     )
   }
