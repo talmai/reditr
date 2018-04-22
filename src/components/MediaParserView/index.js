@@ -9,13 +9,17 @@ import GalleryView from '../GalleryView'
 import TweetView from '../TweetView'
 
 class MediaParserView extends React.Component {
-
   static propTypes = {
-    onClick: PropTypes.func
+    onClick: PropTypes.func,
+    post: PropTypes.object,
+    style: PropTypes.object,
+    onRender: PropTypes.func,
+    className: PropTypes.string
   }
 
   static defaultProps = {
-    onClick() {}
+    onClick() {},
+    onRender() {}
   }
 
   constructor(props) {
@@ -34,9 +38,12 @@ class MediaParserView extends React.Component {
     // is this a self post?
     if (this.props.post.get('selftext_html')) {
       MediaParser.parseText(this.props.post.get('selftext_html'), media => {
-        this.setState({
-          media: media
-        })
+        this.setState(
+          {
+            media: media
+          },
+          this.props.onRender
+        )
       })
     } else {
       MediaParser.parse(this.props.url, media => {
@@ -55,11 +62,13 @@ class MediaParserView extends React.Component {
   render() {
     const styles = {
       image: {
-        cursor: 'zoom-in'
+        cursor: 'zoom-in',
+        ...this.props.style
       },
       article: {
         display: 'flex',
-        alignItems: 'left'
+        alignItems: 'left',
+        ...this.props.style
       },
       articleImage: {
         maxWidth: '250px'
@@ -72,23 +81,19 @@ class MediaParserView extends React.Component {
 
     switch (this.state.media.type) {
       case 'image': // simply return image tag
-        return <img onClick={() => this.props.onClick(this.state.media.parsedUrl)} style={styles.image} src={this.state.media.parsedUrl} className="media" />
+        return <img onLoad={this.props.onRender} onClick={() => this.props.onClick(this.state.media.parsedUrl)} style={styles.image} src={this.state.media.parsedUrl} className={`media ${this.props.className}`} />
         break
       case 'supported-video':
-        return <ReactPlayer className="media" url={this.state.media.url} />
+        return <ReactPlayer onReady={this.props.onRender} className={`media ${this.props.className}`} url={this.state.media.url} />
         break
       case 'custom-video':
         let sources = []
         if (Array.isArray(this.state.media.parsedUrl)) {
           this.state.media.parsedUrl.forEach((media, index) => {
-            sources.push(
-              <source key={index} type={media.mime} src={media.url} />
-            )
+            sources.push(<source key={index} type={media.mime} src={media.url} />)
           })
         } else {
-          sources = (
-            <source type="video/webm" src={this.state.media.parsedUrl} />
-          )
+          sources = <source type="video/webm" src={this.state.media.parsedUrl} />
         }
 
         return (
@@ -103,15 +108,15 @@ class MediaParserView extends React.Component {
       case 'text':
         if (this.state.media.parsedText.length == 0) return false
         return (
-          <div style={styles.article} className="media text">
-            <p style={styles.articleText} dangerouslySetInnerHTML={{__html: this.state.media.parsedText}} />
+          <div style={styles.article} className={`media text ${this.props.className}`}>
+            <p style={styles.articleText} dangerouslySetInnerHTML={{ __html: this.state.media.parsedText }} />
           </div>
         )
         break
       case 'article':
         if (this.state.media.parsedText.length == 0) return false
         return (
-          <div style={styles.article} className="media text">
+          <div style={styles.article} className={`media text ${this.props.className}`}>
             <img style={styles.articleImage} src={this.state.media.parsedImage} />
             <p style={styles.articleText}>{this.state.media.parsedText}</p>
           </div>

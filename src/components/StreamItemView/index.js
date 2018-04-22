@@ -3,6 +3,7 @@ import moment from 'moment'
 import { AllHtmlEntities as Entities } from 'html-entities'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
+import { debounce } from 'lodash'
 
 import style from '../../utilities/Style'
 import reddit from '../../api/reddit'
@@ -20,7 +21,14 @@ class StreamItemView extends React.Component {
 
   static propTypes = {
     post: PropTypes.object,
-    inColumn: PropTypes.bool
+    inColumn: PropTypes.bool,
+    onHoverEnter: PropTypes.func,
+    onHoverLeave: PropTypes.func
+  }
+
+  static defaultProps = {
+    onHoverEnter() {},
+    onHoverLeave() {}
   }
 
   static style() {
@@ -75,6 +83,19 @@ class StreamItemView extends React.Component {
 
   componentDidMount() {
     this.loadComments()
+  }
+
+  didHover = (post, target) => () => {
+    this.props.onHoverEnter(post, target)
+  }
+
+  onMouseEnter = e => {
+    e.persist()
+    debounce(this.didHover(this.props.post, e.currentTarget), 500)()
+  }
+
+  onMouseLeave = e => {
+    this.props.onHoverLeave(this.props.post)
   }
 
   loadComments() {
@@ -322,7 +343,13 @@ class StreamItemView extends React.Component {
     }
 
     return (
-      <div style={styles.container} onClick={this.openInPostView} className="stream-item-view" data-postid={post.get('id')}>
+      <div
+        style={styles.container}
+        onMouseEnter={this.onMouseEnter}
+        onMouseLeave={this.onMouseLeave}
+        onClick={this.openInPostView}
+        className="stream-item-view"
+        data-postid={post.get('id')}>
         <div className="stream-item-top">
           <div style={styles.voteContainer} className="stream-item-sidebar">
             <VoteView item={this.props.post} />
