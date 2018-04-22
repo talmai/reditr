@@ -33,6 +33,9 @@ class PostView extends React.Component {
       },
       voteContainer: {
         width: '40px'
+      },
+      postView: {
+        flexGrow: 1
       }
     }
   }
@@ -115,7 +118,7 @@ class PostView extends React.Component {
     return (
       <div className={this.props.classes.container}>
         <StreamView className={this.props.classes.stream} isColumn={true} subreddit={this.state.subreddit} />
-        <div style={styles.post} className="post-view">
+        <div style={styles.post} className={`post-view ${this.props.classes.postView}`}>
           <div className="post-content">
             <div className={`post-vote ${this.props.classes.voteContainer}`}>
               <VoteView key="vote" item={post} />
