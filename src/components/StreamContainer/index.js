@@ -25,18 +25,22 @@ export default class StreamContainer extends React.Component {
       const subreddits = list.map(subreddit => ({
         name: subreddit.url.replace('/r/', '').slice(0, subreddit.url.length - 4)
       }))
-      this.setState({ subreddits, subreddit: null })
+      this.setState({ subreddits })
     })
   }
 
   render() {
-    const isColumn = this.state.viewMode === 'column' && (!this.state.subreddit || this.state.subreddit === '')
+    const isColumn = this.state.viewMode === 'column' && !this.state.subreddit
    
     let styles = {
       container: {
         display: 'flex',
         overflowY: 'hidden',
         overflowX: 'scroll'
+      },
+      stream: {
+        maxWidth: '900px',
+        margin: '20px auto'
       }
     }
 
