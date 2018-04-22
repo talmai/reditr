@@ -1,3 +1,7 @@
+div {
+-ms-overflow-style: none;
+}
+
 /*!
  *  Font Awesome 4.7.0 by @davegandy - http://fontawesome.io - @fontawesome
  *  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
@@ -2438,7 +2442,6 @@ body {
 }
 #HeaderView .header-view-left {
   left: 0;
-  padding-left: 10px;
 }
 #HeaderView .header-view-left .header-view-text {
   color: #c9c9c9;

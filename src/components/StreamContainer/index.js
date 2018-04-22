@@ -3,29 +3,50 @@ import React from 'react'
 import reddit from '../../api/reddit'
 import StreamView from '../StreamView'
 
+const makeSubredditHash = (subreddits) => {
+  const hash = []
+  for (let i in subreddits) {
+    hash.push(subreddits[i].name)
+  }
+  return hash.join(':')
+}
+
 export default class StreamContainer extends React.Component {
+
+  subredditsHash: ''
+
   constructor(props) {
     super(props)
-
     let params = (this.props.match && this.props.match.params) || {}
-
     this.state = {
       subreddit: params.subreddit,
       viewMode: 'column',
       subreddits: []
     }
+
   }
 
   componentDidMount() {
     this.getStreams()
   }
-  
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if (nextState.subreddit != this.state.subreddit) return true
+    if (nextState.viewMode != this.state.viewMode) return true
+    if (this.subredditsHash != makeSubredditHash(nextState.subreddits || [])) return true
+    return false
+  }
+
   componentWillReceiveProps(props, nextProps) {
     if (props.match.params.subreddit !== this.state.subreddit) {
       this.setState({
         subreddit: props.match.params.subreddit
       })
     }
+  }
+
+  componentDidUpdate() {
+    this.subredditsHash = makeSubredditHash(this.state.subreddits || [])
   }
 
   getStreams = () => {

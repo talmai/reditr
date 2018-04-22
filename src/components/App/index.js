@@ -25,7 +25,14 @@ export default class App extends React.Component {
 
   constructor(props) {
     super(props)
-    this.state = { quickSwitchVisible: false, viewerVisible: false, url: null, viewMode: 'column' }
+    this.state = {
+      quickSwitchVisible: false,
+      leftSidebarVisible: true,
+      viewerVisible: false,
+      url: null,
+      viewMode: 'column'
+    }
+    this.menuPressed = this.menuPressed.bind(this)
   }
 
   getChildContext() {
@@ -72,14 +79,18 @@ export default class App extends React.Component {
     return curClass
   }
 
+  menuPressed() {
+    this.setState({ leftSidebarVisible: !this.state.leftSidebarVisible })
+  }
+
   render() {
     const quickSwitch = this.state.quickSwitchVisible && <QuickSwitchView onSubredditChanged={this.closeQuickSwitcher.bind(this)} />
     const curClass = this.classForAppView()
     return (
       <Router>
         <div className={curClass}>
-          <HeaderView />
-          <LeftSidebarView />
+          <HeaderView menuPressed={this.menuPressed} />
+          <LeftSidebarView hidden={!this.state.leftSidebarVisible} />
           <MainContainer>
             <Switch>
               <Route exact path="/" component={StreamContainer} />
