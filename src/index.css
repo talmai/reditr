@@ -2615,12 +2615,6 @@ body {
   margin-bottom: 10px;
   margin-right: 10px;
 }
-.post-view .post-comments .post-comment .post-comment-author {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  color: #aeaeae;
-}
 .post-view .post-comments .post-comment .post-comment-body {
   padding-top: 6px;
   display: block;

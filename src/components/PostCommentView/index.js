@@ -1,11 +1,24 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
+import style from '../../utilities/Style'
 import { decodeEntities } from '../../utilities/Common'
 import CommentModel from '../../models/CommentModel'
 import VoteView from '../VoteView'
 
 class PostCommentView extends React.Component {
+
+  static style() {
+    return {
+      postAuthor: {
+        position: 'absolute',
+        top: '10px',
+        left: '60px',
+        color: '#aeaeae'
+      }
+    }
+  }
+
   constructor(props) {
     super(props)
 
@@ -84,7 +97,7 @@ class PostCommentView extends React.Component {
               dangerouslySetInnerHTML={{ __html: parsedHtml }}
             />
           </div>
-          <Link className="post-comment-author" to={`/u/${comment.get('author')}`}>{comment.get('author')}</Link>
+          <Link className={this.props.classes.postAuthor} to={`/u/${comment.get('author')}`}>{comment.get('author')}</Link>
           <div className="post-comment-children">{replyViews}</div>
         </div>
       )
@@ -94,4 +107,4 @@ class PostCommentView extends React.Component {
   }
 }
 
-export default PostCommentView
+export default style(PostCommentView)
