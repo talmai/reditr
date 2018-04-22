@@ -46,22 +46,15 @@ class MediaParserView extends React.Component {
       })
     } else {
       MediaParser.parse(this.props.url, media => {
-        this.setState(
-          {
-            media: media
-          },
-          this.props.onRender
-        )
+        this.setState({
+          media: media
+        })
       })
     }
   }
 
   componentDidMount() {
     // parse the url
-    this.parseMedia()
-  }
-
-  componentWillReceiveProps(props) {
     this.parseMedia()
   }
 
@@ -87,10 +80,10 @@ class MediaParserView extends React.Component {
 
     switch (this.state.media.type) {
       case 'image': // simply return image tag
-        return <img onClick={() => this.props.onClick(this.state.media.parsedUrl)} style={styles.image} src={this.state.media.parsedUrl} className="media" />
+        return <img onLoad={this.props.onRender} onClick={() => this.props.onClick(this.state.media.parsedUrl)} style={styles.image} src={this.state.media.parsedUrl} className="media" />
         break
       case 'supported-video':
-        return <ReactPlayer className="media" url={this.state.media.url} />
+        return <ReactPlayer onReady={this.props.onRender} className="media" url={this.state.media.url} />
         break
       case 'custom-video':
         let sources = []
