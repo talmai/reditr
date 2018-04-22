@@ -1,10 +1,10 @@
 import React from 'react'
-import { render } from 'react-dom'
 import moment from 'moment'
 import { AllHtmlEntities as Entities } from 'html-entities'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 
+import style from '../../utilities/Style'
 import reddit from '../../api/reddit'
 import CommentModel from '../../models/CommentModel'
 import StreamCommentView from '../StreamCommentView'
@@ -21,6 +21,27 @@ class StreamItemView extends React.Component {
   static propTypes = {
     post: PropTypes.object,
     inColumn: PropTypes.bool
+  }
+
+  static style() {
+    const streamTitle = {
+      fontWeight: 'bold',
+      color: '#333',
+      textDecoration: 'none',
+      fontSize: '14px'
+    }
+    const streamTitleLink = {
+      ...streamTitle,
+      '&:hover': {
+        color: 'black',
+        textDecoration: 'underline'
+      }
+    }
+
+    return {
+      streamTitle,
+      streamTitleLink
+    }
   }
 
   constructor(props) {
@@ -107,6 +128,12 @@ class StreamItemView extends React.Component {
     this.setState({ hidden: false })
   }
 
+  openInPostView = () => {
+    if (this.props.inColumn) {
+      this.context.router.history.push(this.props.post.get('permalink'))
+    }
+  }
+
   renderMedia = () => {
     const post = this.props.post
 
@@ -175,7 +202,12 @@ class StreamItemView extends React.Component {
           <Link to={'/user/' + post.get('author')} className="stream-item-author">
             {post.get('author')}
           </Link>
-          <span>{moment.unix(post.get('created_utc')).fromNow().replace(' ago', '')}</span>
+          <span>
+            {moment
+              .unix(post.get('created_utc'))
+              .fromNow()
+              .replace(' ago', '')}
+          </span>
         </div>
       )
     } else {
@@ -196,7 +228,7 @@ class StreamItemView extends React.Component {
 
   renderThumbnail = () => {
     const post = this.props.post
-    if (this.props.inColumn && post.get('thumbnail')) {      
+    if (this.props.inColumn && post.get('thumbnail')) {
       const styles = {
         thumbnail: {
           float: 'left',
@@ -216,9 +248,17 @@ class StreamItemView extends React.Component {
     }
   }
 
-  openInPostView = () => {
+  renderTitle = () => {
+    const post = this.props.post
+
     if (this.props.inColumn) {
-      this.context.router.history.push(this.props.post.get('permalink'))
+      return <span className={this.props.classes.streamTitle}>{Entities.decode(post.get('title'))}</span>
+    } else {
+      return (
+        <a className={this.props.classes.streamTitleLink} href={post.get('url')} target="_blank">
+          {Entities.decode(post.get('title'))}
+        </a>
+      )
     }
   }
 
@@ -257,10 +297,6 @@ class StreamItemView extends React.Component {
         fontSize: '12px'
       }
 
-      styles.title = {
-        fontSize: '14px'
-      }
-
       styles.content = {
         width: 'calc(100% - 50px)',
         boxSizing: 'border-box'
@@ -292,9 +328,7 @@ class StreamItemView extends React.Component {
           </div>
           <div style={styles.content} className="stream-item-content">
             {this.renderThumbnail()}
-            <a style={styles.title} href={post.get('url')} target="_blank" className="stream-item-title">
-              {Entities.decode(post.get('title'))}
-            </a>
+            {this.renderTitle()}
             <span className="stream-item-domain">({post.get('domain')})</span>
             {this.renderMedia()}
             {this.renderDetails()}
@@ -308,4 +342,4 @@ class StreamItemView extends React.Component {
   }
 }
 
-export default StreamItemView
+export default style(StreamItemView)
