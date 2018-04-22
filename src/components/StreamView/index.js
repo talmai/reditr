@@ -9,6 +9,11 @@ import PostModel from '../../models/PostModel'
 import Observable from '../../utilities/Observable'
 
 class StreamView extends React.Component {
+
+  static contextTypes = {
+    setHoverState: PropTypes.func
+  }
+
   static propTypes = {
     subreddit: PropTypes.string,
     sort: PropTypes.string,
@@ -65,11 +70,25 @@ class StreamView extends React.Component {
       let post = redditPosts[i]
       // avoid duplicate posts in the same feed
       if (postIdsHash[post.data.id]) continue
+
+      const hoverEvents = this.props.isColumn && {
+        onHoverEnter: this.onStreamHoverEnter,
+        onHoverLeave: this.onStreamHoverLeave
+      }
+
       // insert post model/view into postViews - array of posts to render later
       let postObj = new PostModel(redditPosts[i])
-      appendToArray.push(<StreamItemView inColumn={this.props.isColumn} key={post.data.id} post={postObj} postIds={postIdsHash} />)
+      appendToArray.push(<StreamItemView {...hoverEvents} inColumn={this.props.isColumn} key={post.data.id} post={postObj} postIds={postIdsHash} />)
     }
     return appendToArray
+  }
+
+  onStreamHoverEnter = (post, node) => {
+    this.context.setHoverState(post, node)
+  }
+
+  onStreamHoverLeave = () => {
+    this.context.setHoverState(null)
   }
 
   loadUser(user = this.state.user, options = { reset: false }) {

@@ -15,12 +15,14 @@ import Observable from '../../utilities/Observable'
 import Device from '../../utilities/Device'
 import UserManager from '../../account/UserManager'
 import MainContainer from '../MainContainer'
+import HoverView from '../HoverView'
 
 // Then we delete a bunch of code from App and
 // add some <Link> elements...
 export default class App extends React.Component {
   static childContextTypes = {
-    setViewerState: PropTypes.func
+    setViewerState: PropTypes.func,
+    setHoverState: PropTypes.func
   }
 
   constructor(props) {
@@ -30,14 +32,16 @@ export default class App extends React.Component {
       leftSidebarVisible: true,
       viewerVisible: false,
       url: null,
-      viewMode: 'column'
+      viewMode: 'column',
+      hoverPost: null
     }
     this.menuPressed = this.menuPressed.bind(this)
   }
 
   getChildContext() {
     return {
-      setViewerState: this.setViewer
+      setViewerState: this.setViewer,
+      setHoverState: this.setHoverState
     }
   }
 
@@ -45,6 +49,13 @@ export default class App extends React.Component {
     this.setState({
       viewerVisible: true,
       url
+    })
+  }
+
+  setHoverState = (post, anchor) => {
+    this.setState({
+      hoverPost: post,
+      hoverAnchor: anchor
     })
   }
 
@@ -103,6 +114,7 @@ export default class App extends React.Component {
             </Switch>
           </MainContainer>
           {quickSwitch}
+          {this.state.hoverPost && <HoverView anchor={this.state.hoverAnchor} post={this.state.hoverPost} />}
           <Viewer
             visible={this.state.viewerVisible}
             onClose={() => {
