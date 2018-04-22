@@ -2465,7 +2465,6 @@ body {
   cursor: pointer;
   box-sizing: border-box;
   padding: 10px;
-  border-left: 1px solid #242424;
 }
 #HeaderView .header-view-right .button:hover {
   background-color: #545454;
@@ -2586,7 +2585,6 @@ body {
 }
 .post-view .post-content .media {
   display: block;
-  max-height: 400px;
   max-width: 90%;
   margin: 10px auto 20px auto;
 }
@@ -2875,15 +2873,7 @@ body {
 .stream-item-view .stream-item-top .stream-item-content .mini-details .stream-item-subreddit:hover {
   text-decoration: underline;
 }
-.stream-item-view .stream-item-top .stream-item-content .stream-item-title {
-  font-weight: bold;
-  color: #333;
-  text-decoration: none;
-}
-.stream-item-view .stream-item-top .stream-item-content .stream-item-title:hover {
-  color: black;
-  text-decoration: underline;
-}
+
 .stream-item-view .stream-item-top .stream-item-content .stream-item-domain {
   font-size: 12px;
   color: #535353;
@@ -2891,7 +2881,6 @@ body {
 }
 .stream-item-view .stream-item-top .stream-item-content .media {
   display: block;
-  max-height: 400px;
   max-width: 90%;
   margin: 10px auto;
 }

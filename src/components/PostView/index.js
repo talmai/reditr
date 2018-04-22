@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 
+import style from '../../utilities/Style'
 import PostModel from '../../models/PostModel'
 import MediaParserView from '../MediaParserView'
 import reddit from '../../api/reddit'
@@ -17,8 +18,31 @@ class PostView extends React.Component {
     setViewerState: PropTypes.func
   }
 
+  static style() {
+    return {
+      container: {
+        display: 'flex',
+        height: '100%',
+        width: '100%',
+        overflow: 'hidden'
+      },
+      stream: {
+        width: '280px',
+        flexShrink: 0,
+        height: '100%'
+      },
+      voteContainer: {
+        width: '40px'
+      },
+      postView: {
+        flexGrow: 1
+      }
+    }
+  }
+
   constructor(props) {
     super(props)
+
     this.state = {
       subreddit: props.match.params.subreddit,
       post: null,
@@ -31,7 +55,19 @@ class PostView extends React.Component {
     this.load()
   }
 
-  load() {
+  componentWillReceiveProps(newProps) {
+    if (this.props.match.params.id !== newProps.match.params.id) {
+      this.setState(
+        {
+          subreddit: newProps.match.params.subreddit,
+          isLoading: true
+        },
+        this.load
+      )
+    }
+  }
+
+  load = () => {
     reddit.getPostFromPermalink(window.location.pathname, null, (err, data) => {
       var post = new PostModel(data.body[0].data.children[0])
       this.setState({
@@ -51,7 +87,8 @@ class PostView extends React.Component {
   render() {
     if (this.state.isLoading)
       return (
-        <div className="post-view">
+        <div className={this.props.classes.container}>
+          <StreamView className={this.props.classes.stream} isColumn={true} subreddit={this.state.subreddit} />
           <StreamSpinnerView />
         </div>
       )
@@ -68,12 +105,6 @@ class PostView extends React.Component {
     })
 
     const styles = {
-      container: {
-        display: 'flex',
-        height: '100%',
-        width: '100%',
-        overflow: 'hidden'
-      },
       post: {
         position: 'relative',
         backgroundColor: 'white',
@@ -81,20 +112,15 @@ class PostView extends React.Component {
         height: '100%',
         overflowX: 'hidden',
         overflowY: 'scroll'
-      },
-      stream: {
-        width: '280px',
-        flexShrink: 0,
-        height: '100%'
       }
     }
 
     return (
-      <div style={styles.container}>
-        <StreamView style={styles.stream} isColumn={true} subreddit={this.state.subreddit} />
-        <div style={styles.post} className="post-view">
+      <div className={this.props.classes.container}>
+        <StreamView className={this.props.classes.stream} isColumn={true} subreddit={this.state.subreddit} />
+        <div style={styles.post} className={`post-view ${this.props.classes.postView}`}>
           <div className="post-content">
-            <div className="post-vote">
+            <div className={`post-vote ${this.props.classes.voteContainer}`}>
               <VoteView key="vote" item={post} />
             </div>
             <a href={post.get('url')} target="_blank" className="post-title">
@@ -113,4 +139,4 @@ class PostView extends React.Component {
   }
 }
 
-export default PostView
+export default style(PostView)

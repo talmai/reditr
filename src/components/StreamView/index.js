@@ -14,7 +14,12 @@ class StreamView extends React.Component {
     sort: PropTypes.string,
     period: PropTypes.string,
     style: PropTypes.object,
-    isColumn: PropTypes.bool
+    isColumn: PropTypes.bool,
+    className: PropTypes.string
+  }
+
+  static defaultProps = {
+    className: ''
   }
 
   constructor(props) {
@@ -287,7 +292,7 @@ class StreamView extends React.Component {
     }
 
     return (
-      <div style={styles.container} className="stream-view">
+      <div style={styles.container} className={`stream-view ${this.props.className}`}>
         {this.renderHeader()}
         <div ref={s => (this.streamContainer = s)} style={styles.stream}>
           {this.state.postViews}
