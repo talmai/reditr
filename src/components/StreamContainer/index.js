@@ -19,6 +19,15 @@ export default class StreamContainer extends React.Component {
   componentDidMount() {
     this.getStreams()
   }
+  
+  componentWillReceiveProps(props, nextProps) {
+    console.log(props)
+    if (props.match.params.subreddit !== this.state.subreddit) {
+      this.setState({
+        subreddit: props.match.params.subreddit
+      })
+    }
+  }
 
   getStreams = () => {
     reddit.getSubscribedSubreddits().then(list => {
@@ -31,7 +40,7 @@ export default class StreamContainer extends React.Component {
 
   render() {
     const isColumn = this.state.viewMode === 'column' && !this.state.subreddit
-   
+
     let styles = {
       container: {
         display: 'flex',

@@ -36,6 +36,12 @@ class StreamView extends React.Component {
     this.detachScrollListener()
   }
 
+  componentWillReceiveProps(props) {
+    this.setState({
+      subreddit: props.match.params.subreddit
+    })
+  }
+
   componentDidMount() {
     this.attachScrollListener()
 

@@ -73,8 +73,7 @@ export default class App extends React.Component {
   }
 
   render() {
-    const quickSwitch = this.state.quickSwitchVisible ? <QuickSwitchView onSubredditChanged={this.closeQuickSwitcher.bind(this)} /> : false
-    console.log(quickSwitch)
+    const quickSwitch = this.state.quickSwitchVisible && <QuickSwitchView onSubredditChanged={this.closeQuickSwitcher.bind(this)} />
     const curClass = this.classForAppView()
     return (
       <Router>
