@@ -62,7 +62,7 @@ class PostCommentView extends React.Component {
           width: '40px'
         },
         commentBody: {
-          padding: '20px 0',
+          padding: '30px 0',
           fontSize: '14px',
           boxSizing: 'border-box'
         }

@@ -288,7 +288,8 @@ class StreamItemView extends React.Component {
         borderTop: 'none',
         borderLeft: 'none',
         borderRight: 'none',
-        borderBottom: '1px solid #efefef'
+        borderBottom: '1px solid #efefef',
+        minHeight: '90px'
       }
 
       styles.voteContainer = {
