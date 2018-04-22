@@ -132,7 +132,7 @@ class PostView extends React.Component {
             <MediaParserView onClick={url => this.context.setViewerState(url)} url={post.get('url')} post={post} />
           </div>
           <div className="post-separator" />
-          <div className="post-comments">{commentViews}</div>
+          <div style={{marginTop: '10px'}} className="post-comments">{commentViews}</div>
         </div>
       </div>
     )
