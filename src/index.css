@@ -2583,7 +2583,6 @@ body {
 }
 .post-view .post-content .media {
   display: block;
-  max-height: 400px;
   max-width: 90%;
   margin: 10px auto 20px auto;
 }
@@ -2880,7 +2879,6 @@ body {
 }
 .stream-item-view .stream-item-top .stream-item-content .media {
   display: block;
-  max-height: 400px;
   max-width: 90%;
   margin: 10px auto;
 }

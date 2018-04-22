@@ -228,7 +228,7 @@ class StreamItemView extends React.Component {
 
   renderThumbnail = () => {
     const post = this.props.post
-    if (this.props.inColumn && post.get('thumbnail')) {
+    if (this.props.inColumn && post.get('thumbnail') && post.get('domain').indexOf('self.') === -1) {
       const styles = {
         thumbnail: {
           float: 'left',
