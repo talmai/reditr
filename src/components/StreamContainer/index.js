@@ -21,7 +21,6 @@ export default class StreamContainer extends React.Component {
   }
   
   componentWillReceiveProps(props, nextProps) {
-    console.log(props)
     if (props.match.params.subreddit !== this.state.subreddit) {
       this.setState({
         subreddit: props.match.params.subreddit
