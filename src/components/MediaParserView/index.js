@@ -13,7 +13,8 @@ class MediaParserView extends React.Component {
     onClick: PropTypes.func,
     post: PropTypes.object,
     style: PropTypes.object,
-    onRender: PropTypes.func
+    onRender: PropTypes.func,
+    className: PropTypes.string
   }
 
   static defaultProps = {
@@ -80,10 +81,10 @@ class MediaParserView extends React.Component {
 
     switch (this.state.media.type) {
       case 'image': // simply return image tag
-        return <img onLoad={this.props.onRender} onClick={() => this.props.onClick(this.state.media.parsedUrl)} style={styles.image} src={this.state.media.parsedUrl} className="media" />
+        return <img onLoad={this.props.onRender} onClick={() => this.props.onClick(this.state.media.parsedUrl)} style={styles.image} src={this.state.media.parsedUrl} className={`media ${this.props.className}`} />
         break
       case 'supported-video':
-        return <ReactPlayer onReady={this.props.onRender} className="media" url={this.state.media.url} />
+        return <ReactPlayer onReady={this.props.onRender} className={`media ${this.props.className}`} url={this.state.media.url} />
         break
       case 'custom-video':
         let sources = []
@@ -107,7 +108,7 @@ class MediaParserView extends React.Component {
       case 'text':
         if (this.state.media.parsedText.length == 0) return false
         return (
-          <div style={styles.article} className="media text">
+          <div style={styles.article} className={`media text ${this.props.className}`}>
             <p style={styles.articleText} dangerouslySetInnerHTML={{ __html: this.state.media.parsedText }} />
           </div>
         )
@@ -115,7 +116,7 @@ class MediaParserView extends React.Component {
       case 'article':
         if (this.state.media.parsedText.length == 0) return false
         return (
-          <div style={styles.article} className="media text">
+          <div style={styles.article} className={`media text ${this.props.className}`}>
             <img style={styles.articleImage} src={this.state.media.parsedImage} />
             <p style={styles.articleText}>{this.state.media.parsedText}</p>
           </div>
