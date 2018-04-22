@@ -308,10 +308,10 @@ class StreamItemView extends React.Component {
         <div style={styles.container} onClick={this.openInPostView} className="stream-item-view hidden" data-postid={post.get('id')}>
           <div className="stream-item-top">
             <div style={styles.voteContainer} className="stream-item-sidebar">
-              <span className="stream-item-vote-count">{post.get('score')}</span>
+              <VoteView item={this.props.post} />
             </div>
             <div className="stream-item-content">
-              <a href={post.get('url')} target="_blank" className="stream-item-title">
+              <a href={post.get('url')} target="_blank" className={this.props.classes.streamTitle}>
                 {Entities.decode(post.get('title'))}
               </a>
             </div>
