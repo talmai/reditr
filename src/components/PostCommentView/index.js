@@ -67,12 +67,11 @@ class PostCommentView extends React.Component {
         voteContainer: {
           top: 0,
           left: 0,
-          marginRight: '20px',
           zIndex: 1,
           width: '40px'
         },
         commentBody: {
-          padding: '30px 0',
+          padding: '30px 20px',
           fontSize: '14px',
           boxSizing: 'border-box'
         },
@@ -83,7 +82,7 @@ class PostCommentView extends React.Component {
           color: '#aeaeae'
         }
       }
-      console.log(this.props.classes)
+      
       return (
         <div style={styles.container} key={this.props.key} className="post-comment">
           <div style={styles.voteBackground} />
