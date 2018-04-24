@@ -16,10 +16,10 @@ class HoverView extends React.Component {
         position: 'fixed',
         maxWidth: '50%',
         maxHeight: '80%',
+        padding: '5px',
         backgroundColor: 'white',
-        border: '1px solid #eee',
-        borderRadius: '3px',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        boxShadow: '0 2px 2px 0 rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.2), 0 1px 5px 0 rgba(0,0,0,.12)'
       },
       media: { maxHeight: '100%', maxWidth: '100%' }
     }
