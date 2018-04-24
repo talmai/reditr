@@ -2,6 +2,7 @@ import React from 'react'
 import { render } from 'react-dom'
 import PropTypes from 'prop-types'
 import ReactPlayer from 'react-player'
+import { debounce } from 'lodash'
 
 import MediaParser from '../../utilities/MediaParser'
 import YoutubeView from '../YoutubeView'
@@ -138,7 +139,7 @@ class MediaParserView extends React.Component {
         break
       case 'article':
         if (this.state.media.parsedText.length == 0) return false
-        this.props.onRender()
+        debounce(this.props.onRender, 0)()
         return (
           <div style={styles.article} className={`media text ${this.props.className}`}>
             <img style={styles.articleImage} src={this.state.media.parsedImage} />
