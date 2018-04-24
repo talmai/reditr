@@ -120,7 +120,7 @@ class MediaParserView extends React.Component {
         }
 
         return (
-          <video className="media" autoPlay loop muted>
+          <video onCanPlay={this.props.onRender} className="media" autoPlay loop muted>
             {sources}
           </video>
         )
