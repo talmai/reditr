@@ -13,7 +13,7 @@ class HoverView extends React.Component {
   static style() {
     return {
       container: {
-        position: 'absolute',
+        position: 'fixed',
         maxWidth: '50%',
         maxHeight: '80%',
         backgroundColor: 'white',

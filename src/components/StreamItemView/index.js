@@ -35,7 +35,7 @@ class StreamItemView extends React.Component {
       fontWeight: 'bold',
       color: '#333',
       textDecoration: 'none',
-      fontSize: '14px'
+      fontSize: '16px'
     }
     const streamTitleLink = {
       ...streamTitle,
