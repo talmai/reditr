@@ -33,7 +33,8 @@ export default class App extends React.Component {
       viewerVisible: false,
       url: null,
       viewMode: 'column',
-      hoverPost: null
+      hoverPost: null,
+      hoverAnchor: null
     }
     this.menuPressed = this.menuPressed.bind(this)
   }
@@ -43,6 +44,18 @@ export default class App extends React.Component {
       setViewerState: this.setViewer,
       setHoverState: this.setHoverState
     }
+  }
+
+  resetState = () => {
+    this.setState({
+      quickSwitchVisible: false,
+      leftSidebarVisible: true,
+      viewerVisible: false,
+      url: null,
+      hoverPost: null,
+      hoverAnchor: null,
+      viewMode: 'column'
+    })
   }
 
   setViewer = url => {
@@ -69,7 +82,14 @@ export default class App extends React.Component {
     this.setState({ quickSwitchVisible: !this.state.quickSwitchVisible })
   }
 
+  handleLocationChange = location => {
+    this.resetState()
+  }
+
   componentDidMount() {
+    this.handleLocationChange(this.router.history.location)
+    this.router.history.listen(this.handleLocationChange)
+
     Observable.global.on(this, 'requestQuickSwitcher', this.showQuickSwitcher)
     Observable.global.on(this, 'requestExitQuickSwitcher', this.closeQuickSwitcher)
     Keystrokes.listen(['⌘e', '⌃e'], this.showQuickSwitcher)
@@ -98,7 +118,7 @@ export default class App extends React.Component {
     const quickSwitch = this.state.quickSwitchVisible && <QuickSwitchView onSubredditChanged={this.closeQuickSwitcher.bind(this)} />
     const curClass = this.classForAppView()
     return (
-      <Router>
+      <Router ref={r => this.router = r}>
         <div className={curClass}>
           <HeaderView menuPressed={this.menuPressed} />
           <LeftSidebarView hidden={!this.state.leftSidebarVisible} />
