@@ -27,7 +27,8 @@ class MediaParserView extends React.Component {
 
     // no media as default
     this.state = {
-      media: {}
+      media: {},
+      isLoading: true
     }
   }
 
@@ -35,31 +36,44 @@ class MediaParserView extends React.Component {
    Takes the url and determines what type of media we have
    */
   parseMedia() {
-    // is this a self post?
-    if (this.props.post.get('selftext_html')) {
-      MediaParser.parseText(this.props.post.get('selftext_html'), media => {
-        this.setState(
-          {
-            media: media
-          },
-          this.props.onRender
-        )
-      })
-    } else {
-      MediaParser.parse(this.props.url, media => {
-        this.setState({
-          media: media
-        })
-      })
-    }
+    this.setState(
+      {
+        isLoading: true,
+        media: {}
+      },
+      () => {
+        // is this a self post?
+        if (this.props.post.get('selftext_html')) {
+          MediaParser.parseText(this.props.post.get('selftext_html'), media => {
+            this.setState(
+              {
+                media: media,
+                isLoading: false
+              },
+              this.props.onRender
+            )
+          })
+        } else {
+          MediaParser.parse(this.props.url, media => {
+            this.setState({
+              media: media,
+              isLoading: false
+            })
+          })
+        }
+      }
+    )
   }
 
   componentDidMount() {
-    // parse the url
     this.parseMedia()
   }
 
   render() {
+    if (this.state.isLoading || this.state.media === {}) {
+      return <div className={`media ${this.props.className}`}>Loading...</div>
+    }
+
     const styles = {
       image: {
         cursor: 'zoom-in',
@@ -81,7 +95,15 @@ class MediaParserView extends React.Component {
 
     switch (this.state.media.type) {
       case 'image': // simply return image tag
-        return <img onLoad={this.props.onRender} onClick={() => this.props.onClick(this.state.media.parsedUrl)} style={styles.image} src={this.state.media.parsedUrl} className={`media ${this.props.className}`} />
+        return (
+          <img
+            onLoad={this.props.onRender}
+            onClick={() => this.props.onClick(this.state.media.parsedUrl)}
+            style={styles.image}
+            src={this.state.media.parsedUrl}
+            className={`media ${this.props.className}`}
+          />
+        )
         break
       case 'supported-video':
         return <ReactPlayer onReady={this.props.onRender} className={`media ${this.props.className}`} url={this.state.media.url} />
@@ -107,6 +129,7 @@ class MediaParserView extends React.Component {
         break
       case 'text':
         if (this.state.media.parsedText.length == 0) return false
+        // look into better place to hook this in
         return (
           <div style={styles.article} className={`media text ${this.props.className}`}>
             <p style={styles.articleText} dangerouslySetInnerHTML={{ __html: this.state.media.parsedText }} />
@@ -115,6 +138,7 @@ class MediaParserView extends React.Component {
         break
       case 'article':
         if (this.state.media.parsedText.length == 0) return false
+        this.props.onRender()
         return (
           <div style={styles.article} className={`media text ${this.props.className}`}>
             <img style={styles.articleImage} src={this.state.media.parsedImage} />

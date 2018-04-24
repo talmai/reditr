@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
+import { debounce } from 'lodash'
 
 import reddit from '../../api/reddit'
 import StreamItemView from '../StreamItemView'
@@ -66,15 +67,16 @@ class StreamView extends React.Component {
 
   createViewsFromRedditPosts = (redditPosts, _appendToArray = [], postIdsHash = {}) => {
     const appendToArray = _appendToArray.slice()
+
+    const hoverEvents = this.props.isColumn && {
+      onHoverEnter: this.onStreamHoverEnter,
+      onHoverLeave: this.onStreamHoverLeave
+    }
+
     for (var i in redditPosts) {
       let post = redditPosts[i]
       // avoid duplicate posts in the same feed
       if (postIdsHash[post.data.id]) continue
-
-      const hoverEvents = this.props.isColumn && {
-        onHoverEnter: this.onStreamHoverEnter,
-        onHoverLeave: this.onStreamHoverLeave
-      }
 
       // insert post model/view into postViews - array of posts to render later
       let postObj = new PostModel(redditPosts[i])
@@ -83,9 +85,9 @@ class StreamView extends React.Component {
     return appendToArray
   }
 
-  onStreamHoverEnter = (post, node) => {
+  onStreamHoverEnter = debounce((post, node) => {
     this.context.setHoverState(post, node)
-  }
+  }, 500)
 
   onStreamHoverLeave = () => {
     this.context.setHoverState(null)

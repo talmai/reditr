@@ -114,7 +114,7 @@ export default class App extends React.Component {
             </Switch>
           </MainContainer>
           {quickSwitch}
-          <HoverView anchor={this.state.hoverAnchor} post={this.state.hoverPost} />
+          {this.state.hoverPost && <HoverView anchor={this.state.hoverAnchor} post={this.state.hoverPost} />}
           <Viewer
             visible={this.state.viewerVisible}
             onClose={() => {

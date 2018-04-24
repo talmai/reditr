@@ -1,6 +1,5 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { debounce } from 'lodash'
 
 import style from '../../utilities/Style'
 import MediaParserView from '../MediaParserView'
@@ -37,17 +36,8 @@ class HoverView extends React.Component {
     }
   }
 
-  componentWillReceiveProps(props) {
-    this.setState({
-      containerPosition: {
-        top: '-200%',
-        left: '-200%'
-      }
-    })
-  }
-
   onLoaded = () => {
-    this.mediaContainer && debounce(this.createContainerPosition, 250)()
+    this.mediaContainer && this.createContainerPosition()
   }
 
   createContainerPosition = () => {

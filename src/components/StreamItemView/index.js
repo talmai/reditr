@@ -3,7 +3,6 @@ import moment from 'moment'
 import { AllHtmlEntities as Entities } from 'html-entities'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
-import { debounce } from 'lodash'
 
 import style from '../../utilities/Style'
 import reddit from '../../api/reddit'
@@ -85,17 +84,12 @@ class StreamItemView extends React.Component {
     this.loadComments()
   }
 
-  didHover = (post, target) => () => {
-    this.props.onHoverEnter(post, target)
-  }
-
   onMouseEnter = e => {
-    e.persist()
-    debounce(this.didHover(this.props.post, e.currentTarget), 500)()
+    this.props.onHoverEnter(this.props.post, e.currentTarget)
   }
 
   onMouseLeave = e => {
-    this.props.onHoverLeave(this.props.post)
+    this.props.onHoverLeave()
   }
 
   loadComments() {
