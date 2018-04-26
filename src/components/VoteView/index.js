@@ -30,7 +30,8 @@ class VoteView extends React.Component {
     }
   }
 
-  didUpvote() {
+  didUpvote = e => {
+    e.stopPropagation()
     // default to upvote
     let newVoteDir = this.state.voteDirection == -1 ? 0 : -1
     let voteDelta = 1
@@ -59,7 +60,9 @@ class VoteView extends React.Component {
     })
   }
 
-  didDownvote() {
+  didDownvote = e => {
+    e.stopPropagation()
+
     // default to down
     let newVoteDir = this.state.voteDirection == -1 ? 0 : -1
     let voteDelta = 1
@@ -102,9 +105,9 @@ class VoteView extends React.Component {
 
     return (
       <div key={this.props.key} style={{width: '100%', textAlign: 'center'}} className="vote-view">
-        <div className={upvoteClass} onClick={this.didUpvote.bind(this)} />
+        <div className={upvoteClass} onClick={this.didUpvote} />
         <span className="vote-count">{prettyNumber(this.state.voteCount)}</span>
-        <div className={downvoteClass} onClick={this.didDownvote.bind(this)} />
+        <div className={downvoteClass} onClick={this.didDownvote} />
       </div>
     )
   }

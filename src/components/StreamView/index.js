@@ -1,7 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
-import { debounce } from 'lodash'
 
 import reddit from '../../api/reddit'
 import StreamItemView from '../StreamItemView'
@@ -85,11 +84,12 @@ class StreamView extends React.Component {
     return appendToArray
   }
 
-  onStreamHoverEnter = debounce((post, node) => {
-    this.context.setHoverState(post, node)
-  }, 500)
+  onStreamHoverEnter = (post, node) => {
+    this.hoverTimeout = setTimeout(() => this.context.setHoverState(post, node), 500)
+  }
 
   onStreamHoverLeave = () => {
+    clearTimeout(this.hoverTimeout)
     this.context.setHoverState(null)
   }
 
