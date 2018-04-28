@@ -1,5 +1,14 @@
 div {
--ms-overflow-style: none;
+  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+}
+::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #FF0000;
 }
 
 /*!

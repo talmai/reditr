@@ -32,10 +32,10 @@ class StreamItemView extends React.Component {
 
   static style() {
     const streamTitle = {
-      fontWeight: 'bold',
+      fontWeight: 'normal',
       color: '#333',
       textDecoration: 'none',
-      fontSize: '16px'
+      fontSize: '15px'
     }
     const streamTitleLink = {
       ...streamTitle,
@@ -221,7 +221,12 @@ class StreamItemView extends React.Component {
             {moment
               .unix(post.get('created_utc'))
               .fromNow()
-              .replace(' ago', '')}
+              .replace(/ ago/, '')
+              .replace(/ day(s|)/, 'd')
+              .replace(/ hour(s|)/, 'h')
+              .replace(/ week(s|)/, 'w')
+              .replace(/ (minute|min)(s|)/, 'm')
+            }
           </span>
         </div>
       )
