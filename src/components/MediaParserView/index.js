@@ -96,7 +96,7 @@ class MediaParserView extends React.Component {
         boxSizing: 'border-box'
       }
     }
-    console.log(styles)
+    
     switch (this.state.media.type) {
       case 'image': // simply return image tag
         return (
