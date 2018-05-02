@@ -85,15 +85,18 @@ class MediaParserView extends React.Component {
         alignItems: 'left',
         ...this.props.style
       },
+      video: {
+        ...this.props.style
+      },
       articleImage: {
-        maxWidth: '250px'
+        maxWidth: '250px',
       },
       articleText: {
         padding: '10px',
         boxSizing: 'border-box'
       }
     }
-
+    console.log(styles)
     switch (this.state.media.type) {
       case 'image': // simply return image tag
         return (
@@ -107,7 +110,7 @@ class MediaParserView extends React.Component {
         )
         break
       case 'supported-video':
-        return <ReactPlayer onReady={this.props.onRender} className={`media ${this.props.className}`} url={this.state.media.url} />
+        return <ReactPlayer controls onReady={this.props.onRender} className={`media ${this.props.className}`} url={this.state.media.url} />
         break
       case 'custom-video':
         let sources = []
@@ -118,9 +121,8 @@ class MediaParserView extends React.Component {
         } else {
           sources = <source type="video/webm" src={this.state.media.parsedUrl} />
         }
-
         return (
-          <video onCanPlay={this.props.onRender} className="media" autoPlay loop muted>
+          <video style={styles.video} onCanPlay={this.props.onRender} className={`media ${this.props.className}`} autoPlay loop muted>
             {sources}
           </video>
         )
