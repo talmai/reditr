@@ -65,19 +65,19 @@ export default class StreamContainer extends React.Component {
       container: {
         display: 'flex',
         overflowY: 'hidden',
-        overflowX: 'scroll'
+        height: '100%'
       },
       stream: {
-        maxWidth: '900px',
-        margin: '20px auto'
+        margin: '0 auto'
       }
     }
 
     if (isColumn) {
       styles.container = {
         ...styles.container,
+        boxSizing: 'border-box',
         height: '100%',
-        boxSizing: 'border-box'
+        overflowX: 'scroll'
       }
 
       styles.stream = {
@@ -86,6 +86,8 @@ export default class StreamContainer extends React.Component {
         marginTop: 0,
         marginRight: '5px'
       }
+    } else {
+      styles.stream.paddingTop = '20px'
     }
 
     return (

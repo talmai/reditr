@@ -210,7 +210,7 @@ class StreamView extends React.Component {
   /* scroll management */
 
   didStopScrolling = () => {
-    const node = ReactDOM.findDOMNode(this.streamContainer)
+    const node = this.streamContainer
     if (node.scrollHeight - (node.scrollTop + node.offsetHeight) < 100) {
       // detect scrolling to the bottom and load more posts
       this.load()
@@ -245,13 +245,13 @@ class StreamView extends React.Component {
   }
 
   attachScrollListener = () => {
-    let node = ReactDOM.findDOMNode(this.streamContainer)
+    let node = this.streamContainer
     node.addEventListener('scroll', this.scrollListener)
     node.addEventListener('resize', this.scrollListener)
   }
 
   detachScrollListener = () => {
-    let node = ReactDOM.findDOMNode(this.streamContainer)
+    let node = this.streamContainer
     node.removeEventListener('scroll', this.scrollListener)
     node.removeEventListener('resize', this.scrollListener)
   }
@@ -295,6 +295,10 @@ class StreamView extends React.Component {
     let styles = {
       container: {
         ...this.props.style
+      },
+      stream: {
+        overflowY: 'scroll',
+        height: '100%'
       }
     }
 
@@ -307,8 +311,8 @@ class StreamView extends React.Component {
       }
 
       styles.stream = {
-        height: 'calc(100% - 64px)',
-        overflowY: 'scroll'
+        ...styles.stream,
+        height: 'calc(100% - 64px)'
       }
     }
 
