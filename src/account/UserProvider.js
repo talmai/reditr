@@ -1,11 +1,21 @@
+import React from 'react'
 import OAuth from '../api/OAuth'
 import User from './User'
 import reddit from '../api/reddit'
 import DataStore from '../utilities/DataStore'
 import Observable from '../utilities/Observable'
 
-class UserManager {
-  constructor() {
+const UserContext = React.createContext({ user: null })
+class UserProvider extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      currentUser: null
+    }
+  }
+
+  componentDidMount() {
     this.dataStore = DataStore.createInstance('UserManager')
 
     this.users = {}
@@ -84,6 +94,10 @@ class UserManager {
       // notify that we have no user
       Observable.global.trigger('updateCurrentUser', { user: user })
     }
+
+    this.setState({
+      currentUser: this.currentUser
+    })
   }
 
   logout() {
@@ -108,6 +122,14 @@ class UserManager {
       this.finalCallback = null
     })
   }
+
+  render() {
+    return (
+      <UserContext.Provider value={{ user: this.state.currentUser }}>
+        {this.props.children}
+      </UserContext.Provider>
+    )
+  }
 }
 
-export default new UserManager()
+export { UserProvider, UserContext }

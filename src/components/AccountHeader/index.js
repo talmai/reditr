@@ -1,13 +1,13 @@
 import React from 'react'
 
 import Observable from '../../utilities/Observable'
-import UserManager from '../../account/UserManager'
+// import UserManager from '../../account/UserManager'
 
 export default class AccountHeader extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      user: UserManager.currentUser,
+      // user: UserManager.currentUser,
       isLoggingIn: false,
       expanded: false
     }
@@ -18,19 +18,19 @@ export default class AccountHeader extends React.Component {
       isLoggingIn: true
     })
 
-    UserManager.startLogin((status, user) => {
-      if (status == 'success') {
-        this.setState({
-          user: user,
-          isLoggingIn: false,
-          expanded: false
-        })
-      } else {
-        this.setState({
-          isLoggingIn: false
-        })
-      }
-    })
+    // UserManager.startLogin((status, user) => {
+    //   if (status == 'success') {
+    //     this.setState({
+    //       user: user,
+    //       isLoggingIn: false,
+    //       expanded: false
+    //     })
+    //   } else {
+    //     this.setState({
+    //       isLoggingIn: false
+    //     })
+    //   }
+    // })
   }
 
   componentDidMount() {
@@ -45,7 +45,7 @@ export default class AccountHeader extends React.Component {
   }
 
   logout() {
-    UserManager.logout()
+    //UserManager.logout()
   }
 
   toggleExpanded() {
