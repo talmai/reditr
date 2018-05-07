@@ -86,8 +86,6 @@ export default class StreamContainer extends React.Component {
         marginTop: 0,
         marginRight: '5px'
       }
-    } else {
-      styles.stream.paddingTop = '20px'
     }
 
     return (

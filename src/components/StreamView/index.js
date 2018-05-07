@@ -314,6 +314,8 @@ class StreamView extends React.Component {
         ...styles.stream,
         height: 'calc(100% - 64px)'
       }
+    } else {
+      styles.stream.paddingTop = '20px'
     }
 
     return (
