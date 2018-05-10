@@ -118,41 +118,42 @@ export default class App extends React.Component {
     const quickSwitch = this.state.quickSwitchVisible && <QuickSwitchView onSubredditChanged={this.closeQuickSwitcher.bind(this)} />
     const curClass = this.classForAppView()
     return (
-      <UserProvider>
-        <UserContext.Consumer>
-          {data => {
-            console.log(data)
-            return (
-              <Router ref={r => (this.router = r)}>
-                <div className={curClass}>
-                  <HeaderView menuPressed={this.menuPressed} />
-                  <LeftSidebarView hidden={!this.state.leftSidebarVisible} />
-                  <MainContainer>
-                    <Switch>
-                      <Route exact path="/" component={StreamContainer} />
-                      <Route exact path="/r/:subreddit" component={StreamContainer} />
-                      <Route exact path="/r/:subreddit/:sort" component={StreamContainer} />
-                      <Route exact path="/r/:subreddit/comments/:id/" component={PostView} />
-                      <Route exact path="/r/:subreddit/comments/:id/:title/" component={PostView} />
-                      <Route exact path="/u/:user" component={StreamContainer} />
-                      <Route exact path="/user/:user" component={StreamContainer} />
-                    </Switch>
-                  </MainContainer>
-                  {quickSwitch}
-                  {this.state.hoverPost && <HoverView anchor={this.state.hoverAnchor} post={this.state.hoverPost} />}
-                  <Viewer
-                    visible={this.state.viewerVisible}
-                    onClose={() => {
-                      this.setState({ viewerVisible: false })
-                    }}
-                    images={[{ src: this.state.url, alt: '' }]}
-                  />
-                </div>
-              </Router>
-            )
-          }}
-        </UserContext.Consumer>
-      </UserProvider>
+      <Router ref={r => (this.router = r)}>
+        <UserProvider>
+          <UserContext.Consumer>
+            {val => {
+              return (
+                val.user && (
+                  <div className={curClass}>
+                    <HeaderView menuPressed={this.menuPressed} />
+                    <LeftSidebarView hidden={!this.state.leftSidebarVisible} />
+                    <MainContainer>
+                      <Switch>
+                        <Route exact path="/" component={StreamContainer} />
+                        <Route exact path="/r/:subreddit" component={StreamContainer} />
+                        <Route exact path="/r/:subreddit/:sort" component={StreamContainer} />
+                        <Route exact path="/r/:subreddit/comments/:id/" component={PostView} />
+                        <Route exact path="/r/:subreddit/comments/:id/:title/" component={PostView} />
+                        <Route exact path="/u/:user" component={StreamContainer} />
+                        <Route exact path="/user/:user" component={StreamContainer} />
+                      </Switch>
+                    </MainContainer>
+                    {quickSwitch}
+                    {this.state.hoverPost && <HoverView anchor={this.state.hoverAnchor} post={this.state.hoverPost} />}
+                    <Viewer
+                      visible={this.state.viewerVisible}
+                      onClose={() => {
+                        this.setState({ viewerVisible: false })
+                      }}
+                      images={[{ src: this.state.url, alt: '' }]}
+                    />
+                  </div>
+                )
+              )
+            }}
+          </UserContext.Consumer>
+        </UserProvider>
+      </Router>
     )
   }
 }
