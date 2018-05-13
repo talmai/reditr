@@ -84,7 +84,7 @@ const HeaderView = style(class extends React.Component {
     var history = this.state.history
 
     //    var right = this.future[this.future.length-1];
-    var rightObj = <AccountHeader />
+    var rightObj = <AccountHeader userManager={this.props.userManager} user={this.props.user} />
     // if(right) {
     //   text = this.truncateTitle(right.text || right.href) + ' »';
     //   rightObj = <Link className="header-view-text" to={right.href}>{text}</Link>;

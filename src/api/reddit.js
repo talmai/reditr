@@ -47,10 +47,10 @@ class reddit {
 
   getSubscribedSubreddits(callback) {
     const defer = Promise.defer()
-    const path = this.authUser ? '/subreddits/mine/subscriber' : '/subreddits/default'
-    const base = this.authUser ? this.baseOAuthUrl : this.baseUrl
+    const path = this.authUser && this.authUser.accessToken ? '/subreddits/mine/subscriber' : '/subreddits/default'
+    const base = this.authUser && this.authUser.accessToken ? this.baseOAuthUrl : this.baseUrl
     let request = Request.get(base + path + this.extension)
-    if (this.authUser) {
+    if (this.authUser && this.authUser.accessToken) {
       request = request.set('Authorization', 'bearer ' + this.authUser.accessToken)
     }
     request.end(
@@ -62,10 +62,10 @@ class reddit {
   }
 
   getPostsFromSubreddit(subreddit, options = { sort: 'hot' }, callback) {
-    const baseUrl = this.authUser ? this.baseOAuthUrl : this.baseUrl
+    const baseUrl = this.authUser && this.authUser.accessToken ? this.baseOAuthUrl : this.baseUrl
     const req = Request.get(baseUrl + '/r/' + subreddit + '/' + options.sort + this.extension).query(options)
 
-    if (this.authUser) {
+    if (this.authUser && this.authUser.accessToken) {
       req.set('Authorization', 'bearer ' + this.authUser.accessToken)
     }
 
