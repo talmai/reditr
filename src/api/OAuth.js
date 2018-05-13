@@ -38,7 +38,10 @@ class OAuth {
   }
 
   getAccessToken(user, callback) {
-
+    if (!user.refreshKey) {
+      callback()
+      return
+    }
     Request
       .get('http://reditr.com/api/sync/?getAccessToken')
       .query({ oauth: user.refreshKey })

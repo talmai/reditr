@@ -27,9 +27,7 @@ class UserProvider extends React.Component {
       if (results[1]) {
         this.setCurrentUser(new User(results[1]))
       } else {
-        // notify that we are ready
-        this.isInitialized = true
-        Observable.global.trigger('UserManagerInitialized', this)
+        this.setCurrentUser(new User())
       }
     })
   }
@@ -58,7 +56,7 @@ class UserProvider extends React.Component {
   }
 
   setCurrentUser(user) {
-    if (user != null) {
+    if (user !== null) {
       this.currentUser = new User(user)
     } else {
       this.currentUser = user
