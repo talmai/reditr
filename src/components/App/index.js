@@ -125,7 +125,7 @@ export default class App extends React.Component {
               return (
                 val.user && (
                   <div className={curClass}>
-                    <HeaderView menuPressed={this.menuPressed} />
+                    <HeaderView userManager={val.userManager} user={val.user} menuPressed={this.menuPressed} />
                     <LeftSidebarView hidden={!this.state.leftSidebarVisible} />
                     <MainContainer>
                       <Switch>

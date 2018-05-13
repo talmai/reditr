@@ -5,30 +5,25 @@ import reddit from '../api/reddit'
 import DataStore from '../utilities/DataStore'
 import Observable from '../utilities/Observable'
 
-const UserContext = React.createContext({ user: null })
-class UserProvider extends React.Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      currentUser: null
-    }
-  }
-
-  componentDidMount() {
+class UserManager {
+  constructor() {
     this.dataStore = DataStore.createInstance('UserManager')
 
     this.users = {}
     this.currentUser = null
 
     this.isInitialized = false
+  }
 
-    this.dataStore.get(['users', 'currentUser'], results => {
-      if (results[1]) {
-        this.setCurrentUser(new User(results[1]))
-      } else {
-        this.setCurrentUser(new User())
-      }
+  getCurrentUser() {
+    return new Promise((resolve, reject) => {
+      this.dataStore.get(['users', 'currentUser'], results => {
+        if (results[1]) {
+          this.setCurrentUser(new User(results[1]), resolve)
+        } else {
+          this.setCurrentUser(new User(), resolve)
+        }
+      })
     })
   }
 
@@ -55,7 +50,7 @@ class UserProvider extends React.Component {
     })
   }
 
-  setCurrentUser(user) {
+  setCurrentUser(user, callback = () => {}) {
     if (user !== null) {
       this.currentUser = new User(user)
     } else {
@@ -93,13 +88,7 @@ class UserProvider extends React.Component {
       Observable.global.trigger('updateCurrentUser', { user: user })
     }
 
-    this.setState({
-      currentUser: this.currentUser
-    })
-  }
-
-  logout() {
-    this.setCurrentUser(null)
+    callback(this.currentUser)
   }
 
   addAccount(user) {
@@ -121,12 +110,31 @@ class UserProvider extends React.Component {
     })
   }
 
+  logout() {
+    this.setCurrentUser(null)
+  }
+}
+
+const UserContext = React.createContext({ user: null, userManager: null })
+class UserProvider extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.userManager = new UserManager()
+
+    this.state = {
+      currentUser: null
+    }
+  }
+
+  componentDidMount() {
+    this.userManager.getCurrentUser().then(user => {
+      this.setState({ currentUser: user })
+    })
+  }
+
   render() {
-    return (
-      <UserContext.Provider value={{ user: this.state.currentUser }}>
-        {this.props.children}
-      </UserContext.Provider>
-    )
+    return <UserContext.Provider value={{ user: this.state.currentUser, userManager: this.userManager }}>{this.props.children}</UserContext.Provider>
   }
 }
 
