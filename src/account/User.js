@@ -19,6 +19,7 @@ class User {
       this.refreshKey = refreshKey
       this.accessToken = ''
       this.userSettings = null
+      this.type = 'empty'
     }
   }
 

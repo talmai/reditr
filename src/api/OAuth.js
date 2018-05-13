@@ -1,51 +1,42 @@
 import Request from 'superagent'
 
 class OAuth {
-  start(callback) {
-    this.callback = callback
+  start() {
+    return new Promise((resolve, reject) => {
+      fetch('http://reditr.com/api/sync/?oauth=')
+        .then(r => r.text())
+        .then(identification => {
+          // open a window to reddit's oauth
+          const oAuthWin = window.open('http://reditr.com/api/sync/?oauth=' + identification)
 
-    // get an identification number from reditr.com
-    Request.get('http://reditr.com/api/sync/')
-      .query({ oauth: '' })
-      .end((err, response) => {
-        // iden
-        let identification = response.text
-
-        // open a window to reddit's oauth
-        let oAuthWin = window.open('http://reditr.com/api/sync/?oauth=' + identification)
-
-        // interval to check when window is closed so we can perform more actions
-        let checkLoginInterval = setInterval(() => {
-          // if window is closed, hit up reditr.com to see if oauth was successful
-          if (!oAuthWin || oAuthWin.closed || typeof oAuthWin.closed == 'undefined') {
-            clearInterval(checkLoginInterval)
-            this.complete(identification)
-          }
-        }, 500)
-      })
+          // interval to check when window is closed so we can perform more actions
+          const checkLoginInterval = setInterval(() => {
+            // if window is closed, hit up reditr.com to see if oauth was successful
+            if (!oAuthWin || oAuthWin.closed || typeof oAuthWin.closed == 'undefined') {
+              clearInterval(checkLoginInterval)
+              this.complete(identification).then(resolve)
+            }
+          }, 500)
+        })
+    })
   }
 
   complete(iden) {
-    // complete the oauth process
-    Request.get('http://reditr.com/api/sync/')
-      .query({ oauth: iden, revive: true })
-      .end((err, response) => this.callback(response.body))
+    return fetch(`http://reditr.com/api/sync/?oauth=${iden}&revive=true`).then(r => r.json())
   }
 
-  getAccessToken(user, callback) {
-    if (!user.refreshKey) {
-      callback()
-      return
-    }
-    Request.get('http://reditr.com/api/sync/?getAccessToken')
-      .query({ oauth: user.refreshKey })
-      .end((err, response) => {
-        let data = response.body
-        // make sure json
-        data = typeof data == 'string' ? JSON.parse(data) : data
+  getAccessToken(user) {
+    return new Promise((resolve, reject) => {
+      if (!user.refreshKey) {
+        resolve()
+      }
 
-        callback(data.accesstoken)
-      })
+      fetch(`http://reditr.com/api/sync/?getAccessToken&oauth=${user.refreshKey}`)
+        .then(r => r.json())
+        .then(data => {
+          resolve(data.accesstoken)
+        })
+    })
   }
 }
 
