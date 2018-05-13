@@ -1,8 +1,5 @@
 import React from 'react'
 
-import Observable from '../../utilities/Observable'
-// import UserManager from '../../account/UserManager'
-
 export default class AccountHeader extends React.Component {
   constructor(props) {
     super(props)
@@ -18,7 +15,7 @@ export default class AccountHeader extends React.Component {
       isLoggingIn: true
     })
 
-    this.props.userManager.startLogin((status, user) => {
+    this.props.userManager.startLogin().then((status, user) => {
       if (status == 'success') {
         this.setState({
           user: user,
@@ -33,10 +30,6 @@ export default class AccountHeader extends React.Component {
     })
   }
 
-  componentDidMount() {
-    Observable.global.on(this, 'updateCurrentUser', this.onUpdateCurrentUser)
-  }
-
   onUpdateCurrentUser(data) {
     this.setState({
       user: data.user,
@@ -45,7 +38,11 @@ export default class AccountHeader extends React.Component {
   }
 
   logout() {
-   this.props.userManager.logout()
+    this.props.userManager.logout().then(user => {
+      this.setState({
+        user
+      })
+    })
   }
 
   toggleExpanded() {
