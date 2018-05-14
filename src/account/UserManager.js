@@ -39,7 +39,7 @@ export default class UserManager {
             user.accessToken = accessToken
 
             // we have an access token, so we can finally add the user
-            this.addAccount(user)
+            this.addAccount(user).then(resolve)
           })
         } else {
           resolve('error')
@@ -55,18 +55,18 @@ export default class UserManager {
       } else {
         this.currentUser = user
       }
-  
+
       // if user is null, stop here so we do not get the refresh token
       if (user) {
         OAuth.getAccessToken(user).then(accessToken => {
           user.accessToken = accessToken
-  
+
           // make sure we set reddit auth for requests to work
           reddit.setAuth(user)
-  
+
           // save
           this.dataStore.set('currentUser', user)
-  
+
           if (!this.isInitialized) {
             // notify that we are ready
             this.isInitialized = true
@@ -75,11 +75,11 @@ export default class UserManager {
       } else {
         // make sure we set reddit auth for requests to work
         reddit.setAuth(user)
-  
+
         // save
         this.dataStore.set('currentUser', user)
       }
-  
+
       resolve(this.currentUser)
     })
   }
@@ -98,7 +98,7 @@ export default class UserManager {
         // assume the account you added will be the current user
         this.setCurrentUser(user).then(() => {
           // done so callback
-          resolve('success', user)
+          resolve({ status: 'success', user })
         })
       })
     })

@@ -1,6 +1,5 @@
 import OAuth from '../api/OAuth'
 import reddit from '../api/reddit'
-import UserSettings from './UserSettings'
 
 class User {
   constructor(refreshKey) {
@@ -11,16 +10,16 @@ class User {
       Object.keys(user).forEach(key => {
         this[key] = user[key]
       })
-
-      this.userSettings = new UserSettings(user)
     } else {
       // we got a refresh key, build some scaffolding
       this.username = ''
       this.refreshKey = refreshKey
       this.accessToken = ''
-      this.userSettings = null
-      this.type = 'empty'
     }
+  }
+
+  isAuthed() {
+    return this.accessToken !== undefined && this.accessToken !== null && this.accessToken !== ''
   }
 
   me() {
@@ -32,8 +31,6 @@ class User {
           const me = response
           this.username = me.name
           this.modhash = me.modhash
-          // get/create userSettings
-          this.userSettings = new UserSettings(this)
 
           resolve()
         })

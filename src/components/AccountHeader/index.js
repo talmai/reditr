@@ -15,7 +15,7 @@ export default class AccountHeader extends React.Component {
       isLoggingIn: true
     })
 
-    this.props.userManager.startLogin().then((status, user) => {
+    this.props.userManager.startLogin().then(({ status, user }) => {
       if (status == 'success') {
         this.setState({
           user: user,
@@ -58,14 +58,14 @@ export default class AccountHeader extends React.Component {
         Login
       </div>
     )
-    if (this.state.user && this.state.user.accessToken) {
+    if (this.state.user.isAuthed()) {
       button = <div className="button account-header disabled">{this.state.user.username}</div>
     } else if (this.state.isLoggingIn) {
       button = <div className="button account-header disabled">Waiting to Login...</div>
     }
 
     let logout = null
-    if (this.state.user && this.state.user.accessToken) {
+    if (this.state.user.isAuthed()) {
       logout = (
         <div className="button logout" onClick={this.logout.bind(this)}>
           Logout
