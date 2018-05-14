@@ -44,7 +44,14 @@ class MediaParserView extends React.Component {
       },
       () => {
         // is this a self post?
-        if (this.props.post.get('selftext_html')) {
+        if (this.props.post.get('is_self') && !this.props.post.get('selftext_html')) {
+          this.setState({
+            isLoading: false,
+            media: {
+              type: 'empty'
+            }
+          })
+        } else if (this.props.post.get('selftext_html')) {
           MediaParser.parseText(this.props.post.get('selftext_html'), media => {
             this.setState(
               {
@@ -98,6 +105,9 @@ class MediaParserView extends React.Component {
     }
     
     switch (this.state.media.type) {
+      case 'empty': 
+        return false
+        break
       case 'image': // simply return image tag
         return (
           <img
