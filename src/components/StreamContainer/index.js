@@ -29,7 +29,6 @@ export default class StreamContainer extends React.Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    console.log(nextProps)
     if (nextState.subreddit != this.state.subreddit) return true
     if (nextState.viewMode != this.state.viewMode) return true
     if (this.subredditsHash != makeSubredditHash(nextState.subreddits || [])) return true
