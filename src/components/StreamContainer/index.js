@@ -3,7 +3,7 @@ import React from 'react'
 import reddit from '../../api/reddit'
 import StreamView from '../StreamView'
 
-const makeSubredditHash = (subreddits) => {
+const makeSubredditHash = subreddits => {
   const hash = []
   for (let i in subreddits) {
     hash.push(subreddits[i].name)
@@ -12,7 +12,6 @@ const makeSubredditHash = (subreddits) => {
 }
 
 export default class StreamContainer extends React.Component {
-
   subredditsHash: ''
 
   constructor(props) {
@@ -23,7 +22,6 @@ export default class StreamContainer extends React.Component {
       viewMode: 'column',
       subreddits: []
     }
-
   }
 
   componentDidMount() {
@@ -31,6 +29,7 @@ export default class StreamContainer extends React.Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
+    console.log(nextProps)
     if (nextState.subreddit != this.state.subreddit) return true
     if (nextState.viewMode != this.state.viewMode) return true
     if (this.subredditsHash != makeSubredditHash(nextState.subreddits || [])) return true

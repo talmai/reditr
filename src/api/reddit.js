@@ -1,6 +1,7 @@
 import Request from 'superagent'
 import OAuth from './OAuth'
 import Promise from 'enhanced-promises'
+import User from '../account/User';
 
 const promiseAndCallback = (defer, callback, parser) => {
   return (err, result) => {
@@ -30,7 +31,7 @@ class reddit {
     this.baseOAuthUrl = 'https://oauth.reddit.com'
     this.extension = '.json'
     this.proxy = 'http://reditr.com/api/sync/'
-    this.authUser = null
+    this.authUser = new User()
   }
 
   setAuth(userObj) {
@@ -47,10 +48,10 @@ class reddit {
 
   getSubscribedSubreddits(callback) {
     const defer = Promise.defer()
-    const path = this.authUser && this.authUser.accessToken ? '/subreddits/mine/subscriber' : '/subreddits/default'
-    const base = this.authUser && this.authUser.accessToken ? this.baseOAuthUrl : this.baseUrl
+    const path = this.authUser.isAuthed() ? '/subreddits/mine/subscriber' : '/subreddits/default'
+    const base = this.authUser.isAuthed() ? this.baseOAuthUrl : this.baseUrl
     let request = Request.get(base + path + this.extension)
-    if (this.authUser && this.authUser.accessToken) {
+    if (this.authUser.isAuthed()) {
       request = request.set('Authorization', 'bearer ' + this.authUser.accessToken)
     }
     request.end(
@@ -62,10 +63,10 @@ class reddit {
   }
 
   getPostsFromSubreddit(subreddit, options = { sort: 'hot' }, callback) {
-    const baseUrl = this.authUser && this.authUser.accessToken ? this.baseOAuthUrl : this.baseUrl
+    const baseUrl = this.authUser.isAuthed() ? this.baseOAuthUrl : this.baseUrl
     const req = Request.get(baseUrl + '/r/' + subreddit + '/' + options.sort + this.extension).query(options)
 
-    if (this.authUser && this.authUser.accessToken) {
+    if (this.authUser.isAuthed()) {
       req.set('Authorization', 'bearer ' + this.authUser.accessToken)
     }
 
