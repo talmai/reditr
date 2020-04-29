@@ -17,10 +17,9 @@ Our Website & Current App: http://reditr.com
 
 # Docker Instructions
 
-1. Build ``docker-compose build``
+1. Build ``docker-compose build`` (for the lazy: ``docker pull talmai/reditr``)
 2. Run ``docker-compose start``
 
-(for the lazy: ``docker pull talmai/reditr``)
 
 # GNU License
 Reditr is free and open. We work on Reditr completely for fun and so we're developing it under the GNU General Public License. To read the GNU GENERAL PUBLIC LICENSE under which our software abides by, please see the file LICENSE.
