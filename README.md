@@ -15,6 +15,13 @@ Our Website & Current App: http://reditr.com
 7. The app is now running in dev mode and you can open http://localhost:3000 in your browser
 5. You are ready to dev!
 
+# Docker Instructions
+
+1. Build ``docker-compose build``
+2. Run ``docker-compose start``
+
+(for the lazy: ``docker pull talmai/reditr``)
+
 # GNU License
 Reditr is free and open. We work on Reditr completely for fun and so we're developing it under the GNU General Public License. To read the GNU GENERAL PUBLIC LICENSE under which our software abides by, please see the file LICENSE.
 
